@@ -28,3 +28,18 @@ jar {
         )
     }
 }
+
+tasks.register('run', JavaExec) {
+    dependsOn 'build'
+    group = "application"
+    description = "Run the application"
+    mainClass = 'io.squid.cypgl.CyPGL'
+
+    classpath = sourceSets.main.runtimeClasspath
+
+    var file = file("$projectDir/run")
+    file.mkdirs()
+    workingDir = file
+
+    jvmArgs = ['-Xmx512m']
+}
