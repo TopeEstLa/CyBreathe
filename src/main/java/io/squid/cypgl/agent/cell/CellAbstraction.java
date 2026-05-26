@@ -1,12 +1,13 @@
 package io.squid.cypgl.agent.cell;
 
 import io.squid.cypgl.entities.CellType;
+
 import java.io.Serializable;
 
 /**
  * Abstraction layer in the PAC architecture for a Cell agent.
  * Represents the data state of a single cell on the 2D grid.
- * 
+ *
  * @author TopeEstLa
  */
 public class CellAbstraction implements Serializable {

@@ -11,14 +11,14 @@ import java.io.IOException;
  * Control layer in the PAC architecture for the root Simulation agent.
  * Manages the background simulation execution loop, gathers grid statistics,
  * and handles persistent save/load operations.
- * 
+ *
  * @author TopeEstLa
  */
 public class SimulationControl {
 
+    private final GridControl gridControl;
     private SimulationAbstraction abstraction;
     private SimulationPresentation presentation; // Optional, null in CLI mode
-    private final GridControl gridControl;
 
     public SimulationControl(SimulationAbstraction abstraction) {
         this.abstraction = abstraction;
@@ -49,10 +49,10 @@ public class SimulationControl {
     public synchronized void tick() {
         // Phase 1: Compute next state based on neighbors' current state
         gridControl.computeNextStates(abstraction.getParameters());
-        
+
         // Phase 2: Commit computed states to active states
         gridControl.commitStates();
-        
+
         // Update statistics
         abstraction.incrementTickCount();
         recordCurrentStats();
@@ -116,19 +116,19 @@ public class SimulationControl {
     public void loadSimulation(File file) throws IOException, ClassNotFoundException {
         // Load the new abstraction
         SimulationAbstraction loadedAbs = SimulationAbstraction.loadFromFile(file);
-        
+
         // Swap active abstraction reference
         this.abstraction = loadedAbs;
-        
+
         // Relink the GridControl and rebuild cell controls
-        
+
         // Copy the grid cells over to the existing grid control structure
         int w = loadedAbs.getGrid().getWidth();
         int h = loadedAbs.getGrid().getHeight();
-        
+
         // Rebuild and copy references
         gridControl.rebuildCellControls();
-        
+
         // Update stats
         recordCurrentStats();
 
@@ -145,11 +145,11 @@ public class SimulationControl {
     public void updatePresentation() {
         if (presentation != null) {
             presentation.updateDashboard(
-                abstraction.getTickCount(),
-                abstraction.getAvgPollutionHistory(),
-                abstraction.getTreeCountHistory(),
-                abstraction.getFactoryCountHistory(),
-                abstraction.getAirCountHistory()
+                    abstraction.getTickCount(),
+                    abstraction.getAvgPollutionHistory(),
+                    abstraction.getTreeCountHistory(),
+                    abstraction.getFactoryCountHistory(),
+                    abstraction.getAirCountHistory()
             );
         }
     }

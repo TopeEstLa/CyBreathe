@@ -5,13 +5,14 @@ import io.squid.cypgl.agent.grid.GridAbstraction;
 import io.squid.cypgl.agent.simulation.SimulationAbstraction;
 import io.squid.cypgl.agent.simulation.SimulationControl;
 import io.squid.cypgl.entities.*;
+
 import java.io.File;
 import java.util.Scanner;
 
 /**
  * Text-based interactive command-line interface for the 2D Cellular Pollution Simulation.
  * Allows independent validation of the simulation model, configurations, ticks, and binary serialization.
- * 
+ *
  * @author TopeEstLa
  */
 public class CommandLineInterface {
@@ -25,7 +26,7 @@ public class CommandLineInterface {
         System.out.println("  2D Cellular Pollution Simulation - CLI Mode  ");
         System.out.println("=================================================");
         System.out.println("Type 'help' to list available commands.");
-        
+
         // Initialize a default 15x15 grid on start
         initGrid(15, 15);
         System.out.println("Initialized default 15x15 grid. Ready.");
@@ -54,14 +55,14 @@ public class CommandLineInterface {
             throw new IllegalArgumentException("Dimensions must be positive.");
         }
         SimulationAbstraction simAbs = new SimulationAbstraction(w, h);
-        
+
         // Populate grid with default clean AIR cells
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
                 simAbs.getGrid().setCell(x, y, new CellAbstraction(x, y, new AirCellType(), 0.0));
             }
         }
-        
+
         this.simulationControl = new SimulationControl(simAbs);
     }
 
@@ -88,8 +89,8 @@ public class CommandLineInterface {
                     count = Integer.parseInt(tokens[1]);
                 }
                 simulationControl.tickMultiple(count);
-                System.out.printf("Advanced simulation by %d tick(s). Current tick: %d%n", 
-                                  count, simulationControl.getAbstraction().getTickCount());
+                System.out.printf("Advanced simulation by %d tick(s). Current tick: %d%n",
+                        count, simulationControl.getAbstraction().getTickCount());
             }
             case "set" -> {
                 if (tokens.length < 4) {
@@ -115,7 +116,7 @@ public class CommandLineInterface {
                 }
 
                 if (x < 0 || x >= simulationControl.getAbstraction().getGrid().getWidth() ||
-                    y < 0 || y >= simulationControl.getAbstraction().getGrid().getHeight()) {
+                        y < 0 || y >= simulationControl.getAbstraction().getGrid().getHeight()) {
                     System.out.println("Coordinates out of grid boundaries.");
                     return;
                 }
@@ -237,7 +238,7 @@ public class CommandLineInterface {
             for (int x = 0; x < w; x++) {
                 CellAbstraction cell = grid.getCell(x, y);
                 char c = cell.getType().getConsoleChar();
-                
+
                 // For AIR cells, show shaded intensity depending on pollution
                 if (cell.getType() instanceof AirCellType) {
                     double poll = cell.getPollutionLevel();

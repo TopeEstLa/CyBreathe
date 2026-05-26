@@ -7,7 +7,7 @@ import javafx.application.Application;
 /**
  * Main application launcher for the 2D Cellular Pollution Simulation.
  * Supports launching in interactive GUI mode (default) or CLI mode (via '--cli' argument).
- * 
+ *
  * @author TopeEstLa
  */
 public class CyPGL {

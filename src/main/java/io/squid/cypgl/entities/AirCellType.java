@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Concrete implementation of CellType for AIR cells.
  * Air cells permit standard atmospheric diffusion of pollution across their neighbors.
- * 
+ *
  * @author TopeEstLa
  */
 public class AirCellType implements CellType {
@@ -31,7 +31,7 @@ public class AirCellType implements CellType {
         List<CellAbstraction> neighbors = grid.getNeighbors(cell.getX(), cell.getY());
         double sum = 0.0;
         double neighborAbsorptionSum = 0.0;
-        
+
         for (CellAbstraction neighbor : neighbors) {
             sum += neighbor.getPollutionLevel();
             if (neighbor.getType() instanceof TreeCellType) {
@@ -39,7 +39,7 @@ public class AirCellType implements CellType {
                 neighborAbsorptionSum += params.getAbsorptionRate() * 0.5 * neighbor.getCustomRate();
             }
         }
-        
+
         double neighborGenerationSum = 0.0;
         int cx = cell.getX();
         int cy = cell.getY();
@@ -56,7 +56,7 @@ public class AirCellType implements CellType {
                 if (other != null && other.getType() instanceof FactoryCellType) {
                     double R = other.getCustomRate();
                     int d = Math.max(Math.abs(nx - cx), Math.abs(ny - cy)); // Chebyshev distance
-                    
+
                     // The factory only emits directly to distance d if its customRate supports that radius
                     if (d <= Math.ceil(R)) {
                         neighborGenerationSum += (params.getGenerationRate() * R) / (d * d);
@@ -64,14 +64,14 @@ public class AirCellType implements CellType {
                 }
             }
         }
-        
+
         double avg = neighbors.isEmpty() ? cell.getPollutionLevel() : sum / neighbors.size();
         double nextPollution = cell.getPollutionLevel() + params.getDiffusionRate() * (avg - cell.getPollutionLevel());
-        
+
         // Add neighboring factory emissions and subtract neighboring tree absorption
         nextPollution += neighborGenerationSum;
         nextPollution -= neighborAbsorptionSum;
-        
+
         cell.setNextPollutionLevel(nextPollution);
         cell.setNextType(this);
     }

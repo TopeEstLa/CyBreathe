@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Global configuration parameters for the 2D Cellular Pollution Simulation.
  * These settings control the speed, rates, and thresholds of pollution dynamics.
- * 
+ *
  * @author TopeEstLa
  */
 public class SimulationParameters implements Serializable {

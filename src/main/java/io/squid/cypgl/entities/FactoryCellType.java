@@ -7,7 +7,7 @@ import io.squid.cypgl.agent.grid.GridAbstraction;
  * Concrete implementation of CellType for FACTORY cells.
  * Factories act as continuous, infinite sources of air pollution.
  * They lock their own pollution level at maximum (1.0) and emit smoke into neighbors.
- * 
+ *
  * @author TopeEstLa
  */
 public class FactoryCellType implements CellType {

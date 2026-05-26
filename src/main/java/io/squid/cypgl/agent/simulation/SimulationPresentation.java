@@ -13,6 +13,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
+
 import java.io.File;
 import java.util.List;
 import java.util.Timer;
@@ -22,7 +23,7 @@ import java.util.TimerTask;
  * Presentation layer in the PAC architecture for the root Simulation agent.
  * Implements a modern JavaFX BorderPane dashboard housing the toolbar controls,
  * sidebar parameter configurators, the central 2D Grid, and real-time LineCharts for analytics.
- * 
+ *
  * @author TopeEstLa
  */
 public class SimulationPresentation extends BorderPane {
@@ -37,14 +38,14 @@ public class SimulationPresentation extends BorderPane {
     private ToggleGroup brushModeGroup;
     private ToggleGroup cellTypeGroup;
     private Label tickLabel;
-    
+
     // Sliders
     private Slider speedSlider;
     private Slider diffusionSlider;
     private Slider absorptionSlider;
     private Slider generationSlider;
     private Slider massSeedSlider;
-    
+
     // Brush custom rate controls
     private CheckBox randomRateCheckbox;
     private Slider brushCustomRateSlider;
@@ -64,7 +65,7 @@ public class SimulationPresentation extends BorderPane {
     public SimulationPresentation(SimulationControl control) {
         this.control = control;
         this.gridPresentation = new GridPresentation();
-        
+
         // Build the GUI components FIRST
         setupTopToolbar();
         setupLeftSidebar();
@@ -76,7 +77,7 @@ public class SimulationPresentation extends BorderPane {
 
         // Initialize grid display
         rebuildGridDisplay(control.getGridControl());
-        
+
         // Bind UI values to simulation properties
         bindProperties();
     }
@@ -101,11 +102,11 @@ public class SimulationPresentation extends BorderPane {
         playBtn.setStyle("-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-weight: bold;");
         pauseBtn.setStyle("-fx-background-color: #ff8f00; -fx-text-fill: white; -fx-font-weight: bold;");
         stepBtn.setStyle("-fx-background-color: #0277bd; -fx-text-fill: white; -fx-font-weight: bold;");
-        
+
         playBtn.setOnAction(e -> startSimulationLoop());
         pauseBtn.setOnAction(e -> stopSimulationLoop());
         stepBtn.setOnAction(e -> control.tick());
-        
+
         clearBtn.setOnAction(e -> {
             stopSimulationLoop();
             GridAbstraction grid = control.getAbstraction().getGrid();
@@ -156,7 +157,7 @@ public class SimulationPresentation extends BorderPane {
 
         toolbar.getChildren().addAll(playBtn, pauseBtn, stepBtn, clearBtn, new Separator(), saveBtn, loadBtn, new Pane(), tickLabel);
         HBox.setHgrow(toolbar.getChildren().get(7), Priority.ALWAYS); // Spacer
-        
+
         setTop(toolbar);
     }
 
@@ -218,9 +219,9 @@ public class SimulationPresentation extends BorderPane {
         brushCustomRateLabel.disableProperty().bind(randomRateCheckbox.selectedProperty());
 
         brushBox.getChildren().addAll(
-            brushHeading, individualRadio, brushRadio, zoneRadio, new Separator(), 
-            typeLabel, airRadio, treeRadio, factoryRadio, new Separator(),
-            randomRateCheckbox, brushCustomRateLabel, brushCustomRateSlider
+                brushHeading, individualRadio, brushRadio, zoneRadio, new Separator(),
+                typeLabel, airRadio, treeRadio, factoryRadio, new Separator(),
+                randomRateCheckbox, brushCustomRateLabel, brushCustomRateSlider
         );
 
         // 2. Mass Seed Control
@@ -255,20 +256,20 @@ public class SimulationPresentation extends BorderPane {
         speedSlider = new Slider(50, 1000, 200);
 
         ratesBox.getChildren().addAll(
-            ratesHeading,
-            new Label("Diffusion Rate:"), diffusionSlider,
-            new Label("Absorption Power:"), absorptionSlider,
-            new Label("Factory Output:"), generationSlider,
-            new Label("Tick Delay (ms):"), speedSlider
+                ratesHeading,
+                new Label("Diffusion Rate:"), diffusionSlider,
+                new Label("Absorption Power:"), absorptionSlider,
+                new Label("Factory Output:"), generationSlider,
+                new Label("Tick Delay (ms):"), speedSlider
         );
 
         sidebar.getChildren().addAll(brushBox, seedBox, ratesBox);
-        
+
         // Wrap sidebar in ScrollPane for safety
         ScrollPane scroller = new ScrollPane(sidebar);
         scroller.setFitToWidth(true);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        
+
         setLeft(scroller);
     }
 
@@ -281,7 +282,7 @@ public class SimulationPresentation extends BorderPane {
         ScrollPane gridScroller = new ScrollPane(gridContainer);
         gridScroller.setFitToWidth(true);
         gridScroller.setFitToHeight(true);
-        
+
         setCenter(gridScroller);
     }
 
@@ -333,23 +334,23 @@ public class SimulationPresentation extends BorderPane {
         pollutionChart.getData().add(pollutionSeries);
 
         rightBar.getChildren().addAll(statsTitle, statsSummaryLabel, populationChart, pollutionChart);
-        
+
         // Wrap right panel in scroll pane
         ScrollPane scroller = new ScrollPane(rightBar);
         scroller.setFitToWidth(true);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        
+
         setRight(scroller);
     }
 
     private void bindProperties() {
         SimulationParameters params = control.getAbstraction().getParameters();
-        
+
         // Bidirectional-like listener updates
         diffusionSlider.valueProperty().addListener((obs, ov, nv) -> params.setDiffusionRate(nv.doubleValue()));
         absorptionSlider.valueProperty().addListener((obs, ov, nv) -> params.setAbsorptionRate(nv.doubleValue()));
         generationSlider.valueProperty().addListener((obs, ov, nv) -> params.setGenerationRate(nv.doubleValue()));
-        
+
         speedSlider.valueProperty().addListener((obs, ov, nv) -> {
             control.getAbstraction().setSpeedDelayMs(nv.intValue());
             // If running, restart the timer with new delay immediately
@@ -361,10 +362,10 @@ public class SimulationPresentation extends BorderPane {
 
     public void rebuildGridDisplay(GridControl gridControl) {
         gridPresentation.initializeGrid(
-            gridControl,
-            this::getSelectedCellType,
-            this::getSelectedBrushMode,
-            this::getBrushCustomRate
+                gridControl,
+                this::getSelectedCellType,
+                this::getSelectedBrushMode,
+                this::getBrushCustomRate
         );
     }
 
@@ -426,7 +427,7 @@ public class SimulationPresentation extends BorderPane {
             List<Integer> treeCountHistory,
             List<Integer> factoryCountHistory,
             List<Integer> airCountHistory) {
-        
+
         // 1. Update Tick Count Label
         tickLabel.setText("Tick: " + tickCount);
 
@@ -442,17 +443,17 @@ public class SimulationPresentation extends BorderPane {
 
         // 3. Build summary statistics text
         String summary = String.format(
-            "GRID SIZE : %d x %d%n" +
-            "TOTALS    : %d cells%n" +
-            "POLLUTION : %.4f (avg)%n" +
-            "POPULATIONS:%n" +
-            " - AIR    : %d (%.1f%%)%n" +
-            " - TREES  : %d (%.1f%%)%n" +
-            " - FACT   : %d (%.1f%%)",
-            w, h, total, pollution,
-            air, (double) air / total * 100,
-            trees, (double) trees / total * 100,
-            factories, (double) factories / total * 100
+                "GRID SIZE : %d x %d%n" +
+                        "TOTALS    : %d cells%n" +
+                        "POLLUTION : %.4f (avg)%n" +
+                        "POPULATIONS:%n" +
+                        " - AIR    : %d (%.1f%%)%n" +
+                        " - TREES  : %d (%.1f%%)%n" +
+                        " - FACT   : %d (%.1f%%)",
+                w, h, total, pollution,
+                air, (double) air / total * 100,
+                trees, (double) trees / total * 100,
+                factories, (double) factories / total * 100
         );
         statsSummaryLabel.setText(summary);
 

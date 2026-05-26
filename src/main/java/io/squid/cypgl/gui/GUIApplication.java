@@ -13,7 +13,7 @@ import javafx.stage.Stage;
  * Main graphical user interface application wrapper.
  * Instantiates the Simulation agent PAC layers, starts the window stage,
  * and sets up a default 30x30 cellular pollution board.
- * 
+ *
  * @author TopeEstLa
  */
 public class GUIApplication extends Application {
@@ -41,7 +41,7 @@ public class GUIApplication extends Application {
 
         // Create main application Scene
         Scene scene = new Scene(presentation, 1280, 800);
-        
+
         primaryStage.setTitle("2D Cellular Pollution Simulation - CyTech PGL v1.0");
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(1000);

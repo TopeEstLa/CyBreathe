@@ -8,11 +8,11 @@ import io.squid.cypgl.entities.SimulationParameters;
  * Control layer in the PAC architecture for a Cell agent.
  * Acts as the mediator between CellAbstraction (data) and CellPresentation (UI).
  * Coordinates local cell logic ticks and user interactions.
- * 
+ *
  * @author TopeEstLa
  */
 public class CellControl {
-    
+
     private final CellAbstraction abstraction;
     private CellPresentation presentation; // Optional, null in CLI mode
 

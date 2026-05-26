@@ -8,7 +8,7 @@ import io.squid.cypgl.agent.grid.GridAbstraction;
  * Trees absorb pollution from their environment.
  * If exposed to excessive pollution over time, their health decays, and they eventually die (turning into DEAD_TREE).
  * If pollution remains low, they can recover health.
- * 
+ *
  * @author TopeEstLa
  */
 public class TreeCellType implements CellType {
@@ -23,12 +23,13 @@ public class TreeCellType implements CellType {
     public char getConsoleChar() {
         return 'T';
     }
+
     @Override
     public void computeNextState(CellAbstraction cell, GridAbstraction grid, SimulationParameters params) {
         // Absorb pollution locally based on individual customRate multiplier
         double nextPollution = cell.getPollutionLevel() - (params.getAbsorptionRate() * cell.getCustomRate());
         cell.setNextPollutionLevel(Math.max(0.0, nextPollution));
-        
+
         cell.setNextType(this);
     }
 

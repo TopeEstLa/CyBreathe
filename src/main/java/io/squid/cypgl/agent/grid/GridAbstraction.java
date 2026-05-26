@@ -1,6 +1,7 @@
 package io.squid.cypgl.agent.grid;
 
 import io.squid.cypgl.agent.cell.CellAbstraction;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 /**
  * Abstraction layer in the PAC architecture for the Grid agent.
  * Manages the grid cell array and calculates local Bounded Moore neighborhood relationships.
- * 
+ *
  * @author TopeEstLa
  */
 public class GridAbstraction implements Serializable {
@@ -50,7 +51,7 @@ public class GridAbstraction implements Serializable {
      */
     public List<CellAbstraction> getNeighbors(int x, int y) {
         List<CellAbstraction> neighbors = new ArrayList<>();
-        
+
         int[] dx = {-1, 0, 1, -1, 1, -1, 0, 1};
         int[] dy = {-1, -1, -1, 0, 0, 1, 1, 1};
 

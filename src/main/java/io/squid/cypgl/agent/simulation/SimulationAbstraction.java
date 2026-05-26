@@ -2,6 +2,7 @@ package io.squid.cypgl.agent.simulation;
 
 import io.squid.cypgl.agent.grid.GridAbstraction;
 import io.squid.cypgl.entities.SimulationParameters;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,23 +12,20 @@ import java.util.List;
  * Represents the global state of the simulation, including parameters,
  * the active grid, run parameters, and historical statistics.
  * Supports binary serialization to import/export simulation states.
- * 
+ *
  * @author TopeEstLa
  */
 public class SimulationAbstraction implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    private GridAbstraction grid;
-    private SimulationParameters parameters;
-    
-    private int tickCount;
-    private int speedDelayMs = 200; // Delay between steps in milliseconds
-
     // Historical statistics for charting/trend purposes
     private final List<Double> avgPollutionHistory;
     private final List<Integer> treeCountHistory;
     private final List<Integer> factoryCountHistory;
     private final List<Integer> airCountHistory;
+    private GridAbstraction grid;
+    private SimulationParameters parameters;
+    private int tickCount;
+    private int speedDelayMs = 200; // Delay between steps in milliseconds
 
     public SimulationAbstraction(int gridWidth, int gridHeight) {
         this.grid = new GridAbstraction(gridWidth, gridHeight);
@@ -37,6 +35,15 @@ public class SimulationAbstraction implements Serializable {
         this.treeCountHistory = new ArrayList<>();
         this.factoryCountHistory = new ArrayList<>();
         this.airCountHistory = new ArrayList<>();
+    }
+
+    /**
+     * Imports a saved simulation state from a binary file.
+     */
+    public static SimulationAbstraction loadFromFile(File file) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+            return (SimulationAbstraction) ois.readObject();
+        }
     }
 
     public GridAbstraction getGrid() {
@@ -122,15 +129,6 @@ public class SimulationAbstraction implements Serializable {
     public void saveToFile(File file) throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
             oos.writeObject(this);
-        }
-    }
-
-    /**
-     * Imports a saved simulation state from a binary file.
-     */
-    public static SimulationAbstraction loadFromFile(File file) throws IOException, ClassNotFoundException {
-        try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
-            return (SimulationAbstraction) ois.readObject();
         }
     }
 }

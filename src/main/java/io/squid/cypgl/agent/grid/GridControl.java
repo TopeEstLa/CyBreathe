@@ -4,19 +4,20 @@ import io.squid.cypgl.agent.cell.CellAbstraction;
 import io.squid.cypgl.agent.cell.CellControl;
 import io.squid.cypgl.entities.CellType;
 import io.squid.cypgl.entities.SimulationParameters;
+
 import java.util.Random;
 
 /**
  * Control layer in the PAC architecture for the Grid agent.
  * Coordinates all individual child CellAgents and propagates ticks and user grid actions (brush, zone, random fill).
- * 
+ *
  * @author TopeEstLa
  */
 public class GridControl {
 
     private final GridAbstraction abstraction;
-    private GridPresentation presentation; // Optional, null in CLI mode
     private final CellControl[][] cellControls;
+    private GridPresentation presentation; // Optional, null in CLI mode
 
     public GridControl(GridAbstraction abstraction) {
         this.abstraction = abstraction;
@@ -113,15 +114,15 @@ public class GridControl {
 
     /**
      * Performs a mass random spawn of a specific CellType across a percentage of empty (AIR) tiles.
-     * 
-     * @param type The CellType to spawn.
+     *
+     * @param type       The CellType to spawn.
      * @param percentage Value from 0.0 to 1.0 representing coverage.
      */
     public void massSpawn(CellType type, double percentage) {
         Random rand = new Random();
         int w = abstraction.getWidth();
         int h = abstraction.getHeight();
-        
+
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
                 // Spawn only on existing AIR cells to avoid overwriting factories/other structures

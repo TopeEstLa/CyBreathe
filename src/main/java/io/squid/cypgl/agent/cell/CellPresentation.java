@@ -10,7 +10,7 @@ import javafx.scene.shape.Rectangle;
  * Presentation layer in the PAC architecture for a Cell agent.
  * Implements a JavaFX StackPane that renders the cell color, health,
  * and pollution levels dynamically with modern rich aesthetics.
- * 
+ *
  * @author TopeEstLa
  */
 public class CellPresentation extends StackPane {
@@ -41,14 +41,14 @@ public class CellPresentation extends StackPane {
     public void draw(CellType type, double pollutionLevel, double customRate) {
         String typeName = type.getName();
         Color cellColor;
-        
+
         switch (typeName) {
             case "FACTORY" -> {
                 // Sleek industrial metallic gray
                 cellColor = Color.web("#37474f");
                 borderRect.setFill(cellColor);
                 borderRect.setStroke(Color.web("#263238"));
-                
+
                 // Scale factory core orange glow based on individual generation capacity
                 double baseRadius = (borderRect.getWidth() - 2) / 4.0;
                 statusNode.setRadius(Math.clamp(baseRadius * customRate, baseRadius * 0.4, baseRadius * 1.8));
@@ -60,7 +60,7 @@ public class CellPresentation extends StackPane {
                 cellColor = Color.web("#2e7d32");
                 borderRect.setFill(cellColor);
                 borderRect.setStroke(cellColor.darker());
-                
+
                 // Scale leaf circle size based on individual absorption capacity
                 double baseRadius = (borderRect.getWidth() - 2) / 4.0;
                 statusNode.setRadius(Math.clamp(baseRadius * customRate, baseRadius * 0.4, baseRadius * 1.8));
@@ -71,11 +71,11 @@ public class CellPresentation extends StackPane {
                 // Beautiful fluid gradient from fresh celestial blue to thick smoky industrial purple-black
                 Color freshBlue = Color.web("#e0f7fa"); // Soft clean air
                 Color smokyPurple = Color.web("#4a148c"); // Thick carbon soot/pollution
-                
+
                 cellColor = freshBlue.interpolate(smokyPurple, pollutionLevel);
                 borderRect.setFill(cellColor);
                 borderRect.setStroke(Color.web("#cfd8dc"));
-                
+
                 statusNode.setVisible(false);
             }
         }
