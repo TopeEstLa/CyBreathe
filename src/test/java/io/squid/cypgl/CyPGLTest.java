@@ -100,9 +100,9 @@ public class CyPGLTest {
         CellAbstraction cell = new CellAbstraction(0, 0, new TreeCellType(), 0.8);
         grid.setCell(0, 0, cell);
 
+        cell.setCustomRate(1.0);
 
-        // Absorption: 0.8 - absorptionRate (0.2) = 0.6
-        // Health should remain locked at 1.0 (permanently alive)
+        // Absorption: 0.8 - absorptionRate (0.2) * 1.0 = 0.6
         cell.getType().computeNextState(cell, grid, params);
         
         assertEquals(0.6, cell.getNextPollutionLevel(), 0.0001);

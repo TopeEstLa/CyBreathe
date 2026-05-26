@@ -45,7 +45,10 @@ public class SimulationPresentation extends BorderPane {
     private Slider generationSlider;
     private Slider massSeedSlider;
     
-
+    // Brush custom rate controls
+    private CheckBox randomRateCheckbox;
+    private Slider brushCustomRateSlider;
+    private Label brushCustomRateLabel;
 
     // Stats Labels
     private Label statsSummaryLabel;
@@ -191,7 +194,34 @@ public class SimulationPresentation extends BorderPane {
         factoryRadio.setToggleGroup(cellTypeGroup);
         cellTypeGroup.selectToggle(treeRadio);
 
-        brushBox.getChildren().addAll(brushHeading, individualRadio, brushRadio, zoneRadio, new Separator(), typeLabel, airRadio, treeRadio, factoryRadio);
+        // Custom rate controls
+        randomRateCheckbox = new CheckBox("Randomize Power (0.5x - 2.0x)");
+        randomRateCheckbox.setStyle("-fx-font-size: 11px; -fx-text-fill: #37474f;");
+        randomRateCheckbox.setSelected(false);
+
+        brushCustomRateLabel = new Label("Brush Power: 1.0x");
+        brushCustomRateLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #78909c; -fx-font-weight: bold;");
+
+        brushCustomRateSlider = new Slider(0.1, 3.0, 1.0);
+        brushCustomRateSlider.setShowTickLabels(true);
+        brushCustomRateSlider.setShowTickMarks(true);
+        brushCustomRateSlider.setMajorTickUnit(1.0);
+        brushCustomRateSlider.setMinorTickCount(9);
+        brushCustomRateSlider.setBlockIncrement(0.1);
+
+        brushCustomRateSlider.valueProperty().addListener((obs, ov, nv) -> {
+            brushCustomRateLabel.setText(String.format("Brush Power: %.1fx", nv.doubleValue()));
+        });
+
+        // Disable slider/label when random is checked
+        brushCustomRateSlider.disableProperty().bind(randomRateCheckbox.selectedProperty());
+        brushCustomRateLabel.disableProperty().bind(randomRateCheckbox.selectedProperty());
+
+        brushBox.getChildren().addAll(
+            brushHeading, individualRadio, brushRadio, zoneRadio, new Separator(), 
+            typeLabel, airRadio, treeRadio, factoryRadio, new Separator(),
+            randomRateCheckbox, brushCustomRateLabel, brushCustomRateSlider
+        );
 
         // 2. Mass Seed Control
         VBox seedBox = new VBox(8);
@@ -333,8 +363,16 @@ public class SimulationPresentation extends BorderPane {
         gridPresentation.initializeGrid(
             gridControl,
             this::getSelectedCellType,
-            this::getSelectedBrushMode
+            this::getSelectedBrushMode,
+            this::getBrushCustomRate
         );
+    }
+
+    private Double getBrushCustomRate() {
+        if (randomRateCheckbox != null && randomRateCheckbox.isSelected()) {
+            return 0.5 + Math.random() * 1.5;
+        }
+        return brushCustomRateSlider != null ? brushCustomRateSlider.getValue() : 1.0;
     }
 
     private CellType getSelectedCellType() {

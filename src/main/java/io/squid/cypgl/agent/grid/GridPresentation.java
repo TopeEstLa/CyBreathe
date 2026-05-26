@@ -22,6 +22,7 @@ public class GridPresentation extends GridPane {
     // Suppliers to fetch active selection from SimulationControl at runtime
     private Supplier<CellType> activeBrushTypeSupplier;
     private Supplier<String> activeBrushModeSupplier; // "BRUSH", "ZONE", "INDIVIDUAL"
+    private Supplier<Double> activeCustomRateSupplier;
 
     // Track state for Zone selection box
     private int zoneStartX = -1;
@@ -30,11 +31,13 @@ public class GridPresentation extends GridPane {
     public void initializeGrid(
             GridControl control,
             Supplier<CellType> activeBrushTypeSupplier,
-            Supplier<String> activeBrushModeSupplier) {
+            Supplier<String> activeBrushModeSupplier,
+            Supplier<Double> activeCustomRateSupplier) {
         
         this.gridControl = control;
         this.activeBrushTypeSupplier = activeBrushTypeSupplier;
         this.activeBrushModeSupplier = activeBrushModeSupplier;
+        this.activeCustomRateSupplier = activeCustomRateSupplier;
         
         rebuildDisplay();
     }
@@ -96,6 +99,23 @@ public class GridPresentation extends GridPane {
                         // Apply bulk zone rectangle on drag release
                         if (zoneStartX != -1 && zoneStartY != -1) {
                             gridControl.applyZone(zoneStartX, zoneStartY, finalX, finalY, activeBrushTypeSupplier.get());
+                            
+                            int minX = Math.max(0, Math.min(zoneStartX, finalX));
+                            int maxX = Math.min(gridControl.getAbstraction().getWidth() - 1, Math.max(zoneStartX, finalX));
+                            int minY = Math.max(0, Math.min(zoneStartY, finalY));
+                            int maxY = Math.min(gridControl.getAbstraction().getHeight() - 1, Math.max(zoneStartY, finalY));
+                            
+                            Double rate = activeCustomRateSupplier.get();
+                            for (int zx = minX; zx <= maxX; zx++) {
+                                for (int zy = minY; zy <= maxY; zy++) {
+                                    CellControl zctrl = gridControl.getCellControl(zx, zy);
+                                    if (zctrl != null && rate != null) {
+                                        zctrl.getAbstraction().setCustomRate(rate);
+                                        zctrl.updatePresentation();
+                                    }
+                                }
+                            }
+                            
                             zoneStartX = -1;
                             zoneStartY = -1;
                         }
@@ -113,6 +133,13 @@ public class GridPresentation extends GridPane {
         CellControl ctrl = gridControl.getCellControl(x, y);
         if (ctrl != null && brushType != null) {
             ctrl.setCellType(brushType);
+            
+            // Assign customRate from active brush settings
+            Double rate = activeCustomRateSupplier.get();
+            if (rate != null) {
+                ctrl.getAbstraction().setCustomRate(rate);
+            }
+            ctrl.updatePresentation();
         }
     }
 }

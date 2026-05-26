@@ -71,7 +71,7 @@ public class CellControl {
      */
     public void updatePresentation() {
         if (presentation != null) {
-            presentation.draw(abstraction.getType(), abstraction.getPollutionLevel());
+            presentation.draw(abstraction.getType(), abstraction.getPollutionLevel(), abstraction.getCustomRate());
         }
     }
 }

@@ -23,11 +23,10 @@ public class TreeCellType implements CellType {
     public char getConsoleChar() {
         return 'T';
     }
-
     @Override
     public void computeNextState(CellAbstraction cell, GridAbstraction grid, SimulationParameters params) {
-        // Absorb pollution locally
-        double nextPollution = cell.getPollutionLevel() - params.getAbsorptionRate();
+        // Absorb pollution locally based on individual customRate multiplier
+        double nextPollution = cell.getPollutionLevel() - (params.getAbsorptionRate() * cell.getCustomRate());
         cell.setNextPollutionLevel(Math.max(0.0, nextPollution));
         
         cell.setNextType(this);

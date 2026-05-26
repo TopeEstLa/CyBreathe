@@ -93,7 +93,7 @@ public class CommandLineInterface {
             }
             case "set" -> {
                 if (tokens.length < 4) {
-                    System.out.println("Usage: set <x> <y> <type> [pollution]");
+                    System.out.println("Usage: set <x> <y> <type> [pollution] [customRate]");
                     return;
                 }
                 int x = Integer.parseInt(tokens[1]);
@@ -102,6 +102,10 @@ public class CommandLineInterface {
                 double pollution = 0.0;
                 if (tokens.length >= 5) {
                     pollution = Double.parseDouble(tokens[4]);
+                }
+                double customRate = 1.0;
+                if (tokens.length >= 6) {
+                    customRate = Double.parseDouble(tokens[5]);
                 }
 
                 CellType type = parseCellType(typeStr);
@@ -118,9 +122,11 @@ public class CommandLineInterface {
 
                 simulationControl.getGridControl().setCellType(x, y, type);
                 simulationControl.getGridControl().getCellControl(x, y).setPollution(pollution);
+                simulationControl.getGridControl().getCellControl(x, y).getAbstraction().setCustomRate(customRate);
+                simulationControl.getGridControl().getCellControl(x, y).updatePresentation();
 
                 simulationControl.recordCurrentStats();
-                System.out.printf("Set cell (%d, %d) to %s (pollution: %.2f)%n", x, y, type.getName(), pollution);
+                System.out.printf("Set cell (%d, %d) to %s (pollution: %.2f, customRate: %.2f)%n", x, y, type.getName(), pollution, customRate);
             }
             case "random" -> {
                 if (tokens.length < 3) {
@@ -302,7 +308,7 @@ public class CommandLineInterface {
         System.out.println("  init <width> <height>              - Create a clean grid of specified dimensions.");
         System.out.println("  show                               - Render the grid visually in ASCII format.");
         System.out.println("  tick [count]                       - Run simulation for count ticks (default 1).");
-        System.out.println("  set <x> <y> <type> [pollution]     - Place a cell (AIR, TREE, FACTORY) at (x, y) and set optional pollution.");
+        System.out.println("  set <x> <y> <type> [pollution] [rate] - Place a cell (AIR, TREE, FACTORY) at (x, y) with optional pollution and custom rate multiplier.");
         System.out.println("  random <type> <percentage>         - Randomly seed a % of clean cells with specified type.");
         System.out.println("  stats                              - View grid configurations and cell statistics.");
         System.out.println("  config <param> <value>             - Set parameters:");

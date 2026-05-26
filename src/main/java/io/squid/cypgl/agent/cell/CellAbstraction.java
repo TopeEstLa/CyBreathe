@@ -23,6 +23,9 @@ public class CellAbstraction implements Serializable {
     private CellType nextType;
     private double nextPollutionLevel;
 
+    // Individual properties: custom rate multiplier (e.g. how much a tree absorbs or a factory pollutes)
+    private double customRate;
+
     public CellAbstraction(int x, int y, CellType type, double initialPollution) {
         this.x = x;
         this.y = y;
@@ -30,6 +33,8 @@ public class CellAbstraction implements Serializable {
         this.nextType = type;
         this.pollutionLevel = Math.clamp(initialPollution, 0.0, 1.0);
         this.nextPollutionLevel = this.pollutionLevel;
+        // Diverse individual rate multiplier by default (0.5 to 2.0)
+        this.customRate = 0.5 + Math.random() * 1.5;
     }
 
     public int getX() {
@@ -62,7 +67,8 @@ public class CellAbstraction implements Serializable {
     }
 
     public void setPollutionLevel(double pollutionLevel) {
-        this.pollutionLevel = Math.clamp(pollutionLevel, 0.0, 1.0);
+        double clamped = Math.clamp(pollutionLevel, 0.0, 1.0);
+        this.pollutionLevel = clamped < 0.01 ? 0.0 : clamped;
     }
 
     public double getNextPollutionLevel() {
@@ -70,7 +76,16 @@ public class CellAbstraction implements Serializable {
     }
 
     public void setNextPollutionLevel(double nextPollutionLevel) {
-        this.nextPollutionLevel = Math.clamp(nextPollutionLevel, 0.0, 1.0);
+        double clamped = Math.clamp(nextPollutionLevel, 0.0, 1.0);
+        this.nextPollutionLevel = clamped < 0.01 ? 0.0 : clamped;
+    }
+
+    public double getCustomRate() {
+        return customRate;
+    }
+
+    public void setCustomRate(double customRate) {
+        this.customRate = Math.max(0.0, customRate);
     }
 
     /**

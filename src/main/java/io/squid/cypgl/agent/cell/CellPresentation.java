@@ -36,9 +36,9 @@ public class CellPresentation extends StackPane {
     }
 
     /**
-     * Renders the cell visually according to its type, pollution level, and health.
+     * Renders the cell visually according to its type, pollution level, and customRate strength.
      */
-    public void draw(CellType type, double pollutionLevel) {
+    public void draw(CellType type, double pollutionLevel, double customRate) {
         String typeName = type.getName();
         Color cellColor;
         
@@ -49,8 +49,10 @@ public class CellPresentation extends StackPane {
                 borderRect.setFill(cellColor);
                 borderRect.setStroke(Color.web("#263238"));
                 
-                // Pulsing factory core showing active emission
-                statusNode.setFill(Color.web("#ff5722")); // Orange glow
+                // Scale factory core orange glow based on individual generation capacity
+                double baseRadius = (borderRect.getWidth() - 2) / 4.0;
+                statusNode.setRadius(Math.clamp(baseRadius * customRate, baseRadius * 0.4, baseRadius * 1.8));
+                statusNode.setFill(Color.web("#ff5722"));
                 statusNode.setVisible(true);
             }
             case "TREE" -> {
@@ -59,7 +61,9 @@ public class CellPresentation extends StackPane {
                 borderRect.setFill(cellColor);
                 borderRect.setStroke(cellColor.darker());
                 
-                // Add a small leaf-like circle inside
+                // Scale leaf circle size based on individual absorption capacity
+                double baseRadius = (borderRect.getWidth() - 2) / 4.0;
+                statusNode.setRadius(Math.clamp(baseRadius * customRate, baseRadius * 0.4, baseRadius * 1.8));
                 statusNode.setFill(Color.web("#1b5e20"));
                 statusNode.setVisible(true);
             }
