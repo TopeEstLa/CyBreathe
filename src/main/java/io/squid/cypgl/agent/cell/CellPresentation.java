@@ -1,6 +1,7 @@
 package io.squid.cypgl.agent.cell;
 
 import io.squid.cypgl.entities.CellType;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -17,6 +18,17 @@ public class CellPresentation extends StackPane {
 
     private final Rectangle borderRect;
     private final Circle statusNode; // Custom overlay representing tree health or factory core
+    private final Label debugLabel;
+
+    private static boolean showDebugValues = false;
+
+    public static void setShowDebugValues(boolean show) {
+        showDebugValues = show;
+    }
+
+    public static boolean isShowDebugValues() {
+        return showDebugValues;
+    }
 
     public CellPresentation(double cellSize) {
         setPrefSize(cellSize, cellSize);
@@ -32,7 +44,11 @@ public class CellPresentation extends StackPane {
         this.statusNode = new Circle((cellSize - 2) / 4.0);
         this.statusNode.setVisible(false);
 
-        getChildren().addAll(borderRect, statusNode);
+        // Visual debug label overlay
+        this.debugLabel = new Label();
+        this.debugLabel.setMouseTransparent(true);
+
+        getChildren().addAll(borderRect, statusNode, debugLabel);
     }
 
     /**
@@ -72,12 +88,26 @@ public class CellPresentation extends StackPane {
                 Color freshBlue = Color.web("#e0f7fa"); // Soft clean air
                 Color smokyPurple = Color.web("#4a148c"); // Thick carbon soot/pollution
 
-                cellColor = freshBlue.interpolate(smokyPurple, pollutionLevel);
+                cellColor = freshBlue.interpolate(smokyPurple, Math.clamp(pollutionLevel, 0.0, 1.0));
                 borderRect.setFill(cellColor);
                 borderRect.setStroke(Color.web("#cfd8dc"));
 
                 statusNode.setVisible(false);
             }
+        }
+
+        // Manage Debug Label display
+        if (showDebugValues) {
+            debugLabel.setText(String.format("%.2f", pollutionLevel));
+            // High contrast text coloring
+            if (typeName.equals("AIR") && pollutionLevel <= 0.4) {
+                debugLabel.setStyle("-fx-font-size: 8px; -fx-font-weight: bold; -fx-text-fill: #37474f;");
+            } else {
+                debugLabel.setStyle("-fx-font-size: 8px; -fx-font-weight: bold; -fx-text-fill: white;");
+            }
+            debugLabel.setVisible(true);
+        } else {
+            debugLabel.setVisible(false);
         }
     }
 }

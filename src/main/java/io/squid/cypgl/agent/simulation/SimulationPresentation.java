@@ -155,8 +155,15 @@ public class SimulationPresentation extends BorderPane {
             }
         });
 
-        toolbar.getChildren().addAll(playBtn, pauseBtn, stepBtn, clearBtn, new Separator(), saveBtn, loadBtn, new Pane(), tickLabel);
-        HBox.setHgrow(toolbar.getChildren().get(7), Priority.ALWAYS); // Spacer
+        CheckBox debugCheckbox = new CheckBox("🐞 Debug Values");
+        debugCheckbox.setStyle("-fx-font-weight: bold; -fx-text-fill: #37474f;");
+        debugCheckbox.setOnAction(e -> {
+            io.squid.cypgl.agent.cell.CellPresentation.setShowDebugValues(debugCheckbox.isSelected());
+            control.getGridControl().updateAllCellPresentations();
+        });
+
+        toolbar.getChildren().addAll(playBtn, pauseBtn, stepBtn, clearBtn, new Separator(), saveBtn, loadBtn, new Separator(), debugCheckbox, new Pane(), tickLabel);
+        HBox.setHgrow(toolbar.getChildren().get(9), Priority.ALWAYS); // Spacer
 
         setTop(toolbar);
     }

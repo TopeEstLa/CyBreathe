@@ -32,7 +32,7 @@ public class CellAbstraction implements Serializable {
         this.y = y;
         this.type = type;
         this.nextType = type;
-        this.pollutionLevel = Math.clamp(initialPollution, 0.0, 1.0);
+        this.pollutionLevel = Math.clamp(initialPollution, 0.0, 3.0);
         this.nextPollutionLevel = this.pollutionLevel;
         // Diverse individual rate multiplier by default (0.5 to 2.0)
         this.customRate = 0.5 + Math.random() * 1.5;
@@ -68,7 +68,7 @@ public class CellAbstraction implements Serializable {
     }
 
     public void setPollutionLevel(double pollutionLevel) {
-        double clamped = Math.clamp(pollutionLevel, 0.0, 1.0);
+        double clamped = Math.clamp(pollutionLevel, 0.0, 3.0);
         this.pollutionLevel = clamped < 0.01 ? 0.0 : clamped;
     }
 
@@ -77,7 +77,7 @@ public class CellAbstraction implements Serializable {
     }
 
     public void setNextPollutionLevel(double nextPollutionLevel) {
-        double clamped = Math.clamp(nextPollutionLevel, 0.0, 1.0);
+        double clamped = Math.clamp(nextPollutionLevel, 0.0, 3.0);
         this.nextPollutionLevel = clamped < 0.01 ? 0.0 : clamped;
     }
 

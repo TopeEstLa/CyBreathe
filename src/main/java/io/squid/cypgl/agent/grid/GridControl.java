@@ -148,4 +148,19 @@ public class GridControl {
             }
         }
     }
+
+    /**
+     * Triggers updatePresentation on all individual CellControls.
+     */
+    public void updateAllCellPresentations() {
+        int w = abstraction.getWidth();
+        int h = abstraction.getHeight();
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                if (cellControls[x][y] != null) {
+                    cellControls[x][y].updatePresentation();
+                }
+            }
+        }
+    }
 }

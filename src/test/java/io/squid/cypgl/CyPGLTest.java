@@ -84,6 +84,7 @@ public class CyPGLTest {
     public void testFactoryCreation() {
         GridAbstraction grid = new GridAbstraction(1, 1);
         CellAbstraction cell = new CellAbstraction(0, 0, new FactoryCellType(), 0.0);
+        cell.setCustomRate(1.0);
         grid.setCell(0, 0, cell);
 
         // Factory computeNextState should always set pollution to 1.0
@@ -99,10 +100,10 @@ public class CyPGLTest {
         GridAbstraction grid = new GridAbstraction(1, 1);
         CellAbstraction cell = new CellAbstraction(0, 0, new TreeCellType(), 0.8);
         grid.setCell(0, 0, cell);
-
         cell.setCustomRate(1.0);
 
-        // Absorption: 0.8 - absorptionRate (0.2) * 1.0 = 0.6
+        // Absorption: 0.8 - absorptionRate (0.2) = 0.6
+        // Health should remain locked at 1.0 (permanently alive)
         cell.getType().computeNextState(cell, grid, params);
         
         assertEquals(0.6, cell.getNextPollutionLevel(), 0.0001);

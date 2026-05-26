@@ -25,14 +25,13 @@ public class FactoryCellType implements CellType {
 
     @Override
     public void computeNextState(CellAbstraction cell, GridAbstraction grid, SimulationParameters params) {
-        // Factory pollution is locked at maximum
-        cell.setNextPollutionLevel(1.0);
+        cell.setNextPollutionLevel(cell.getCustomRate());
         cell.setNextType(this);
     }
 
     @Override
     public void commitState(CellAbstraction cell) {
-        cell.setPollutionLevel(1.0); // Ensure it is exactly 1.0
+        cell.setPollutionLevel(cell.getCustomRate());
         cell.setType(cell.getNextType());
     }
 }
