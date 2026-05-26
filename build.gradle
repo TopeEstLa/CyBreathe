@@ -9,7 +9,14 @@ repositories {
     mavenCentral()
 }
 
+def osName = System.getProperty('os.name').toLowerCase()
+def javafxPlatform = osName.contains('windows') ? 'win' : (osName.contains('mac') ? 'mac' : 'linux')
+
 dependencies {
+    implementation "org.openjfx:javafx-controls:21:${javafxPlatform}"
+    implementation "org.openjfx:javafx-graphics:21:${javafxPlatform}"
+    implementation "org.openjfx:javafx-base:21:${javafxPlatform}"
+
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
