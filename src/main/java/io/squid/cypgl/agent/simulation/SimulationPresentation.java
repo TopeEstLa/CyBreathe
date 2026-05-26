@@ -197,9 +197,11 @@ public class SimulationPresentation extends BorderPane {
         RadioButton airRadio = new RadioButton("AIR");
         RadioButton treeRadio = new RadioButton("TREE");
         RadioButton factoryRadio = new RadioButton("FACTORY");
+        RadioButton buildingRadio = new RadioButton("BUILDING");
         airRadio.setToggleGroup(cellTypeGroup);
         treeRadio.setToggleGroup(cellTypeGroup);
         factoryRadio.setToggleGroup(cellTypeGroup);
+        buildingRadio.setToggleGroup(cellTypeGroup);
         cellTypeGroup.selectToggle(treeRadio);
 
         // Custom rate controls
@@ -227,7 +229,7 @@ public class SimulationPresentation extends BorderPane {
 
         brushBox.getChildren().addAll(
                 brushHeading, individualRadio, brushRadio, zoneRadio, new Separator(),
-                typeLabel, airRadio, treeRadio, factoryRadio, new Separator(),
+                typeLabel, airRadio, treeRadio, factoryRadio, buildingRadio, new Separator(),
                 randomRateCheckbox, brushCustomRateLabel, brushCustomRateSlider
         );
 
@@ -390,6 +392,7 @@ public class SimulationPresentation extends BorderPane {
             case "AIR" -> new AirCellType();
             case "TREE" -> new TreeCellType();
             case "FACTORY" -> new FactoryCellType();
+            case "BUILDING" -> new BuildingCellType();
             default -> new AirCellType();
         };
     }

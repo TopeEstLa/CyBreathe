@@ -59,11 +59,20 @@ public class CellPresentation extends StackPane {
         Color cellColor;
 
         switch (typeName) {
+            case "BUILDING" -> {
+                // Solid concrete gray obstacle with clean dark border
+                cellColor = Color.web("#757575");
+                borderRect.setFill(cellColor);
+                borderRect.setStroke(Color.web("#424242"));
+                borderRect.setStrokeWidth(1.5); // Thicker wall border
+                statusNode.setVisible(false);
+            }
             case "FACTORY" -> {
                 // Sleek industrial metallic gray
                 cellColor = Color.web("#37474f");
                 borderRect.setFill(cellColor);
                 borderRect.setStroke(Color.web("#263238"));
+                borderRect.setStrokeWidth(0.5);
 
                 // Scale factory core orange glow based on individual generation capacity
                 double baseRadius = (borderRect.getWidth() - 2) / 4.0;
@@ -76,6 +85,7 @@ public class CellPresentation extends StackPane {
                 cellColor = Color.web("#2e7d32");
                 borderRect.setFill(cellColor);
                 borderRect.setStroke(cellColor.darker());
+                borderRect.setStrokeWidth(0.5);
 
                 // Scale leaf circle size based on individual absorption capacity
                 double baseRadius = (borderRect.getWidth() - 2) / 4.0;
@@ -91,6 +101,7 @@ public class CellPresentation extends StackPane {
                 cellColor = freshBlue.interpolate(smokyPurple, Math.clamp(pollutionLevel, 0.0, 1.0));
                 borderRect.setFill(cellColor);
                 borderRect.setStroke(Color.web("#cfd8dc"));
+                borderRect.setStrokeWidth(0.5);
 
                 statusNode.setVisible(false);
             }

@@ -115,6 +115,39 @@ public class CyPGLTest {
     }
 
     @Test
+    public void testBuildingBlocksPollution() {
+        GridAbstraction grid = new GridAbstraction(3, 3);
+        
+        // (1, 1) is BUILDING
+        grid.setCell(1, 1, new CellAbstraction(1, 1, new BuildingCellType(), 0.0));
+        
+        // Populate others as AIR
+        for (int x = 0; x < 3; x++) {
+            for (int y = 0; y < 3; y++) {
+                if (x == 1 && y == 1) continue;
+                grid.setCell(x, y, new CellAbstraction(x, y, new AirCellType(), 0.0));
+            }
+        }
+        
+        // Set all neighbors of (1, 2) to 1.0 (excluding (1, 1) which is BUILDING)
+        // Neighbors of (1, 2) in a 3x3 grid are: (0, 1), (1, 1) BUILDING, (2, 1), (0, 2), (2, 2)
+        grid.getCell(0, 1).setPollutionLevel(1.0);
+        grid.getCell(2, 1).setPollutionLevel(1.0);
+        grid.getCell(0, 2).setPollutionLevel(1.0);
+        grid.getCell(2, 2).setPollutionLevel(1.0);
+        
+        CellAbstraction testCell = grid.getCell(1, 2);
+        assertEquals(0.0, testCell.getPollutionLevel());
+        
+        // Compute next state on testCell
+        testCell.getType().computeNextState(testCell, grid, params);
+        
+        // Expected avg of active neighbors: (1.0 * 4) / 4 = 1.0 (completely ignoring (1, 1) BUILDING)
+        // nextPollution = 0.0 + 0.5 * (1.0 - 0.0) = 0.5
+        assertEquals(0.5, testCell.getNextPollutionLevel(), 0.0001);
+    }
+
+    @Test
     public void testBinarySerialization() throws IOException, ClassNotFoundException {
         SimulationAbstraction originalAbs = new SimulationAbstraction(2, 2);
         originalAbs.getGrid().setCell(0, 0, new CellAbstraction(0, 0, new FactoryCellType(), 1.0));

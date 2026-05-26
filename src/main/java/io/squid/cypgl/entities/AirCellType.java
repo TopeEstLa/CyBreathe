@@ -37,17 +37,24 @@ public class AirCellType implements CellType {
     public void computeNextState(CellAbstraction cell, GridAbstraction grid, SimulationParameters params) {
         List<CellAbstraction> neighbors = grid.getNeighbors(cell.getX(), cell.getY());
         double sum = 0.0;
+        int activeNeighborsCount = 0;
         double neighborAbsorptionSum = 0.0;
 
         for (CellAbstraction neighbor : neighbors) {
+            if (neighbor.getType() instanceof BuildingCellType) {
+                // Ignore building cells completely so they act as solid obstacles
+                continue;
+            }
             sum += neighbor.getPollutionLevel();
+            activeNeighborsCount++;
+            
             if (neighbor.getType() instanceof TreeCellType) {
                 // Tree customRate determines its absorption strength
                 neighborAbsorptionSum += params.getAbsorptionRate() * 0.5 * neighbor.getCustomRate();
             }
         }
 
-        double avg = neighbors.isEmpty() ? cell.getPollutionLevel() : sum / neighbors.size();
+        double avg = activeNeighborsCount == 0 ? cell.getPollutionLevel() : sum / activeNeighborsCount;
         double nextPollution = cell.getPollutionLevel() + params.getDiffusionRate() * (avg - cell.getPollutionLevel());
 
         // Subtract neighboring tree absorption

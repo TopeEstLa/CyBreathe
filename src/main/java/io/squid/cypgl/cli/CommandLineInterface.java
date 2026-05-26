@@ -192,6 +192,7 @@ public class CommandLineInterface {
             case "AIR" -> new AirCellType();
             case "TREE" -> new TreeCellType();
             case "FACTORY" -> new FactoryCellType();
+            case "BUILDING" -> new BuildingCellType();
             default -> null;
         };
     }
@@ -262,7 +263,7 @@ public class CommandLineInterface {
         System.out.print("  +");
         System.out.print("--".repeat(w));
         System.out.println("+");
-        System.out.println("Legend: . (Clean Air), ░/▒/▓/█ (Polluted Air levels), T (Tree), # (Factory), x (Dead Tree)");
+        System.out.println("Legend: . (Clean Air), ░/▒/▓/█ (Polluted Air levels), T (Tree), # (Factory), B (Building)");
     }
 
     private void showStats() {
@@ -271,7 +272,7 @@ public class CommandLineInterface {
         int totalCells = grid.getWidth() * grid.getHeight();
 
         // Get count
-        int trees = 0, factories = 0, air = 0;
+        int trees = 0, factories = 0, air = 0, buildings = 0;
         double totalPollution = 0.0;
 
         for (int x = 0; x < grid.getWidth(); x++) {
@@ -283,6 +284,7 @@ public class CommandLineInterface {
                     case "TREE" -> trees++;
                     case "FACTORY" -> factories++;
                     case "AIR" -> air++;
+                    case "BUILDING" -> buildings++;
                 }
             }
         }
@@ -297,6 +299,7 @@ public class CommandLineInterface {
         System.out.printf("  - AIR       : %d (%.1f%%)%n", air, (double) air / totalCells * 100);
         System.out.printf("  - TREE      : %d (%.1f%%)%n", trees, (double) trees / totalCells * 100);
         System.out.printf("  - FACTORY   : %d (%.1f%%)%n", factories, (double) factories / totalCells * 100);
+        System.out.printf("  - BUILDING  : %d (%.1f%%)%n", buildings, (double) buildings / totalCells * 100);
         System.out.println("Parameters:");
         System.out.printf("  - Diffusion Rate  : %.2f%n", abs.getParameters().getDiffusionRate());
         System.out.printf("  - Absorption Rate : %.2f%n", abs.getParameters().getAbsorptionRate());
