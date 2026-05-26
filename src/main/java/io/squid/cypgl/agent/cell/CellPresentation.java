@@ -1,10 +1,6 @@
 package io.squid.cypgl.agent.cell;
 
-import io.squid.cypgl.model.CellType;
-import javafx.geometry.Insets;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
+import io.squid.cypgl.entities.CellType;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -42,7 +38,7 @@ public class CellPresentation extends StackPane {
     /**
      * Renders the cell visually according to its type, pollution level, and health.
      */
-    public void draw(CellType type, double pollutionLevel, double health) {
+    public void draw(CellType type, double pollutionLevel) {
         String typeName = type.getName();
         Color cellColor;
         
@@ -58,25 +54,13 @@ public class CellPresentation extends StackPane {
                 statusNode.setVisible(true);
             }
             case "TREE" -> {
-                // Rich organic forest green, transitioning to yellow/olive depending on health
-                Color healthyGreen = Color.web("#2e7d32");
-                Color damagedYellow = Color.web("#c0ca33");
-                
-                cellColor = healthyGreen.interpolate(damagedYellow, 1.0 - health);
+                // Rich organic forest green
+                cellColor = Color.web("#2e7d32");
                 borderRect.setFill(cellColor);
                 borderRect.setStroke(cellColor.darker());
                 
                 // Add a small leaf-like circle inside
                 statusNode.setFill(Color.web("#1b5e20"));
-                statusNode.setVisible(true);
-            }
-            case "DEAD_TREE" -> {
-                // Barren, withered brown tree stump
-                cellColor = Color.web("#5d4037");
-                borderRect.setFill(cellColor);
-                borderRect.setStroke(Color.web("#3e2723"));
-                
-                statusNode.setFill(Color.web("#8d6e63"));
                 statusNode.setVisible(true);
             }
             default -> { // AIR

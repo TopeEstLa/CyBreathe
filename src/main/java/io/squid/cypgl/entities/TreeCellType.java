@@ -1,4 +1,4 @@
-package io.squid.cypgl.model;
+package io.squid.cypgl.entities;
 
 import io.squid.cypgl.agent.cell.CellAbstraction;
 import io.squid.cypgl.agent.grid.GridAbstraction;
@@ -26,37 +26,16 @@ public class TreeCellType implements CellType {
 
     @Override
     public void computeNextState(CellAbstraction cell, GridAbstraction grid, SimulationParameters params) {
-        // 1. Absorb pollution locally
+        // Absorb pollution locally
         double nextPollution = cell.getPollutionLevel() - params.getAbsorptionRate();
         cell.setNextPollutionLevel(Math.max(0.0, nextPollution));
-
-        // 2. Determine health changes based on exposure to pollution
-        double nextHealth = cell.getHealth();
-        if (cell.getPollutionLevel() > params.getTreePollutionThreshold()) {
-            // Highly polluted: decay health
-            nextHealth -= params.getTreeDecayRate();
-        } else {
-            // Clean air: recover health
-            nextHealth += params.getTreeRecoveryRate();
-        }
-        nextHealth = Math.clamp(nextHealth, 0.0, 1.0);
-        cell.setNextHealth(nextHealth);
-
-        // 3. Handle death cycle
-        if (nextHealth <= 0.0) {
-            // Tree dies: transition to DEAD_TREE type
-            cell.setNextType(new DeadTreeCellType());
-            cell.setNextHealth(0.0);
-        } else {
-            cell.setNextType(this);
-        }
+        
+        cell.setNextType(this);
     }
 
     @Override
     public void commitState(CellAbstraction cell) {
         cell.setPollutionLevel(cell.getNextPollutionLevel());
         cell.setType(cell.getNextType());
-        cell.setHealth(cell.getNextHealth());
-        cell.incrementAge();
     }
 }

@@ -46,7 +46,7 @@ public class GridAbstraction implements Serializable {
     }
 
     /**
-     * Retrieves Bounded Moore neighbors (8 orthogonal and diagonal directions, ignoring out of bounds).
+     * Moore neighbors (8 orthogonal and diagonal directions, ignoring out of bounds).
      */
     public List<CellAbstraction> getNeighbors(int x, int y) {
         List<CellAbstraction> neighbors = new ArrayList<>();

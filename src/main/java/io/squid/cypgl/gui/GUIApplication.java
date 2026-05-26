@@ -4,7 +4,7 @@ import io.squid.cypgl.agent.cell.CellAbstraction;
 import io.squid.cypgl.agent.simulation.SimulationAbstraction;
 import io.squid.cypgl.agent.simulation.SimulationControl;
 import io.squid.cypgl.agent.simulation.SimulationPresentation;
-import io.squid.cypgl.model.AirCellType;
+import io.squid.cypgl.entities.AirCellType;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

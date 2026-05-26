@@ -3,9 +3,8 @@ package io.squid.cypgl.agent.simulation;
 import io.squid.cypgl.agent.grid.GridAbstraction;
 import io.squid.cypgl.agent.grid.GridControl;
 import io.squid.cypgl.agent.grid.GridPresentation;
-import io.squid.cypgl.model.*;
+import io.squid.cypgl.entities.*;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
@@ -227,7 +226,7 @@ public class SimulationPresentation extends BorderPane {
 
         ratesBox.getChildren().addAll(
             ratesHeading,
-            new Label("Diffusion Speed:"), diffusionSlider,
+            new Label("Diffusion Rate:"), diffusionSlider,
             new Label("Absorption Power:"), absorptionSlider,
             new Label("Factory Output:"), generationSlider,
             new Label("Tick Delay (ms):"), speedSlider

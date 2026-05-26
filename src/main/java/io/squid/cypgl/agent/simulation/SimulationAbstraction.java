@@ -1,7 +1,7 @@
 package io.squid.cypgl.agent.simulation;
 
 import io.squid.cypgl.agent.grid.GridAbstraction;
-import io.squid.cypgl.model.SimulationParameters;
+import io.squid.cypgl.entities.SimulationParameters;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;

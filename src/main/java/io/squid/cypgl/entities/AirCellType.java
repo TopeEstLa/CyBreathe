@@ -1,7 +1,9 @@
-package io.squid.cypgl.model;
+package io.squid.cypgl.entities;
 
 import io.squid.cypgl.agent.cell.CellAbstraction;
 import io.squid.cypgl.agent.grid.GridAbstraction;
+
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -11,6 +13,7 @@ import java.util.List;
  * @author TopeEstLa
  */
 public class AirCellType implements CellType {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -50,14 +53,11 @@ public class AirCellType implements CellType {
         
         cell.setNextPollutionLevel(nextPollution);
         cell.setNextType(this);
-        cell.setNextHealth(cell.getHealth());
     }
 
     @Override
     public void commitState(CellAbstraction cell) {
         cell.setPollutionLevel(cell.getNextPollutionLevel());
         cell.setType(cell.getNextType());
-        cell.setHealth(cell.getNextHealth());
-        cell.incrementAge();
     }
 }

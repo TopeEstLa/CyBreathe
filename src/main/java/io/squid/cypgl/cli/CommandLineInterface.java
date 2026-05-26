@@ -4,7 +4,7 @@ import io.squid.cypgl.agent.cell.CellAbstraction;
 import io.squid.cypgl.agent.grid.GridAbstraction;
 import io.squid.cypgl.agent.simulation.SimulationAbstraction;
 import io.squid.cypgl.agent.simulation.SimulationControl;
-import io.squid.cypgl.model.*;
+import io.squid.cypgl.entities.*;
 import java.io.File;
 import java.util.Scanner;
 
@@ -106,7 +106,7 @@ public class CommandLineInterface {
 
                 CellType type = parseCellType(typeStr);
                 if (type == null) {
-                    System.out.println("Unknown type: " + typeStr + ". Choose from: AIR, TREE, FACTORY, DEAD_TREE");
+                    System.out.println("Unknown type: " + typeStr + ". Choose from: AIR, TREE, FACTORY");
                     return;
                 }
 
@@ -118,12 +118,7 @@ public class CommandLineInterface {
 
                 simulationControl.getGridControl().setCellType(x, y, type);
                 simulationControl.getGridControl().getCellControl(x, y).setPollution(pollution);
-                
-                // Seed tree health to full on manual placement
-                if (type instanceof TreeCellType) {
-                    simulationControl.getGridControl().getCellControl(x, y).getAbstraction().setHealth(1.0);
-                }
-                
+
                 simulationControl.recordCurrentStats();
                 System.out.printf("Set cell (%d, %d) to %s (pollution: %.2f)%n", x, y, type.getName(), pollution);
             }
@@ -190,7 +185,6 @@ public class CommandLineInterface {
             case "AIR" -> new AirCellType();
             case "TREE" -> new TreeCellType();
             case "FACTORY" -> new FactoryCellType();
-            case "DEAD_TREE" -> new DeadTreeCellType();
             default -> null;
         };
     }
@@ -270,7 +264,7 @@ public class CommandLineInterface {
         int totalCells = grid.getWidth() * grid.getHeight();
 
         // Get count
-        int trees = 0, factories = 0, air = 0, dead = 0;
+        int trees = 0, factories = 0, air = 0;
         double totalPollution = 0.0;
 
         for (int x = 0; x < grid.getWidth(); x++) {
@@ -282,7 +276,6 @@ public class CommandLineInterface {
                     case "TREE" -> trees++;
                     case "FACTORY" -> factories++;
                     case "AIR" -> air++;
-                    case "DEAD_TREE" -> dead++;
                 }
             }
         }
@@ -297,7 +290,6 @@ public class CommandLineInterface {
         System.out.printf("  - AIR       : %d (%.1f%%)%n", air, (double) air / totalCells * 100);
         System.out.printf("  - TREE      : %d (%.1f%%)%n", trees, (double) trees / totalCells * 100);
         System.out.printf("  - FACTORY   : %d (%.1f%%)%n", factories, (double) factories / totalCells * 100);
-        System.out.printf("  - DEAD_TREE : %d (%.1f%%)%n", dead, (double) dead / totalCells * 100);
         System.out.println("Parameters:");
         System.out.printf("  - Diffusion Rate  : %.2f%n", abs.getParameters().getDiffusionRate());
         System.out.printf("  - Absorption Rate : %.2f%n", abs.getParameters().getAbsorptionRate());
@@ -310,7 +302,7 @@ public class CommandLineInterface {
         System.out.println("  init <width> <height>              - Create a clean grid of specified dimensions.");
         System.out.println("  show                               - Render the grid visually in ASCII format.");
         System.out.println("  tick [count]                       - Run simulation for count ticks (default 1).");
-        System.out.println("  set <x> <y> <type> [pollution]     - Place a cell (AIR, TREE, FACTORY, DEAD_TREE) at (x, y) and set optional pollution.");
+        System.out.println("  set <x> <y> <type> [pollution]     - Place a cell (AIR, TREE, FACTORY) at (x, y) and set optional pollution.");
         System.out.println("  random <type> <percentage>         - Randomly seed a % of clean cells with specified type.");
         System.out.println("  stats                              - View grid configurations and cell statistics.");
         System.out.println("  config <param> <value>             - Set parameters:");

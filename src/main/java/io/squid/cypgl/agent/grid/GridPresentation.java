@@ -3,7 +3,7 @@ package io.squid.cypgl.agent.grid;
 import io.squid.cypgl.agent.cell.CellAbstraction;
 import io.squid.cypgl.agent.cell.CellControl;
 import io.squid.cypgl.agent.cell.CellPresentation;
-import io.squid.cypgl.model.CellType;
+import io.squid.cypgl.entities.CellType;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import java.util.function.Supplier;
@@ -108,24 +108,11 @@ public class GridPresentation extends GridPane {
         }
     }
 
-    /**
-     * Helper to apply the active brush paint/toggle to a specific cell coordinate.
-     */
     private void applyActivePaint(int x, int y) {
         CellType brushType = activeBrushTypeSupplier.get();
         CellControl ctrl = gridControl.getCellControl(x, y);
         if (ctrl != null && brushType != null) {
-            String mode = activeBrushModeSupplier.get();
-            if ("INDIVIDUAL".equals(mode)) {
-                // Individual mode: toggle tree back to life if it is a dead tree, or toggle/place otherwise
-                if (ctrl.getAbstraction().getType().getName().equals("DEAD_TREE") && brushType.getName().equals("TREE")) {
-                    ctrl.replantTree(brushType);
-                } else {
-                    ctrl.setCellType(brushType);
-                }
-            } else { // BRUSH mode
-                ctrl.setCellType(brushType);
-            }
+            ctrl.setCellType(brushType);
         }
     }
 }

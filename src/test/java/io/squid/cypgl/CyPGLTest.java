@@ -3,8 +3,7 @@ package io.squid.cypgl;
 import io.squid.cypgl.agent.cell.CellAbstraction;
 import io.squid.cypgl.agent.grid.GridAbstraction;
 import io.squid.cypgl.agent.simulation.SimulationAbstraction;
-import io.squid.cypgl.agent.simulation.SimulationControl;
-import io.squid.cypgl.model.*;
+import io.squid.cypgl.entities.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.File;
@@ -96,46 +95,22 @@ public class CyPGLTest {
     }
 
     @Test
-    public void testTreeAbsorptionAndHealthDecay() {
+    public void testTreeAbsorption() {
         GridAbstraction grid = new GridAbstraction(1, 1);
         CellAbstraction cell = new CellAbstraction(0, 0, new TreeCellType(), 0.8);
         grid.setCell(0, 0, cell);
 
-        cell.setHealth(1.0);
 
         // Absorption: 0.8 - absorptionRate (0.2) = 0.6
-        // Health Decay: since pollution 0.8 > threshold (0.5), health decays by decayRate (0.05) to 0.95
+        // Health should remain locked at 1.0 (permanently alive)
         cell.getType().computeNextState(cell, grid, params);
         
         assertEquals(0.6, cell.getNextPollutionLevel(), 0.0001);
-        assertEquals(0.95, cell.getNextHealth(), 0.0001);
         assertEquals("TREE", cell.getNextType().getName());
 
         // Commit
         cell.getType().commitState(cell);
         assertEquals(0.6, cell.getPollutionLevel(), 0.0001);
-        assertEquals(0.95, cell.getHealth(), 0.0001);
-    }
-
-    @Test
-    public void testTreeDeathCycle() {
-        GridAbstraction grid = new GridAbstraction(1, 1);
-        CellAbstraction cell = new CellAbstraction(0, 0, new TreeCellType(), 1.0);
-        grid.setCell(0, 0, cell);
-
-        // Force low health
-        cell.setHealth(0.04);
-
-        // Compute: nextHealth = 0.04 - 0.05 = -0.01 (clamped to 0.0) -> transitions to DEAD_TREE
-        cell.getType().computeNextState(cell, grid, params);
-
-        assertEquals(0.0, cell.getNextHealth());
-        assertEquals("DEAD_TREE", cell.getNextType().getName());
-
-        // Commit
-        cell.getType().commitState(cell);
-        assertEquals("DEAD_TREE", cell.getType().getName());
-        assertEquals(0.0, cell.getHealth());
     }
 
     @Test
@@ -144,7 +119,7 @@ public class CyPGLTest {
         originalAbs.getGrid().setCell(0, 0, new CellAbstraction(0, 0, new FactoryCellType(), 1.0));
         originalAbs.getGrid().setCell(0, 1, new CellAbstraction(0, 1, new TreeCellType(), 0.5));
         originalAbs.getGrid().setCell(1, 0, new CellAbstraction(1, 0, new AirCellType(), 0.1));
-        originalAbs.getGrid().setCell(1, 1, new CellAbstraction(1, 1, new DeadTreeCellType(), 0.0));
+        originalAbs.getGrid().setCell(1, 1, new CellAbstraction(1, 1, new AirCellType(), 0.0));
         
         originalAbs.getParameters().setDiffusionRate(0.44);
         originalAbs.recordStats(0.4, 1, 1, 2);
@@ -167,7 +142,7 @@ public class CyPGLTest {
             assertEquals("FACTORY", restoredAbs.getGrid().getCell(0, 0).getType().getName());
             assertEquals("TREE", restoredAbs.getGrid().getCell(0, 1).getType().getName());
             assertEquals("AIR", restoredAbs.getGrid().getCell(1, 0).getType().getName());
-            assertEquals("DEAD_TREE", restoredAbs.getGrid().getCell(1, 1).getType().getName());
+            assertEquals("AIR", restoredAbs.getGrid().getCell(1, 1).getType().getName());
             
             assertEquals(1.0, restoredAbs.getGrid().getCell(0, 0).getPollutionLevel());
             assertEquals(0.5, restoredAbs.getGrid().getCell(0, 1).getPollutionLevel());

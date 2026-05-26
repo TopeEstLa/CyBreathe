@@ -1,6 +1,6 @@
 package io.squid.cypgl.agent.cell;
 
-import io.squid.cypgl.model.CellType;
+import io.squid.cypgl.entities.CellType;
 import java.io.Serializable;
 
 /**
@@ -18,13 +18,10 @@ public class CellAbstraction implements Serializable {
     // Active state variables
     private CellType type;
     private double pollutionLevel;
-    private double health; // e.g. for TREE (0.0 to 1.0)
-    private int age;
 
     // Double-buffered variables for order-independent grid updates
     private CellType nextType;
     private double nextPollutionLevel;
-    private double nextHealth;
 
     public CellAbstraction(int x, int y, CellType type, double initialPollution) {
         this.x = x;
@@ -33,9 +30,6 @@ public class CellAbstraction implements Serializable {
         this.nextType = type;
         this.pollutionLevel = Math.clamp(initialPollution, 0.0, 1.0);
         this.nextPollutionLevel = this.pollutionLevel;
-        this.health = 1.0;
-        this.nextHealth = 1.0;
-        this.age = 0;
     }
 
     public int getX() {
@@ -79,40 +73,11 @@ public class CellAbstraction implements Serializable {
         this.nextPollutionLevel = Math.clamp(nextPollutionLevel, 0.0, 1.0);
     }
 
-    public double getHealth() {
-        return health;
-    }
-
-    public void setHealth(double health) {
-        this.health = Math.clamp(health, 0.0, 1.0);
-    }
-
-    public double getNextHealth() {
-        return nextHealth;
-    }
-
-    public void setNextHealth(double nextHealth) {
-        this.nextHealth = Math.clamp(nextHealth, 0.0, 1.0);
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public void incrementAge() {
-        this.age++;
-    }
-
     /**
      * Resets next state values to match the current state.
      */
     public void resetNextBuffer() {
         this.nextType = this.type;
         this.nextPollutionLevel = this.pollutionLevel;
-        this.nextHealth = this.health;
     }
 }

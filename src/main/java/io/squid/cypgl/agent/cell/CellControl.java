@@ -1,8 +1,8 @@
 package io.squid.cypgl.agent.cell;
 
 import io.squid.cypgl.agent.grid.GridAbstraction;
-import io.squid.cypgl.model.CellType;
-import io.squid.cypgl.model.SimulationParameters;
+import io.squid.cypgl.entities.CellType;
+import io.squid.cypgl.entities.SimulationParameters;
 
 /**
  * Control layer in the PAC architecture for a Cell agent.
@@ -67,22 +67,11 @@ public class CellControl {
     }
 
     /**
-     * Programmatically replants a dead tree with a healthy green tree.
-     */
-    public void replantTree(CellType treeType) {
-        abstraction.setType(treeType);
-        abstraction.setHealth(1.0);
-        abstraction.setPollutionLevel(0.0);
-        abstraction.resetNextBuffer();
-        updatePresentation();
-    }
-
-    /**
      * Triggers the Presentation layer (if active) to redraw reflecting current Abstraction data.
      */
     public void updatePresentation() {
         if (presentation != null) {
-            presentation.draw(abstraction.getType(), abstraction.getPollutionLevel(), abstraction.getHealth());
+            presentation.draw(abstraction.getType(), abstraction.getPollutionLevel());
         }
     }
 }

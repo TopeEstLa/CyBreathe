@@ -2,8 +2,8 @@ package io.squid.cypgl.agent.grid;
 
 import io.squid.cypgl.agent.cell.CellAbstraction;
 import io.squid.cypgl.agent.cell.CellControl;
-import io.squid.cypgl.model.CellType;
-import io.squid.cypgl.model.SimulationParameters;
+import io.squid.cypgl.entities.CellType;
+import io.squid.cypgl.entities.SimulationParameters;
 import java.util.Random;
 
 /**

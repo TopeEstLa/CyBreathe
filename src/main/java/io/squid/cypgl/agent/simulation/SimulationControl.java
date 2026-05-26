@@ -3,7 +3,7 @@ package io.squid.cypgl.agent.simulation;
 import io.squid.cypgl.agent.cell.CellAbstraction;
 import io.squid.cypgl.agent.grid.GridAbstraction;
 import io.squid.cypgl.agent.grid.GridControl;
-import io.squid.cypgl.model.SimulationParameters;
+
 import java.io.File;
 import java.io.IOException;
 

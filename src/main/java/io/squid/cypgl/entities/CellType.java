@@ -1,4 +1,4 @@
-package io.squid.cypgl.model;
+package io.squid.cypgl.entities;
 
 import io.squid.cypgl.agent.cell.CellAbstraction;
 import io.squid.cypgl.agent.grid.GridAbstraction;

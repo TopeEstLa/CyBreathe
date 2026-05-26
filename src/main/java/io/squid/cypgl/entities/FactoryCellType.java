@@ -1,4 +1,4 @@
-package io.squid.cypgl.model;
+package io.squid.cypgl.entities;
 
 import io.squid.cypgl.agent.cell.CellAbstraction;
 import io.squid.cypgl.agent.grid.GridAbstraction;
@@ -28,14 +28,11 @@ public class FactoryCellType implements CellType {
         // Factory pollution is locked at maximum
         cell.setNextPollutionLevel(1.0);
         cell.setNextType(this);
-        cell.setNextHealth(cell.getHealth());
     }
 
     @Override
     public void commitState(CellAbstraction cell) {
         cell.setPollutionLevel(1.0); // Ensure it is exactly 1.0
         cell.setType(cell.getNextType());
-        cell.setHealth(cell.getNextHealth());
-        cell.incrementAge();
     }
 }
