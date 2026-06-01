@@ -25,7 +25,6 @@ public class BuildingCellType implements CellType {
 
     @Override
     public void computeNextState(CellAbstraction cell, GridAbstraction grid, SimulationParameters params) {
-        // Buildings lock their pollution at 0.0
         cell.setNextPollutionLevel(0.0);
         cell.setNextType(this);
     }

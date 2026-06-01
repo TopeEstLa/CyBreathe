@@ -42,14 +42,12 @@ public class AirCellType implements CellType {
 
         for (CellAbstraction neighbor : neighbors) {
             if (neighbor.getType() instanceof BuildingCellType) {
-                // Ignore building cells completely so they act as solid obstacles
                 continue;
             }
             sum += neighbor.getPollutionLevel();
             activeNeighborsCount++;
             
             if (neighbor.getType() instanceof TreeCellType) {
-                // Tree customRate determines its absorption strength
                 neighborAbsorptionSum += params.getAbsorptionRate() * 0.5 * neighbor.getCustomRate();
             }
         }
@@ -57,7 +55,6 @@ public class AirCellType implements CellType {
         double avg = activeNeighborsCount == 0 ? cell.getPollutionLevel() : sum / activeNeighborsCount;
         double nextPollution = cell.getPollutionLevel() + params.getDiffusionRate() * (avg - cell.getPollutionLevel());
 
-        // Subtract neighboring tree absorption
         nextPollution -= neighborAbsorptionSum;
 
         cell.setNextPollutionLevel(nextPollution);

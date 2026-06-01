@@ -11,7 +11,6 @@ import java.io.Serializable;
 public class SimulationParameters implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    // Rates of change
     private double diffusionRate = 0.3;     // Speed at which pollution spreads from Air cells (0.0 to 1.0)
     private double absorptionRate = 0.15;   // Rate at which Trees absorb pollution (0.0 to 1.0)
     private double generationRate = 0.5;   // Rate at which Factories emit pollution to neighbors (0.0 to 1.0)
