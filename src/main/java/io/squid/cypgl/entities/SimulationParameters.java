@@ -14,6 +14,9 @@ public class SimulationParameters implements Serializable {
     private double diffusionRate = 0.3;     // Speed at which pollution spreads from Air cells (0.0 to 1.0)
     private double absorptionRate = 0.15;   // Rate at which Trees absorb pollution (0.0 to 1.0)
     private double generationRate = 0.5;   // Rate at which Factories emit pollution to neighbors (0.0 to 1.0)
+    
+    private WindDirection windDirection = WindDirection.NONE; // Direction of atmospheric wind
+    private double windStrength = 0.5;      // Strength of the wind advection effect (0.0 to 1.0)
 
     public double getDiffusionRate() {
         return diffusionRate;
@@ -37,5 +40,21 @@ public class SimulationParameters implements Serializable {
 
     public void setGenerationRate(double generationRate) {
         this.generationRate = Math.clamp(generationRate, 0.0, 1.0);
+    }
+
+    public WindDirection getWindDirection() {
+        return windDirection;
+    }
+
+    public void setWindDirection(WindDirection windDirection) {
+        this.windDirection = windDirection != null ? windDirection : WindDirection.NONE;
+    }
+
+    public double getWindStrength() {
+        return windStrength;
+    }
+
+    public void setWindStrength(double windStrength) {
+        this.windStrength = Math.clamp(windStrength, 0.0, 1.0);
     }
 }

@@ -214,7 +214,25 @@ public class CommandLineInterface {
                 p.setGenerationRate(Double.parseDouble(val));
                 System.out.printf("Generation rate set to %.2f%n", p.getGenerationRate());
             }
-            default -> System.out.println("Unknown config parameter. Use: diffusion, absorption, generation");
+            case "wind_direction" -> {
+                try {
+                    WindDirection dir = WindDirection.valueOf(val.toUpperCase().replace("-", "_"));
+                    p.setWindDirection(dir);
+                    System.out.printf("Wind direction set to %s%n", p.getWindDirection());
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid direction. Use one of: NONE, NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST");
+                }
+            }
+            case "wind_strength" -> {
+                try {
+                    double str = Double.parseDouble(val);
+                    p.setWindStrength(str);
+                    System.out.printf("Wind strength set to %.2f%n", p.getWindStrength());
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid strength value. Must be a double between 0.0 and 1.0.");
+                }
+            }
+            default -> System.out.println("Unknown config parameter. Use: diffusion, absorption, generation, wind_direction, wind_strength");
         }
     }
 
@@ -304,6 +322,8 @@ public class CommandLineInterface {
         System.out.printf("  - Diffusion Rate  : %.2f%n", abs.getParameters().getDiffusionRate());
         System.out.printf("  - Absorption Rate : %.2f%n", abs.getParameters().getAbsorptionRate());
         System.out.printf("  - Generation Rate : %.2f%n", abs.getParameters().getGenerationRate());
+        System.out.printf("  - Wind Direction  : %s%n", abs.getParameters().getWindDirection());
+        System.out.printf("  - Wind Strength   : %.2f%n", abs.getParameters().getWindStrength());
     }
 
     private void printHelp() {
@@ -319,6 +339,8 @@ public class CommandLineInterface {
         System.out.println("                                         - diffusion <0.0 - 1.0>");
         System.out.println("                                         - absorption <0.0 - 1.0>");
         System.out.println("                                         - generation <0.0 - 1.0>");
+        System.out.println("                                         - wind_direction <NONE/NORTH/EAST/SOUTH/WEST/...>");
+        System.out.println("                                         - wind_strength <0.0 - 1.0>");
         System.out.println("  save <filename>                    - Save current simulation state to a binary file.");
         System.out.println("  load <filename>                    - Load a simulation state from a binary file.");
         System.out.println("  exit / quit                        - Terminate the application.");

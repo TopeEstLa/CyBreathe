@@ -148,6 +148,35 @@ public class CyPGLTest {
     }
 
     @Test
+    public void testWindAdvectionMath() {
+        GridAbstraction grid = new GridAbstraction(3, 3);
+        for (int x = 0; x < 3; x++) {
+            for (int y = 0; y < 3; y++) {
+                grid.setCell(x, y, new CellAbstraction(x, y, new AirCellType(), 0.0));
+            }
+        }
+        
+        // Set a source of pollution in the center
+        grid.getCell(1, 1).setPollutionLevel(1.0);
+        
+        // Configure EAST wind (blowing West to East)
+        params.setWindDirection(WindDirection.EAST);
+        params.setWindStrength(1.0);
+        
+        CellAbstraction eastCell = grid.getCell(2, 1);  // Downstream cell
+        CellAbstraction westCell = grid.getCell(0, 1);  // Upstream cell
+        
+        eastCell.getType().computeNextState(eastCell, grid, params);
+        westCell.getType().computeNextState(westCell, grid, params);
+        
+        // Downstream cell should receive significantly more pollution than the upstream cell
+        assertTrue(eastCell.getNextPollutionLevel() > westCell.getNextPollutionLevel(),
+                "Downstream cell must receive higher pollution under easterly wind.");
+        assertEquals(0.0, westCell.getNextPollutionLevel(), 0.0001,
+                "Upstream cell should get zero contribution from easterly wind since its weight is clamped to 0.0.");
+    }
+
+    @Test
     public void testBinarySerialization() throws IOException, ClassNotFoundException {
         SimulationAbstraction originalAbs = new SimulationAbstraction(2, 2);
         originalAbs.getGrid().setCell(0, 0, new CellAbstraction(0, 0, new FactoryCellType(), 1.0));

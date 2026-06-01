@@ -15,7 +15,9 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -50,6 +52,11 @@ public class SimulationPresentation extends BorderPane {
     private CheckBox randomRateCheckbox;
     private Slider brushCustomRateSlider;
     private Label brushCustomRateLabel;
+
+    // Wind controls
+    private Slider windStrengthSlider;
+    private Label windStrengthLabel;
+    private final Map<WindDirection, Button> windDirButtons = new HashMap<>();
 
     // Stats Labels
     private Label statsSummaryLabel;
@@ -253,6 +260,51 @@ public class SimulationPresentation extends BorderPane {
         });
         seedBox.getChildren().addAll(seedHeading, new Label("Coverage (%):"), massSeedSlider, seedBtn);
 
+        // 3. Wind Control Configuration
+        VBox windBox = new VBox(8);
+        windBox.setStyle("-fx-border-color: #cfd8dc; -fx-border-width: 1; -fx-border-radius: 4; -fx-padding: 10; -fx-background-color: white;");
+        Label windHeading = new Label("Wind Settings");
+        windHeading.setStyle("-fx-font-weight: bold; -fx-text-fill: #1a237e;");
+
+        // Grid of Direction Buttons (3x3 compass layout)
+        GridPane compassGrid = new GridPane();
+        compassGrid.setHgap(5);
+        compassGrid.setVgap(5);
+        compassGrid.setAlignment(Pos.CENTER);
+
+        // Compass layout mapping: row, col -> Direction
+        setupCompassButton(compassGrid, WindDirection.NORTH_WEST, "NW", 0, 0);
+        setupCompassButton(compassGrid, WindDirection.NORTH, "N ⬆", 0, 1);
+        setupCompassButton(compassGrid, WindDirection.NORTH_EAST, "NE", 0, 2);
+        setupCompassButton(compassGrid, WindDirection.WEST, "W ⬅", 1, 0);
+        setupCompassButton(compassGrid, WindDirection.NONE, "╳ OFF", 1, 1);
+        setupCompassButton(compassGrid, WindDirection.EAST, "E ➡", 1, 2);
+        setupCompassButton(compassGrid, WindDirection.SOUTH_WEST, "SW", 2, 0);
+        setupCompassButton(compassGrid, WindDirection.SOUTH, "S ⬇", 2, 1);
+        setupCompassButton(compassGrid, WindDirection.SOUTH_EAST, "SE", 2, 2);
+
+        // Wind Strength Slider
+        windStrengthLabel = new Label("Wind Strength: 50%");
+        windStrengthLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #37474f; -fx-font-weight: bold;");
+
+        windStrengthSlider = new Slider(0.0, 1.0, 0.5);
+        windStrengthSlider.setShowTickLabels(true);
+        windStrengthSlider.setShowTickMarks(true);
+        windStrengthSlider.setMajorTickUnit(0.5);
+        windStrengthSlider.setMinorTickCount(4);
+        windStrengthSlider.setBlockIncrement(0.1);
+
+        windStrengthSlider.valueProperty().addListener((obs, ov, nv) -> {
+            windStrengthLabel.setText(String.format("Wind Strength: %.0f%%", nv.doubleValue() * 100));
+            control.getAbstraction().getParameters().setWindStrength(nv.doubleValue());
+        });
+
+        windBox.getChildren().addAll(
+                windHeading,
+                new Label("Direction:"), compassGrid,
+                windStrengthLabel, windStrengthSlider
+        );
+
         // 4. Sliders and Rates
         VBox ratesBox = new VBox(8);
         ratesBox.setStyle("-fx-border-color: #cfd8dc; -fx-border-width: 1; -fx-border-radius: 4; -fx-padding: 10; -fx-background-color: white;");
@@ -272,7 +324,7 @@ public class SimulationPresentation extends BorderPane {
                 new Label("Tick Delay (ms):"), speedSlider
         );
 
-        sidebar.getChildren().addAll(brushBox, seedBox, ratesBox);
+        sidebar.getChildren().addAll(brushBox, seedBox, windBox, ratesBox);
 
         // Wrap sidebar in ScrollPane for safety
         ScrollPane scroller = new ScrollPane(sidebar);
@@ -354,6 +406,16 @@ public class SimulationPresentation extends BorderPane {
 
     private void bindProperties() {
         SimulationParameters params = control.getAbstraction().getParameters();
+
+        // Set initial values
+        diffusionSlider.setValue(params.getDiffusionRate());
+        absorptionSlider.setValue(params.getAbsorptionRate());
+        generationSlider.setValue(params.getGenerationRate());
+        speedSlider.setValue(control.getAbstraction().getSpeedDelayMs());
+
+        windStrengthSlider.setValue(params.getWindStrength());
+        windStrengthLabel.setText(String.format("Wind Strength: %.0f%%", params.getWindStrength() * 100));
+        updateWindUISelection();
 
         // Bidirectional-like listener updates
         diffusionSlider.valueProperty().addListener((obs, ov, nv) -> params.setDiffusionRate(nv.doubleValue()));
@@ -504,6 +566,46 @@ public class SimulationPresentation extends BorderPane {
         alert.setHeaderText("An error occurred");
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    private void setupCompassButton(GridPane grid, WindDirection dir, String label, int row, int col) {
+        Button btn = new Button(label);
+        btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        btn.setPrefSize(60, 30);
+        btn.setStyle("-fx-background-color: #f0f4c3; -fx-text-fill: #37474f; -fx-font-weight: bold; -fx-font-size: 10px; -fx-background-radius: 4; -fx-border-color: #d4e157; -fx-border-radius: 4;");
+
+        // Subtle modern hover effect
+        btn.setOnMouseEntered(e -> {
+            if (control.getAbstraction().getParameters().getWindDirection() != dir) {
+                btn.setStyle("-fx-background-color: #d4e157; -fx-text-fill: #1a237e; -fx-font-weight: bold; -fx-font-size: 10px; -fx-background-radius: 4; -fx-border-color: #afb42b; -fx-border-radius: 4;");
+            }
+        });
+        btn.setOnMouseExited(e -> {
+            if (control.getAbstraction().getParameters().getWindDirection() != dir) {
+                btn.setStyle("-fx-background-color: #f0f4c3; -fx-text-fill: #37474f; -fx-font-weight: bold; -fx-font-size: 10px; -fx-background-radius: 4; -fx-border-color: #d4e157; -fx-border-radius: 4;");
+            }
+        });
+
+        btn.setOnAction(e -> {
+            control.getAbstraction().getParameters().setWindDirection(dir);
+            updateWindUISelection();
+        });
+
+        grid.add(btn, col, row);
+        windDirButtons.put(dir, btn);
+    }
+
+    private void updateWindUISelection() {
+        WindDirection currentDir = control.getAbstraction().getParameters().getWindDirection();
+        for (Map.Entry<WindDirection, Button> entry : windDirButtons.entrySet()) {
+            WindDirection dir = entry.getKey();
+            Button btn = entry.getValue();
+            if (dir == currentDir) {
+                btn.setStyle("-fx-background-color: #1a237e; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 10px; -fx-background-radius: 4; -fx-border-color: #0d47a1; -fx-border-radius: 4;");
+            } else {
+                btn.setStyle("-fx-background-color: #f0f4c3; -fx-text-fill: #37474f; -fx-font-weight: bold; -fx-font-size: 10px; -fx-background-radius: 4; -fx-border-color: #d4e157; -fx-border-radius: 4;");
+            }
+        }
     }
 
     public void cleanup() {
