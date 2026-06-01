@@ -1,4 +1,4 @@
-package io.squid.cypgl.entities;
+package io.squid.cypgl.models;
 
 import java.io.Serializable;
 

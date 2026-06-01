@@ -1,7 +1,7 @@
 package io.squid.cypgl;
 
-import io.squid.cypgl.cli.CommandLineInterface;
-import io.squid.cypgl.gui.GUIApplication;
+import io.squid.cypgl.view.cli.CommandLineInterface;
+import io.squid.cypgl.view.javafx.GUIApplication;
 import javafx.application.Application;
 
 /**

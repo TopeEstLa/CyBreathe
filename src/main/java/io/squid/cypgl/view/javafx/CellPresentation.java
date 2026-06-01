@@ -1,6 +1,5 @@
-package io.squid.cypgl.agent.cell;
+package io.squid.cypgl.view.javafx;
 
-import io.squid.cypgl.entities.CellType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -8,9 +7,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 /**
- * Presentation layer in the PAC architecture for a Cell agent.
- * Implements a JavaFX StackPane that renders the cell color, health,
- * and pollution levels dynamically with modern rich aesthetics.
+ * JavaFX component rendering a Cell's state visually.
  *
  * @author TopeEstLa
  */
@@ -52,10 +49,9 @@ public class CellPresentation extends StackPane {
     }
 
     /**
-     * Renders the cell visually according to its type, pollution level, and customRate strength.
+     * Renders the cell visually according to its type name, pollution level, and customRate strength.
      */
-    public void draw(CellType type, double pollutionLevel, double customRate) {
-        String typeName = type.getName();
+    public void draw(String typeName, double pollutionLevel, double customRate) {
         Color cellColor;
 
         switch (typeName) {

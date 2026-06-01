@@ -1,15 +1,12 @@
-package io.squid.cypgl.agent.grid;
+package io.squid.cypgl.controller.javafx;
 
-import io.squid.cypgl.agent.cell.CellAbstraction;
-import io.squid.cypgl.agent.cell.CellControl;
-import io.squid.cypgl.entities.CellType;
-import io.squid.cypgl.entities.SimulationParameters;
+import io.squid.cypgl.models.*;
+import io.squid.cypgl.view.javafx.GridPresentation;
 
 import java.util.Random;
 
 /**
- * Control layer in the PAC architecture for the Grid agent.
- * Coordinates all individual child CellAgents and propagates ticks and user grid actions (brush, zone, random fill).
+ * Controller coordinating all grid CellControl elements for JavaFX GUI.
  *
  * @author TopeEstLa
  */
@@ -17,7 +14,7 @@ public class GridControl {
 
     private final GridAbstraction abstraction;
     private final CellControl[][] cellControls;
-    private GridPresentation presentation; // Optional, null in CLI mode
+    private GridPresentation presentation;
 
     public GridControl(GridAbstraction abstraction) {
         this.abstraction = abstraction;
@@ -25,10 +22,10 @@ public class GridControl {
         int h = abstraction.getHeight();
         this.cellControls = new CellControl[w][h];
 
-        // Initialize child cell agents
+        // Initialize child cell controls
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
-                CellAbstraction cellAbs = abstraction.getCell(x, y);
+                AbstractCell cellAbs = abstraction.getCell(x, y);
                 if (cellAbs == null) {
                     throw new IllegalStateException("Grid cells not initialized in Abstraction!");
                 }
@@ -89,17 +86,32 @@ public class GridControl {
     /**
      * Applies a cell brush modification at coordinates (x, y).
      */
-    public void setCellType(int x, int y, CellType type) {
+    public void setCellType(int x, int y, String typeName) {
         CellControl ctrl = getCellControl(x, y);
         if (ctrl != null) {
-            ctrl.setCellType(type);
+            double currentPollution = ctrl.getAbstraction().getPollutionLevel();
+            double currentCustomRate = ctrl.getAbstraction().getCustomRate();
+            
+            AbstractCell newCell = switch (typeName.toUpperCase()) {
+                case "AIR" -> new AirCell(x, y, currentPollution);
+                case "TREE" -> new TreeCell(x, y, currentPollution);
+                case "FACTORY" -> new FactoryCell(x, y, currentPollution);
+                case "BUILDING" -> new BuildingCell(x, y, currentPollution);
+                default -> new AirCell(x, y, currentPollution);
+            };
+            newCell.setCustomRate(currentCustomRate);
+            
+            // Re-assign grid model cell
+            abstraction.setCell(x, y, newCell);
+            // Re-assign control model cell
+            ctrl.setCellType(newCell);
         }
     }
 
     /**
      * Applies a zone-selection brush filling a rectangle with a cell type.
      */
-    public void applyZone(int startX, int startY, int endX, int endY, CellType type) {
+    public void applyZone(int startX, int startY, int endX, int endY, String typeName) {
         int minX = Math.max(0, Math.min(startX, endX));
         int maxX = Math.min(abstraction.getWidth() - 1, Math.max(startX, endX));
         int minY = Math.max(0, Math.min(startY, endY));
@@ -107,18 +119,15 @@ public class GridControl {
 
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
-                setCellType(x, y, type);
+                setCellType(x, y, typeName);
             }
         }
     }
 
     /**
      * Performs a mass random spawn of a specific CellType across a percentage of empty (AIR) tiles.
-     *
-     * @param type       The CellType to spawn.
-     * @param percentage Value from 0.0 to 1.0 representing coverage.
      */
-    public void massSpawn(CellType type, double percentage) {
+    public void massSpawn(String typeName, double percentage) {
         Random rand = new Random();
         int w = abstraction.getWidth();
         int h = abstraction.getHeight();
@@ -126,9 +135,9 @@ public class GridControl {
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
                 // Spawn only on existing AIR cells to avoid overwriting factories/other structures
-                if (abstraction.getCell(x, y).getType().getName().equals("AIR")) {
+                if (abstraction.getCell(x, y).getName().equals("AIR")) {
                     if (rand.nextDouble() < percentage) {
-                        cellControls[x][y].setCellType(type);
+                        setCellType(x, y, typeName);
                     }
                 }
             }
@@ -143,7 +152,7 @@ public class GridControl {
         int h = abstraction.getHeight();
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
-                CellAbstraction cellAbs = abstraction.getCell(x, y);
+                AbstractCell cellAbs = abstraction.getCell(x, y);
                 this.cellControls[x][y] = new CellControl(cellAbs);
             }
         }

@@ -1,14 +1,11 @@
-package io.squid.cypgl.agent.grid;
-
-import io.squid.cypgl.agent.cell.CellAbstraction;
+package io.squid.cypgl.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Abstraction layer in the PAC architecture for the Grid agent.
- * Manages the grid cell array and calculates local Bounded Moore neighborhood relationships.
+ * Abstraction model for the 2D grid, managing cells and neighbors.
  *
  * @author TopeEstLa
  */
@@ -17,12 +14,12 @@ public class GridAbstraction implements Serializable {
 
     private final int width;
     private final int height;
-    private final CellAbstraction[][] cells;
+    private final AbstractCell[][] cells;
 
     public GridAbstraction(int width, int height) {
         this.width = width;
         this.height = height;
-        this.cells = new CellAbstraction[width][height];
+        this.cells = new AbstractCell[width][height];
     }
 
     public int getWidth() {
@@ -33,14 +30,14 @@ public class GridAbstraction implements Serializable {
         return height;
     }
 
-    public CellAbstraction getCell(int x, int y) {
+    public AbstractCell getCell(int x, int y) {
         if (x >= 0 && x < width && y >= 0 && y < height) {
             return cells[x][y];
         }
         return null;
     }
 
-    public void setCell(int x, int y, CellAbstraction cell) {
+    public void setCell(int x, int y, AbstractCell cell) {
         if (x >= 0 && x < width && y >= 0 && y < height) {
             cells[x][y] = cell;
         }
@@ -49,8 +46,8 @@ public class GridAbstraction implements Serializable {
     /**
      * Moore neighbors (8 orthogonal and diagonal directions, ignoring out of bounds).
      */
-    public List<CellAbstraction> getNeighbors(int x, int y) {
-        List<CellAbstraction> neighbors = new ArrayList<>();
+    public List<AbstractCell> getNeighbors(int x, int y) {
+        List<AbstractCell> neighbors = new ArrayList<>();
 
         int[] dx = {-1, 0, 1, -1, 1, -1, 0, 1};
         int[] dy = {-1, -1, -1, 0, 0, 1, 1, 1};
@@ -60,7 +57,9 @@ public class GridAbstraction implements Serializable {
             int ny = y + dy[i];
 
             if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
-                neighbors.add(cells[nx][ny]);
+                if (cells[nx][ny] != null) {
+                    neighbors.add(cells[nx][ny]);
+                }
             }
         }
 

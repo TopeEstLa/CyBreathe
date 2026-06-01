@@ -1,22 +1,19 @@
-package io.squid.cypgl.agent.simulation;
-
-import io.squid.cypgl.agent.grid.GridAbstraction;
-import io.squid.cypgl.entities.SimulationParameters;
+package io.squid.cypgl.models;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Abstraction layer in the PAC architecture for the root Simulation agent.
- * Represents the global state of the simulation, including parameters,
- * the active grid, run parameters, and historical statistics.
+ * Abstraction layer in the PAC architecture representing the global state of the simulation.
+ * Represents global stats, active grid, loaded parameters, and historical data.
  * Supports binary serialization to import/export simulation states.
  *
  * @author TopeEstLa
  */
 public class SimulationAbstraction implements Serializable {
     private static final long serialVersionUID = 1L;
+
     // Historical statistics for charting/trend purposes
     private final List<Double> avgPollutionHistory;
     private final List<Integer> treeCountHistory;

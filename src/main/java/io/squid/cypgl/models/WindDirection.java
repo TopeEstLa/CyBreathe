@@ -1,10 +1,10 @@
-package io.squid.cypgl.entities;
+package io.squid.cypgl.models;
 
 /**
  * Enumeration representing wind directions and their corresponding 2D grid offset vectors.
  * Implements standard directional mapping for Moor neighborhood advection.
  *
- * @author Antigravity
+ * @author TopeEstLa
  */
 public enum WindDirection {
     NONE(0, 0),

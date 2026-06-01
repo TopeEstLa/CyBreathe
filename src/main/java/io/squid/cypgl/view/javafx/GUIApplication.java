@@ -1,18 +1,13 @@
-package io.squid.cypgl.gui;
+package io.squid.cypgl.view.javafx;
 
-import io.squid.cypgl.agent.cell.CellAbstraction;
-import io.squid.cypgl.agent.simulation.SimulationAbstraction;
-import io.squid.cypgl.agent.simulation.SimulationControl;
-import io.squid.cypgl.agent.simulation.SimulationPresentation;
-import io.squid.cypgl.entities.AirCellType;
+import io.squid.cypgl.models.*;
+import io.squid.cypgl.controller.javafx.SimulationControl;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * Main graphical user interface application wrapper.
- * Instantiates the Simulation agent PAC layers, starts the window stage,
- * and sets up a default 30x30 cellular pollution board.
+ * Main graphical user interface application wrapper for JavaFX presentation window.
  *
  * @author TopeEstLa
  */
@@ -29,7 +24,7 @@ public class GUIApplication extends Application {
         // Pre-fill with standard clean AIR cells
         for (int x = 0; x < defaultSize; x++) {
             for (int y = 0; y < defaultSize; y++) {
-                abstraction.getGrid().setCell(x, y, new CellAbstraction(x, y, new AirCellType(), 0.0));
+                abstraction.getGrid().setCell(x, y, new AirCell(x, y, 0.0));
             }
         }
 
@@ -42,7 +37,7 @@ public class GUIApplication extends Application {
         // Create main application Scene
         Scene scene = new Scene(presentation, 1280, 800);
 
-        primaryStage.setTitle("2D Cellular Pollution Simulation - CyTech PGL v1.0");
+        primaryStage.setTitle("CyBreathe v1.0");
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(1000);
         primaryStage.setMinHeight(700);

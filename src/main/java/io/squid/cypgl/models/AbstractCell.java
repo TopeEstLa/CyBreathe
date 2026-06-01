@@ -1,37 +1,29 @@
-package io.squid.cypgl.agent.cell;
-
-import io.squid.cypgl.entities.CellType;
+package io.squid.cypgl.models;
 
 import java.io.Serializable;
 
 /**
- * Abstraction layer in the PAC architecture for a Cell agent.
- * Represents the data state of a single cell on the 2D grid.
+ * Abstract base class representing a Cell on the 2D grid.
+ * Combines basic properties with polymorphic simulation execution methods.
  *
  * @author TopeEstLa
  */
-public class CellAbstraction implements Serializable {
+public abstract class AbstractCell implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private final int x;
-    private final int y;
+    protected final int x;
+    protected final int y;
 
     // Active state variables
-    private CellType type;
-    private double pollutionLevel;
+    protected double pollutionLevel;
+    protected double nextPollutionLevel;
 
-    // Double-buffered variables for order-independent grid updates
-    private CellType nextType;
-    private double nextPollutionLevel;
+    // Individual properties: custom rate multiplier (e.g. tree absorption, factory emission power)
+    protected double customRate;
 
-    // Individual properties: custom rate multiplier (e.g. how much a tree absorbs or a factory pollutes)
-    private double customRate;
-
-    public CellAbstraction(int x, int y, CellType type, double initialPollution) {
+    public AbstractCell(int x, int y, double initialPollution) {
         this.x = x;
         this.y = y;
-        this.type = type;
-        this.nextType = type;
         this.pollutionLevel = Math.clamp(initialPollution, 0.0, 3.0);
         this.nextPollutionLevel = this.pollutionLevel;
         // Diverse individual rate multiplier by default (0.5 to 2.0)
@@ -46,22 +38,9 @@ public class CellAbstraction implements Serializable {
         return y;
     }
 
-    public CellType getType() {
-        return type;
-    }
-
-    public void setType(CellType type) {
-        this.type = type;
-        this.nextType = type;
-    }
-
-    public CellType getNextType() {
-        return nextType;
-    }
-
-    public void setNextType(CellType nextType) {
-        this.nextType = nextType;
-    }
+    public abstract String getName();
+    
+    public abstract char getConsoleChar();
 
     public double getPollutionLevel() {
         return pollutionLevel;
@@ -93,7 +72,18 @@ public class CellAbstraction implements Serializable {
      * Resets next state values to match the current state.
      */
     public void resetNextBuffer() {
-        this.nextType = this.type;
         this.nextPollutionLevel = this.pollutionLevel;
+    }
+
+    /**
+     * Calculates the next state of the cell and stores it in double-buffered fields.
+     */
+    public abstract void computeNextState(GridAbstraction grid, SimulationParameters params);
+
+    /**
+     * Commits the computed double-buffered state to the active state.
+     */
+    public void commitState() {
+        this.pollutionLevel = this.nextPollutionLevel;
     }
 }

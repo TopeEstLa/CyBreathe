@@ -1,20 +1,19 @@
-package io.squid.cypgl.entities;
+package io.squid.cypgl.models;
 
-import io.squid.cypgl.agent.cell.CellAbstraction;
-import io.squid.cypgl.agent.grid.GridAbstraction;
-
-import java.io.Serial;
 import java.util.List;
 
 /**
- * Concrete implementation of CellType for AIR cells.
- * Air cells permit standard atmospheric diffusion of pollution across their neighbors.
+ * Concrete implementation of AbstractCell representing an AIR cell.
+ * Handles advection-diffusion calculations and building reflection logic under wind conditions.
  *
  * @author TopeEstLa
  */
-public class AirCellType implements CellType {
-    @Serial
+public class AirCell extends AbstractCell {
     private static final long serialVersionUID = 1L;
+
+    public AirCell(int x, int y, double initialPollution) {
+        super(x, y, initialPollution);
+    }
 
     @Override
     public String getName() {
@@ -26,16 +25,9 @@ public class AirCellType implements CellType {
         return '.';
     }
 
-    /**
-     * nextPollutionState = current + (diffuRate * (avg[neighbor pollution] - current))
-     * nextPollutionState - nearAbsorption
-     * @param cell   The cell being updated.
-     * @param grid   The overall grid model to fetch neighbor states.
-     * @param params Global simulation parameters.
-     */
     @Override
-    public void computeNextState(CellAbstraction cell, GridAbstraction grid, SimulationParameters params) {
-        List<CellAbstraction> neighbors = grid.getNeighbors(cell.getX(), cell.getY());
+    public void computeNextState(GridAbstraction grid, SimulationParameters params) {
+        List<AbstractCell> neighbors = grid.getNeighbors(x, y);
         double sum = 0.0;
         double totalWeight = 0.0;
         double neighborAbsorptionSum = 0.0;
@@ -46,21 +38,21 @@ public class AirCellType implements CellType {
         double wy = windDir.getDy();
         boolean hasWind = windDir != WindDirection.NONE && windStrength > 0.0;
 
-        for (CellAbstraction neighbor : neighbors) {
-            if (neighbor.getType() instanceof BuildingCellType) {
+        for (AbstractCell neighbor : neighbors) {
+            if (neighbor instanceof BuildingCell) {
                 continue;
             }
 
             double weight = 1.0;
             if (hasWind) {
                 // Relative direction vector from the neighbor to the current cell (-dx, -dy)
-                double dx = neighbor.getX() - cell.getX();
-                double dy = neighbor.getY() - cell.getY();
+                double dx = neighbor.getX() - x;
+                double dy = neighbor.getY() - y;
                 double vx = -dx;
                 double vy = -dy;
 
                 // Normalize neighbor-to-cell direction vector
-                double lenV = Math.hypot(vx, vy); //sqrt(vx^2+vy^2)
+                double lenV = Math.hypot(vx, vy);
                 if (lenV > 0) {
                     vx /= lenV;
                     vy /= lenV;
@@ -82,23 +74,16 @@ public class AirCellType implements CellType {
             sum += neighbor.getPollutionLevel() * weight;
             totalWeight += weight;
             
-            if (neighbor.getType() instanceof TreeCellType) {
+            if (neighbor instanceof TreeCell) {
                 neighborAbsorptionSum += params.getAbsorptionRate() * 0.5 * neighbor.getCustomRate();
             }
         }
 
-        double avg = totalWeight == 0.0 ? cell.getPollutionLevel() : sum / totalWeight;
-        double nextPollution = cell.getPollutionLevel() + params.getDiffusionRate() * (avg - cell.getPollutionLevel());
+        double avg = totalWeight == 0.0 ? pollutionLevel : sum / totalWeight;
+        double nextPollution = pollutionLevel + params.getDiffusionRate() * (avg - pollutionLevel);
 
         nextPollution -= neighborAbsorptionSum;
 
-        cell.setNextPollutionLevel(nextPollution);
-        cell.setNextType(this);
-    }
-
-    @Override
-    public void commitState(CellAbstraction cell) {
-        cell.setPollutionLevel(cell.getNextPollutionLevel());
-        cell.setType(cell.getNextType());
+        setNextPollutionLevel(nextPollution);
     }
 }

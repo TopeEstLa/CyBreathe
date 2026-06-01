@@ -1,18 +1,15 @@
-package io.squid.cypgl.agent.grid;
+package io.squid.cypgl.view.javafx;
 
-import io.squid.cypgl.agent.cell.CellAbstraction;
-import io.squid.cypgl.agent.cell.CellControl;
-import io.squid.cypgl.agent.cell.CellPresentation;
-import io.squid.cypgl.entities.CellType;
+import io.squid.cypgl.controller.javafx.CellControl;
+import io.squid.cypgl.controller.javafx.GridControl;
+import io.squid.cypgl.models.AbstractCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 
 import java.util.function.Supplier;
 
 /**
- * Presentation layer in the PAC architecture for the Grid agent.
- * Implements a JavaFX GridPane containing cell nodes, and hooks up mouse interaction events
- * (Brush, Zone selection, and Individual clicks) for fluid real-time simulation paint actions.
+ * JavaFX grid panel containing CellPresentations. Handles mouse paint brushes (drag, zone, click).
  *
  * @author TopeEstLa
  */
@@ -20,8 +17,8 @@ public class GridPresentation extends GridPane {
 
     private GridControl gridControl;
 
-    // Suppliers to fetch active selection from SimulationControl at runtime
-    private Supplier<CellType> activeBrushTypeSupplier;
+    // Suppliers to fetch active selection from SimulationPresentation at runtime
+    private Supplier<String> activeBrushTypeSupplier; // "AIR", "TREE", "FACTORY", "BUILDING"
     private Supplier<String> activeBrushModeSupplier; // "BRUSH", "ZONE", "INDIVIDUAL"
     private Supplier<Double> activeCustomRateSupplier;
 
@@ -31,7 +28,7 @@ public class GridPresentation extends GridPane {
 
     public void initializeGrid(
             GridControl control,
-            Supplier<CellType> activeBrushTypeSupplier,
+            Supplier<String> activeBrushTypeSupplier,
             Supplier<String> activeBrushModeSupplier,
             Supplier<Double> activeCustomRateSupplier) {
 
@@ -59,7 +56,7 @@ public class GridPresentation extends GridPane {
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
                 CellControl cellCtrl = gridControl.getCellControl(x, y);
-                CellAbstraction cellAbs = cellCtrl.getAbstraction();
+                AbstractCell cellAbs = cellCtrl.getAbstraction();
 
                 // Create individual visual node
                 CellPresentation cellPres = new CellPresentation(cellSize);
@@ -99,7 +96,8 @@ public class GridPresentation extends GridPane {
                     if (e.getButton() == MouseButton.PRIMARY && "ZONE".equals(activeBrushModeSupplier.get())) {
                         // Apply bulk zone rectangle on drag release
                         if (zoneStartX != -1 && zoneStartY != -1) {
-                            gridControl.applyZone(zoneStartX, zoneStartY, finalX, finalY, activeBrushTypeSupplier.get());
+                            String type = activeBrushTypeSupplier.get();
+                            gridControl.applyZone(zoneStartX, zoneStartY, finalX, finalY, type);
 
                             int minX = Math.max(0, Math.min(zoneStartX, finalX));
                             int maxX = Math.min(gridControl.getAbstraction().getWidth() - 1, Math.max(zoneStartX, finalX));
@@ -130,10 +128,10 @@ public class GridPresentation extends GridPane {
     }
 
     private void applyActivePaint(int x, int y) {
-        CellType brushType = activeBrushTypeSupplier.get();
+        String brushType = activeBrushTypeSupplier.get();
         CellControl ctrl = gridControl.getCellControl(x, y);
         if (ctrl != null && brushType != null) {
-            ctrl.setCellType(brushType);
+            gridControl.setCellType(x, y, brushType);
 
             // Assign customRate from active brush settings
             Double rate = activeCustomRateSupplier.get();

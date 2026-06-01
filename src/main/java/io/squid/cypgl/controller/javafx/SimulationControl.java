@@ -1,16 +1,13 @@
-package io.squid.cypgl.agent.simulation;
+package io.squid.cypgl.controller.javafx;
 
-import io.squid.cypgl.agent.cell.CellAbstraction;
-import io.squid.cypgl.agent.grid.GridAbstraction;
-import io.squid.cypgl.agent.grid.GridControl;
+import io.squid.cypgl.models.*;
+import io.squid.cypgl.view.javafx.SimulationPresentation;
 
 import java.io.File;
 import java.io.IOException;
 
 /**
- * Control layer in the PAC architecture for the root Simulation agent.
- * Manages the background simulation execution loop, gathers grid statistics,
- * and handles persistent save/load operations.
+ * Controller mediating communication between SimulationAbstraction model and JavaFX SimulationPresentation view.
  *
  * @author TopeEstLa
  */
@@ -18,7 +15,7 @@ public class SimulationControl {
 
     private final GridControl gridControl;
     private SimulationAbstraction abstraction;
-    private SimulationPresentation presentation; // Optional, null in CLI mode
+    private SimulationPresentation presentation;
 
     public SimulationControl(SimulationAbstraction abstraction) {
         this.abstraction = abstraction;
@@ -62,7 +59,7 @@ public class SimulationControl {
     }
 
     /**
-     * Loops a specified number of ticks (convenient for CLI commands).
+     * Loops a specified number of ticks.
      */
     public void tickMultiple(int count) {
         for (int i = 0; i < count; i++) {
@@ -86,14 +83,14 @@ public class SimulationControl {
 
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
-                CellAbstraction cell = grid.getCell(x, y);
+                AbstractCell cell = grid.getCell(x, y);
                 if (cell != null) {
                     sumPollution += cell.getPollutionLevel();
-                    String typeName = cell.getType().getName();
+                    String typeName = cell.getName();
                     switch (typeName) {
                         case "TREE" -> treeCount++;
                         case "FACTORY" -> factoryCount++;
-                        case "AIR", "DEAD_TREE" -> airCount++; // Count dead trees as air equivalent for base stats
+                        case "AIR" -> airCount++;
                     }
                 }
             }
@@ -120,13 +117,7 @@ public class SimulationControl {
         // Swap active abstraction reference
         this.abstraction = loadedAbs;
 
-        // Relink the GridControl and rebuild cell controls
-
-        // Copy the grid cells over to the existing grid control structure
-        int w = loadedAbs.getGrid().getWidth();
-        int h = loadedAbs.getGrid().getHeight();
-
-        // Rebuild and copy references
+        // Rebuild cell controls
         gridControl.rebuildCellControls();
 
         // Update stats

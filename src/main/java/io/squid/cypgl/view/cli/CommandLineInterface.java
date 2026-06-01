@@ -1,23 +1,20 @@
-package io.squid.cypgl.cli;
+package io.squid.cypgl.view.cli;
 
-import io.squid.cypgl.agent.cell.CellAbstraction;
-import io.squid.cypgl.agent.grid.GridAbstraction;
-import io.squid.cypgl.agent.simulation.SimulationAbstraction;
-import io.squid.cypgl.agent.simulation.SimulationControl;
-import io.squid.cypgl.entities.*;
+import io.squid.cypgl.models.*;
+import io.squid.cypgl.controller.cli.CLIController;
 
 import java.io.File;
 import java.util.Scanner;
 
 /**
- * Text-based interactive command-line interface for the 2D Cellular Pollution Simulation.
- * Allows independent validation of the simulation model, configurations, ticks, and binary serialization.
+ * Text-based interactive command-line interface view.
+ * Handles user input/output and forwards commands to the dedicated CLIController.
  *
  * @author TopeEstLa
  */
 public class CommandLineInterface {
 
-    private SimulationControl simulationControl;
+    private CLIController cliController;
     private boolean running = true;
 
     public void start() {
@@ -47,6 +44,7 @@ public class CommandLineInterface {
                 System.out.println("Error processing command: " + e.getMessage());
             }
         }
+
         System.out.println("Exiting CyPGL CLI. Goodbye!");
     }
 
@@ -55,15 +53,8 @@ public class CommandLineInterface {
             throw new IllegalArgumentException("Dimensions must be positive.");
         }
         SimulationAbstraction simAbs = new SimulationAbstraction(w, h);
-
-        // Populate grid with default clean AIR cells
-        for (int x = 0; x < w; x++) {
-            for (int y = 0; y < h; y++) {
-                simAbs.getGrid().setCell(x, y, new CellAbstraction(x, y, new AirCellType(), 0.0));
-            }
-        }
-
-        this.simulationControl = new SimulationControl(simAbs);
+        this.cliController = new CLIController(simAbs);
+        this.cliController.initGrid(w, h);
     }
 
     private void processCommand(String inputLine) {
@@ -88,9 +79,9 @@ public class CommandLineInterface {
                 if (tokens.length >= 2) {
                     count = Integer.parseInt(tokens[1]);
                 }
-                simulationControl.tickMultiple(count);
+                cliController.tick(count);
                 System.out.printf("Advanced simulation by %d tick(s). Current tick: %d%n",
-                        count, simulationControl.getAbstraction().getTickCount());
+                        count, cliController.getAbstraction().getTickCount());
             }
             case "set" -> {
                 if (tokens.length < 4) {
@@ -109,25 +100,19 @@ public class CommandLineInterface {
                     customRate = Double.parseDouble(tokens[5]);
                 }
 
-                CellType type = parseCellType(typeStr);
-                if (type == null) {
-                    System.out.println("Unknown type: " + typeStr + ". Choose from: AIR, TREE, FACTORY");
+                if (!typeStr.equals("AIR") && !typeStr.equals("TREE") && !typeStr.equals("FACTORY") && !typeStr.equals("BUILDING")) {
+                    System.out.println("Unknown type: " + typeStr + ". Choose from: AIR, TREE, FACTORY, BUILDING");
                     return;
                 }
 
-                if (x < 0 || x >= simulationControl.getAbstraction().getGrid().getWidth() ||
-                        y < 0 || y >= simulationControl.getAbstraction().getGrid().getHeight()) {
+                if (x < 0 || x >= cliController.getAbstraction().getGrid().getWidth() ||
+                        y < 0 || y >= cliController.getAbstraction().getGrid().getHeight()) {
                     System.out.println("Coordinates out of grid boundaries.");
                     return;
                 }
 
-                simulationControl.getGridControl().setCellType(x, y, type);
-                simulationControl.getGridControl().getCellControl(x, y).setPollution(pollution);
-                simulationControl.getGridControl().getCellControl(x, y).getAbstraction().setCustomRate(customRate);
-                simulationControl.getGridControl().getCellControl(x, y).updatePresentation();
-
-                simulationControl.recordCurrentStats();
-                System.out.printf("Set cell (%d, %d) to %s (pollution: %.2f, customRate: %.2f)%n", x, y, type.getName(), pollution, customRate);
+                cliController.setCell(x, y, typeStr, pollution, customRate);
+                System.out.printf("Set cell (%d, %d) to %s (pollution: %.2f, customRate: %.2f)%n", x, y, typeStr, pollution, customRate);
             }
             case "random" -> {
                 if (tokens.length < 3) {
@@ -136,14 +121,12 @@ public class CommandLineInterface {
                 }
                 String typeStr = tokens[1].toUpperCase();
                 double pct = Double.parseDouble(tokens[2]) / 100.0;
-                CellType type = parseCellType(typeStr);
-                if (type == null) {
+                if (!typeStr.equals("AIR") && !typeStr.equals("TREE") && !typeStr.equals("FACTORY") && !typeStr.equals("BUILDING")) {
                     System.out.println("Unknown type: " + typeStr);
                     return;
                 }
-                simulationControl.getGridControl().massSpawn(type, pct);
-                simulationControl.recordCurrentStats();
-                System.out.printf("Randomly seeded %.0f%% of empty cells with %s.%n", pct * 100, type.getName());
+                cliController.massSpawn(typeStr, pct);
+                System.out.printf("Randomly seeded %.0f%% of empty cells with %s.%n", pct * 100, typeStr);
             }
             case "stats", "status" -> showStats();
             case "config" -> {
@@ -162,7 +145,7 @@ public class CommandLineInterface {
                 }
                 File file = new File(tokens[1]);
                 try {
-                    simulationControl.saveSimulation(file);
+                    cliController.saveSimulation(file);
                     System.out.println("Simulation successfully exported to " + file.getAbsolutePath());
                 } catch (Exception e) {
                     System.out.println("Failed to export state: " + e.getMessage());
@@ -175,7 +158,7 @@ public class CommandLineInterface {
                 }
                 File file = new File(tokens[1]);
                 try {
-                    simulationControl.loadSimulation(file);
+                    cliController.loadSimulation(file);
                     System.out.println("Simulation successfully loaded from " + file.getAbsolutePath());
                     showStats();
                 } catch (Exception e) {
@@ -187,19 +170,8 @@ public class CommandLineInterface {
         }
     }
 
-    private CellType parseCellType(String str) {
-        return switch (str) {
-            case "AIR" -> new AirCellType();
-            case "TREE" -> new TreeCellType();
-            case "FACTORY" -> new FactoryCellType();
-            case "BUILDING" -> new BuildingCellType();
-            default -> null;
-        };
-    }
-
     private void applyConfig(String param, String val) {
-        GridAbstraction grid = simulationControl.getAbstraction().getGrid();
-        SimulationParameters p = simulationControl.getAbstraction().getParameters();
+        SimulationParameters p = cliController.getAbstraction().getParameters();
 
         switch (param) {
             case "diffusion" -> {
@@ -237,7 +209,7 @@ public class CommandLineInterface {
     }
 
     private void showGrid() {
-        GridAbstraction grid = simulationControl.getAbstraction().getGrid();
+        GridAbstraction grid = cliController.getAbstraction().getGrid();
         int w = grid.getWidth();
         int h = grid.getHeight();
 
@@ -255,11 +227,11 @@ public class CommandLineInterface {
         for (int y = 0; y < h; y++) {
             System.out.printf("%2d| ", y);
             for (int x = 0; x < w; x++) {
-                CellAbstraction cell = grid.getCell(x, y);
-                char c = cell.getType().getConsoleChar();
+                AbstractCell cell = grid.getCell(x, y);
+                char c = cell.getConsoleChar();
 
                 // For AIR cells, show shaded intensity depending on pollution
-                if (cell.getType() instanceof AirCellType) {
+                if (cell instanceof AirCell) {
                     double poll = cell.getPollutionLevel();
                     if (poll == 0.0) {
                         c = '.';
@@ -285,24 +257,25 @@ public class CommandLineInterface {
     }
 
     private void showStats() {
-        SimulationAbstraction abs = simulationControl.getAbstraction();
+        SimulationAbstraction abs = cliController.getAbstraction();
         GridAbstraction grid = abs.getGrid();
         int totalCells = grid.getWidth() * grid.getHeight();
 
-        // Get count
         int trees = 0, factories = 0, air = 0, buildings = 0;
         double totalPollution = 0.0;
 
         for (int x = 0; x < grid.getWidth(); x++) {
             for (int y = 0; y < grid.getHeight(); y++) {
-                CellAbstraction cell = grid.getCell(x, y);
-                totalPollution += cell.getPollutionLevel();
-                String name = cell.getType().getName();
-                switch (name) {
-                    case "TREE" -> trees++;
-                    case "FACTORY" -> factories++;
-                    case "AIR" -> air++;
-                    case "BUILDING" -> buildings++;
+                AbstractCell cell = grid.getCell(x, y);
+                if (cell != null) {
+                    totalPollution += cell.getPollutionLevel();
+                    String name = cell.getName();
+                    switch (name) {
+                        case "TREE" -> trees++;
+                        case "FACTORY" -> factories++;
+                        case "AIR" -> air++;
+                        case "BUILDING" -> buildings++;
+                    }
                 }
             }
         }
@@ -332,7 +305,7 @@ public class CommandLineInterface {
         System.out.println("  init <width> <height>              - Create a clean grid of specified dimensions.");
         System.out.println("  show                               - Render the grid visually in ASCII format.");
         System.out.println("  tick [count]                       - Run simulation for count ticks (default 1).");
-        System.out.println("  set <x> <y> <type> [pollution] [rate] - Place a cell (AIR, TREE, FACTORY) at (x, y) with optional pollution and custom rate multiplier.");
+        System.out.println("  set <x> <y> <type> [pollution] [rate] - Place a cell (AIR, TREE, FACTORY, BUILDING) at (x, y) with optional pollution and custom rate multiplier.");
         System.out.println("  random <type> <percentage>         - Randomly seed a % of clean cells with specified type.");
         System.out.println("  stats                              - View grid configurations and cell statistics.");
         System.out.println("  config <param> <value>             - Set parameters:");

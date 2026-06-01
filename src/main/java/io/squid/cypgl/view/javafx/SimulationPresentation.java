@@ -1,9 +1,8 @@
-package io.squid.cypgl.agent.simulation;
+package io.squid.cypgl.view.javafx;
 
-import io.squid.cypgl.agent.grid.GridAbstraction;
-import io.squid.cypgl.agent.grid.GridControl;
-import io.squid.cypgl.agent.grid.GridPresentation;
-import io.squid.cypgl.entities.*;
+import io.squid.cypgl.controller.javafx.GridControl;
+import io.squid.cypgl.controller.javafx.SimulationControl;
+import io.squid.cypgl.models.*;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,9 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Presentation layer in the PAC architecture for the root Simulation agent.
- * Implements a modern JavaFX BorderPane dashboard housing the toolbar controls,
- * sidebar parameter configurators, the central 2D Grid, and real-time LineCharts for analytics.
+ * JavaFX Dashboard presentation layer.
  *
  * @author TopeEstLa
  */
@@ -119,7 +116,7 @@ public class SimulationPresentation extends BorderPane {
             GridAbstraction grid = control.getAbstraction().getGrid();
             for (int x = 0; x < grid.getWidth(); x++) {
                 for (int y = 0; y < grid.getHeight(); y++) {
-                    control.getGridControl().setCellType(x, y, new AirCellType());
+                    control.getGridControl().setCellType(x, y, "AIR");
                     control.getGridControl().getCellControl(x, y).setPollution(0.0);
                 }
             }
@@ -165,7 +162,7 @@ public class SimulationPresentation extends BorderPane {
         CheckBox debugCheckbox = new CheckBox("🐞 Debug Values");
         debugCheckbox.setStyle("-fx-font-weight: bold; -fx-text-fill: #37474f;");
         debugCheckbox.setOnAction(e -> {
-            io.squid.cypgl.agent.cell.CellPresentation.setShowDebugValues(debugCheckbox.isSelected());
+            CellPresentation.setShowDebugValues(debugCheckbox.isSelected());
             control.getGridControl().updateAllCellPresentations();
         });
 
@@ -252,7 +249,7 @@ public class SimulationPresentation extends BorderPane {
         seedBtn.setMaxWidth(Double.MAX_VALUE);
         seedBtn.setStyle("-fx-background-color: #37474f; -fx-text-fill: white; -fx-font-weight: bold;");
         seedBtn.setOnAction(e -> {
-            CellType selectedType = getSelectedCellType();
+            String selectedType = getSelectedCellType();
             double pct = massSeedSlider.getValue() / 100.0;
             control.getGridControl().massSpawn(selectedType, pct);
             control.recordCurrentStats();
@@ -447,16 +444,10 @@ public class SimulationPresentation extends BorderPane {
         return brushCustomRateSlider != null ? brushCustomRateSlider.getValue() : 1.0;
     }
 
-    private CellType getSelectedCellType() {
+    private String getSelectedCellType() {
         RadioButton selected = (RadioButton) cellTypeGroup.getSelectedToggle();
-        if (selected == null) return new AirCellType();
-        return switch (selected.getText()) {
-            case "AIR" -> new AirCellType();
-            case "TREE" -> new TreeCellType();
-            case "FACTORY" -> new FactoryCellType();
-            case "BUILDING" -> new BuildingCellType();
-            default -> new AirCellType();
-        };
+        if (selected == null) return "AIR";
+        return selected.getText(); // returns "AIR", "TREE", "FACTORY", or "BUILDING"
     }
 
     private String getSelectedBrushMode() {
