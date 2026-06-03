@@ -81,7 +81,7 @@ public class CommandLineInterface {
                 }
                 cliController.tick(count);
                 System.out.printf("Advanced simulation by %d tick(s). Current tick: %d%n",
-                        count, cliController.getAbstraction().getTickCount());
+                        count, cliController.getTickCount());
             }
             case "set" -> {
                 if (tokens.length < 4) {
@@ -105,8 +105,8 @@ public class CommandLineInterface {
                     return;
                 }
 
-                if (x < 0 || x >= cliController.getAbstraction().getGrid().getWidth() ||
-                        y < 0 || y >= cliController.getAbstraction().getGrid().getHeight()) {
+                if (x < 0 || x >= cliController.getGridWidth() ||
+                        y < 0 || y >= cliController.getGridHeight()) {
                     System.out.println("Coordinates out of grid boundaries.");
                     return;
                 }
@@ -128,7 +128,6 @@ public class CommandLineInterface {
                 cliController.massSpawn(typeStr, pct);
                 System.out.printf("Randomly seeded %.0f%% of empty cells with %s.%n", pct * 100, typeStr);
             }
-            case "stats", "status" -> showStats();
             case "config" -> {
                 if (tokens.length < 3) {
                     System.out.println("Usage: config <param> <value>");
@@ -160,7 +159,6 @@ public class CommandLineInterface {
                 try {
                     cliController.loadSimulation(file);
                     System.out.println("Simulation successfully loaded from " + file.getAbsolutePath());
-                    showStats();
                 } catch (Exception e) {
                     System.out.println("Failed to import state: " + e.getMessage());
                 }
@@ -171,26 +169,24 @@ public class CommandLineInterface {
     }
 
     private void applyConfig(String param, String val) {
-        SimulationParameters p = cliController.getAbstraction().getParameters();
-
         switch (param) {
             case "diffusion" -> {
-                p.setDiffusionRate(Double.parseDouble(val));
-                System.out.printf("Diffusion rate set to %.2f%n", p.getDiffusionRate());
+                cliController.setDiffusionRate(Double.parseDouble(val));
+                System.out.printf("Diffusion rate set to %.2f%n", cliController.getDiffusionRate());
             }
             case "absorption" -> {
-                p.setAbsorptionRate(Double.parseDouble(val));
-                System.out.printf("Absorption rate set to %.2f%n", p.getAbsorptionRate());
+                cliController.setAbsorptionRate(Double.parseDouble(val));
+                System.out.printf("Absorption rate set to %.2f%n", cliController.getAbsorptionRate());
             }
             case "generation" -> {
-                p.setGenerationRate(Double.parseDouble(val));
-                System.out.printf("Generation rate set to %.2f%n", p.getGenerationRate());
+                cliController.setGenerationRate(Double.parseDouble(val));
+                System.out.printf("Generation rate set to %.2f%n", cliController.getGenerationRate());
             }
             case "wind_direction" -> {
                 try {
                     WindDirection dir = WindDirection.valueOf(val.toUpperCase().replace("-", "_"));
-                    p.setWindDirection(dir);
-                    System.out.printf("Wind direction set to %s%n", p.getWindDirection());
+                    cliController.setWindDirection(dir);
+                    System.out.printf("Wind direction set to %s%n", cliController.getWindDirection());
                 } catch (IllegalArgumentException e) {
                     System.out.println("Invalid direction. Use one of: NONE, NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST");
                 }
@@ -198,8 +194,8 @@ public class CommandLineInterface {
             case "wind_strength" -> {
                 try {
                     double str = Double.parseDouble(val);
-                    p.setWindStrength(str);
-                    System.out.printf("Wind strength set to %.2f%n", p.getWindStrength());
+                    cliController.setWindStrength(str);
+                    System.out.printf("Wind strength set to %.2f%n", cliController.getWindStrength());
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid strength value. Must be a double between 0.0 and 1.0.");
                 }
@@ -209,9 +205,8 @@ public class CommandLineInterface {
     }
 
     private void showGrid() {
-        GridAbstraction grid = cliController.getAbstraction().getGrid();
-        int w = grid.getWidth();
-        int h = grid.getHeight();
+        int w = cliController.getGridWidth();
+        int h = cliController.getGridHeight();
 
         // Print header coordinate index
         System.out.print("   ");
@@ -227,12 +222,12 @@ public class CommandLineInterface {
         for (int y = 0; y < h; y++) {
             System.out.printf("%2d| ", y);
             for (int x = 0; x < w; x++) {
-                AbstractCell cell = grid.getCell(x, y);
-                char c = cell.getConsoleChar();
+                char c = cliController.getCellConsoleChar(x, y);
+                String typeName = cliController.getCellName(x, y);
 
                 // For AIR cells, show shaded intensity depending on pollution
-                if (cell instanceof AirCell) {
-                    double poll = cell.getPollutionLevel();
+                if ("AIR".equals(typeName)) {
+                    double poll = cliController.getCellPollutionLevel(x, y);
                     if (poll == 0.0) {
                         c = '.';
                     } else if (poll <= 0.25) {
@@ -254,49 +249,6 @@ public class CommandLineInterface {
         System.out.print("--".repeat(w));
         System.out.println("+");
         System.out.println("Legend: . (Clean Air), ░/▒/▓/█ (Polluted Air levels), T (Tree), # (Factory), B (Building)");
-    }
-
-    private void showStats() {
-        SimulationAbstraction abs = cliController.getAbstraction();
-        GridAbstraction grid = abs.getGrid();
-        int totalCells = grid.getWidth() * grid.getHeight();
-
-        int trees = 0, factories = 0, air = 0, buildings = 0;
-        double totalPollution = 0.0;
-
-        for (int x = 0; x < grid.getWidth(); x++) {
-            for (int y = 0; y < grid.getHeight(); y++) {
-                AbstractCell cell = grid.getCell(x, y);
-                if (cell != null) {
-                    totalPollution += cell.getPollutionLevel();
-                    String name = cell.getName();
-                    switch (name) {
-                        case "TREE" -> trees++;
-                        case "FACTORY" -> factories++;
-                        case "AIR" -> air++;
-                        case "BUILDING" -> buildings++;
-                    }
-                }
-            }
-        }
-
-        double avgPollution = totalCells > 0 ? totalPollution / totalCells : 0.0;
-
-        System.out.println("--- Grid Status & Stats ---");
-        System.out.printf("Grid Size   : %d x %d (%d cells)%n", grid.getWidth(), grid.getHeight(), totalCells);
-        System.out.printf("Current Tick: %d%n", abs.getTickCount());
-        System.out.printf("Avg Pollution: %.4f%n", avgPollution);
-        System.out.println("Cell Populations:");
-        System.out.printf("  - AIR       : %d (%.1f%%)%n", air, (double) air / totalCells * 100);
-        System.out.printf("  - TREE      : %d (%.1f%%)%n", trees, (double) trees / totalCells * 100);
-        System.out.printf("  - FACTORY   : %d (%.1f%%)%n", factories, (double) factories / totalCells * 100);
-        System.out.printf("  - BUILDING  : %d (%.1f%%)%n", buildings, (double) buildings / totalCells * 100);
-        System.out.println("Parameters:");
-        System.out.printf("  - Diffusion Rate  : %.2f%n", abs.getParameters().getDiffusionRate());
-        System.out.printf("  - Absorption Rate : %.2f%n", abs.getParameters().getAbsorptionRate());
-        System.out.printf("  - Generation Rate : %.2f%n", abs.getParameters().getGenerationRate());
-        System.out.printf("  - Wind Direction  : %s%n", abs.getParameters().getWindDirection());
-        System.out.printf("  - Wind Strength   : %.2f%n", abs.getParameters().getWindStrength());
     }
 
     private void printHelp() {

@@ -34,8 +34,12 @@ public class GridControl {
         }
     }
 
-    public GridAbstraction getAbstraction() {
-        return abstraction;
+    public int getWidth() {
+        return abstraction.getWidth();
+    }
+
+    public int getHeight() {
+        return abstraction.getHeight();
     }
 
     public GridPresentation getPresentation() {
@@ -120,26 +124,6 @@ public class GridControl {
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 setCellType(x, y, typeName);
-            }
-        }
-    }
-
-    /**
-     * Performs a mass random spawn of a specific CellType across a percentage of empty (AIR) tiles.
-     */
-    public void massSpawn(String typeName, double percentage) {
-        Random rand = new Random();
-        int w = abstraction.getWidth();
-        int h = abstraction.getHeight();
-
-        for (int x = 0; x < w; x++) {
-            for (int y = 0; y < h; y++) {
-                // Spawn only on existing AIR cells to avoid overwriting factories/other structures
-                if (abstraction.getCell(x, y).getName().equals("AIR")) {
-                    if (rand.nextDouble() < percentage) {
-                        setCellType(x, y, typeName);
-                    }
-                }
             }
         }
     }

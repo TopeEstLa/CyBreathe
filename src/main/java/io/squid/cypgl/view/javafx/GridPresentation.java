@@ -47,8 +47,8 @@ public class GridPresentation extends GridPane {
         getChildren().clear();
         if (gridControl == null) return;
 
-        int w = gridControl.getAbstraction().getWidth();
-        int h = gridControl.getAbstraction().getHeight();
+        int w = gridControl.getWidth();
+        int h = gridControl.getHeight();
 
         // Calculate a responsive cell size based on grid size
         double cellSize = Math.clamp(600.0 / Math.max(w, h), 10.0, 40.0);
@@ -56,7 +56,6 @@ public class GridPresentation extends GridPane {
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
                 CellControl cellCtrl = gridControl.getCellControl(x, y);
-                AbstractCell cellAbs = cellCtrl.getAbstraction();
 
                 // Create individual visual node
                 CellPresentation cellPres = new CellPresentation(cellSize);
@@ -100,17 +99,16 @@ public class GridPresentation extends GridPane {
                             gridControl.applyZone(zoneStartX, zoneStartY, finalX, finalY, type);
 
                             int minX = Math.max(0, Math.min(zoneStartX, finalX));
-                            int maxX = Math.min(gridControl.getAbstraction().getWidth() - 1, Math.max(zoneStartX, finalX));
+                            int maxX = Math.min(gridControl.getWidth() - 1, Math.max(zoneStartX, finalX));
                             int minY = Math.max(0, Math.min(zoneStartY, finalY));
-                            int maxY = Math.min(gridControl.getAbstraction().getHeight() - 1, Math.max(zoneStartY, finalY));
+                            int maxY = Math.min(gridControl.getHeight() - 1, Math.max(zoneStartY, finalY));
 
                             Double rate = activeCustomRateSupplier.get();
                             for (int zx = minX; zx <= maxX; zx++) {
                                 for (int zy = minY; zy <= maxY; zy++) {
                                     CellControl zctrl = gridControl.getCellControl(zx, zy);
                                     if (zctrl != null && rate != null) {
-                                        zctrl.getAbstraction().setCustomRate(rate);
-                                        zctrl.updatePresentation();
+                                        zctrl.setCustomRate(rate);
                                     }
                                 }
                             }
@@ -136,9 +134,10 @@ public class GridPresentation extends GridPane {
             // Assign customRate from active brush settings
             Double rate = activeCustomRateSupplier.get();
             if (rate != null) {
-                ctrl.getAbstraction().setCustomRate(rate);
+                ctrl.setCustomRate(rate);
+            } else {
+                ctrl.updatePresentation();
             }
-            ctrl.updatePresentation();
         }
     }
 }

@@ -144,4 +144,79 @@ public class SimulationControl {
             );
         }
     }
+
+    /**
+     * Resets the entire simulation to a clean state.
+     */
+    public synchronized void clearSimulation() {
+        GridAbstraction grid = abstraction.getGrid();
+        int w = grid.getWidth();
+        int h = grid.getHeight();
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                gridControl.setCellType(x, y, "AIR");
+                gridControl.getCellControl(x, y).setPollution(0.0);
+            }
+        }
+        abstraction.resetTickCount();
+        abstraction.clearHistory();
+        recordCurrentStats();
+        updatePresentation();
+    }
+
+    public double getDiffusionRate() {
+        return abstraction.getParameters().getDiffusionRate();
+    }
+
+    public void setDiffusionRate(double rate) {
+        abstraction.getParameters().setDiffusionRate(rate);
+    }
+
+    public double getAbsorptionRate() {
+        return abstraction.getParameters().getAbsorptionRate();
+    }
+
+    public void setAbsorptionRate(double rate) {
+        abstraction.getParameters().setAbsorptionRate(rate);
+    }
+
+    public double getGenerationRate() {
+        return abstraction.getParameters().getGenerationRate();
+    }
+
+    public void setGenerationRate(double rate) {
+        abstraction.getParameters().setGenerationRate(rate);
+    }
+
+    public int getSpeedDelayMs() {
+        return abstraction.getSpeedDelayMs();
+    }
+
+    public void setSpeedDelayMs(int delayMs) {
+        abstraction.setSpeedDelayMs(delayMs);
+    }
+
+    public double getWindStrength() {
+        return abstraction.getParameters().getWindStrength();
+    }
+
+    public void setWindStrength(double strength) {
+        abstraction.getParameters().setWindStrength(strength);
+    }
+
+    public WindDirection getWindDirection() {
+        return abstraction.getParameters().getWindDirection();
+    }
+
+    public void setWindDirection(WindDirection direction) {
+        abstraction.getParameters().setWindDirection(direction);
+    }
+
+    public int getGridWidth() {
+        return abstraction.getGrid().getWidth();
+    }
+
+    public int getGridHeight() {
+        return abstraction.getGrid().getHeight();
+    }
 }

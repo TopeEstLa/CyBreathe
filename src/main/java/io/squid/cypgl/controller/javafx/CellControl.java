@@ -63,6 +63,14 @@ public class CellControl {
     }
 
     /**
+     * Changes the custom rate directly.
+     */
+    public void setCustomRate(double rate) {
+        abstraction.setCustomRate(rate);
+        updatePresentation();
+    }
+
+    /**
      * Redraws the Presentation layer using current Abstraction state values.
      */
     public void updatePresentation() {

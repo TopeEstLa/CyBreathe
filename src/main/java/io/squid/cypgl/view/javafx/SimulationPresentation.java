@@ -113,17 +113,7 @@ public class SimulationPresentation extends BorderPane {
 
         clearBtn.setOnAction(e -> {
             stopSimulationLoop();
-            GridAbstraction grid = control.getAbstraction().getGrid();
-            for (int x = 0; x < grid.getWidth(); x++) {
-                for (int y = 0; y < grid.getHeight(); y++) {
-                    control.getGridControl().setCellType(x, y, "AIR");
-                    control.getGridControl().getCellControl(x, y).setPollution(0.0);
-                }
-            }
-            control.getAbstraction().resetTickCount();
-            control.getAbstraction().clearHistory();
-            control.recordCurrentStats();
-            control.updatePresentation();
+            control.clearSimulation();
             gridPresentation.rebuildDisplay();
         });
 
@@ -237,26 +227,6 @@ public class SimulationPresentation extends BorderPane {
                 randomRateCheckbox, brushCustomRateLabel, brushCustomRateSlider
         );
 
-        // 2. Mass Seed Control
-        VBox seedBox = new VBox(8);
-        seedBox.setStyle("-fx-border-color: #cfd8dc; -fx-border-width: 1; -fx-border-radius: 4; -fx-padding: 10; -fx-background-color: white;");
-        Label seedHeading = new Label("Mass Spawn");
-        seedHeading.setStyle("-fx-font-weight: bold; -fx-text-fill: #1a237e;");
-        massSeedSlider = new Slider(5, 80, 20);
-        massSeedSlider.setShowTickLabels(true);
-        massSeedSlider.setShowTickMarks(true);
-        Button seedBtn = new Button("Mass Seed Cells");
-        seedBtn.setMaxWidth(Double.MAX_VALUE);
-        seedBtn.setStyle("-fx-background-color: #37474f; -fx-text-fill: white; -fx-font-weight: bold;");
-        seedBtn.setOnAction(e -> {
-            String selectedType = getSelectedCellType();
-            double pct = massSeedSlider.getValue() / 100.0;
-            control.getGridControl().massSpawn(selectedType, pct);
-            control.recordCurrentStats();
-            control.updatePresentation();
-        });
-        seedBox.getChildren().addAll(seedHeading, new Label("Coverage (%):"), massSeedSlider, seedBtn);
-
         // 3. Wind Control Configuration
         VBox windBox = new VBox(8);
         windBox.setStyle("-fx-border-color: #cfd8dc; -fx-border-width: 1; -fx-border-radius: 4; -fx-padding: 10; -fx-background-color: white;");
@@ -293,7 +263,7 @@ public class SimulationPresentation extends BorderPane {
 
         windStrengthSlider.valueProperty().addListener((obs, ov, nv) -> {
             windStrengthLabel.setText(String.format("Wind Strength: %.0f%%", nv.doubleValue() * 100));
-            control.getAbstraction().getParameters().setWindStrength(nv.doubleValue());
+            control.setWindStrength(nv.doubleValue());
         });
 
         windBox.getChildren().addAll(
@@ -321,7 +291,7 @@ public class SimulationPresentation extends BorderPane {
                 new Label("Tick Delay (ms):"), speedSlider
         );
 
-        sidebar.getChildren().addAll(brushBox, seedBox, windBox, ratesBox);
+        sidebar.getChildren().addAll(brushBox, windBox, ratesBox);
 
         // Wrap sidebar in ScrollPane for safety
         ScrollPane scroller = new ScrollPane(sidebar);
@@ -402,25 +372,23 @@ public class SimulationPresentation extends BorderPane {
     }
 
     private void bindProperties() {
-        SimulationParameters params = control.getAbstraction().getParameters();
-
         // Set initial values
-        diffusionSlider.setValue(params.getDiffusionRate());
-        absorptionSlider.setValue(params.getAbsorptionRate());
-        generationSlider.setValue(params.getGenerationRate());
-        speedSlider.setValue(control.getAbstraction().getSpeedDelayMs());
+        diffusionSlider.setValue(control.getDiffusionRate());
+        absorptionSlider.setValue(control.getAbsorptionRate());
+        generationSlider.setValue(control.getGenerationRate());
+        speedSlider.setValue(control.getSpeedDelayMs());
 
-        windStrengthSlider.setValue(params.getWindStrength());
-        windStrengthLabel.setText(String.format("Wind Strength: %.0f%%", params.getWindStrength() * 100));
+        windStrengthSlider.setValue(control.getWindStrength());
+        windStrengthLabel.setText(String.format("Wind Strength: %.0f%%", control.getWindStrength() * 100));
         updateWindUISelection();
 
         // Bidirectional-like listener updates
-        diffusionSlider.valueProperty().addListener((obs, ov, nv) -> params.setDiffusionRate(nv.doubleValue()));
-        absorptionSlider.valueProperty().addListener((obs, ov, nv) -> params.setAbsorptionRate(nv.doubleValue()));
-        generationSlider.valueProperty().addListener((obs, ov, nv) -> params.setGenerationRate(nv.doubleValue()));
+        diffusionSlider.valueProperty().addListener((obs, ov, nv) -> control.setDiffusionRate(nv.doubleValue()));
+        absorptionSlider.valueProperty().addListener((obs, ov, nv) -> control.setAbsorptionRate(nv.doubleValue()));
+        generationSlider.valueProperty().addListener((obs, ov, nv) -> control.setGenerationRate(nv.doubleValue()));
 
         speedSlider.valueProperty().addListener((obs, ov, nv) -> {
-            control.getAbstraction().setSpeedDelayMs(nv.intValue());
+            control.setSpeedDelayMs(nv.intValue());
             // If running, restart the timer with new delay immediately
             if (timerLoop != null) {
                 startSimulationLoop();
@@ -471,7 +439,7 @@ public class SimulationPresentation extends BorderPane {
             public void run() {
                 Platform.runLater(control::tick);
             }
-        }, 0, control.getAbstraction().getSpeedDelayMs());
+        }, 0, control.getSpeedDelayMs());
     }
 
     private synchronized void stopSimulationLoop() {
@@ -495,8 +463,8 @@ public class SimulationPresentation extends BorderPane {
         tickLabel.setText("Tick: " + tickCount);
 
         // 2. Compute aggregate values
-        int w = control.getAbstraction().getGrid().getWidth();
-        int h = control.getAbstraction().getGrid().getHeight();
+        int w = control.getGridWidth();
+        int h = control.getGridHeight();
         int total = w * h;
 
         int air = airCountHistory.isEmpty() ? 0 : airCountHistory.getLast();
@@ -567,18 +535,18 @@ public class SimulationPresentation extends BorderPane {
 
         // Subtle modern hover effect
         btn.setOnMouseEntered(e -> {
-            if (control.getAbstraction().getParameters().getWindDirection() != dir) {
+            if (control.getWindDirection() != dir) {
                 btn.setStyle("-fx-background-color: #d4e157; -fx-text-fill: #1a237e; -fx-font-weight: bold; -fx-font-size: 10px; -fx-background-radius: 4; -fx-border-color: #afb42b; -fx-border-radius: 4;");
             }
         });
         btn.setOnMouseExited(e -> {
-            if (control.getAbstraction().getParameters().getWindDirection() != dir) {
+            if (control.getWindDirection() != dir) {
                 btn.setStyle("-fx-background-color: #f0f4c3; -fx-text-fill: #37474f; -fx-font-weight: bold; -fx-font-size: 10px; -fx-background-radius: 4; -fx-border-color: #d4e157; -fx-border-radius: 4;");
             }
         });
 
         btn.setOnAction(e -> {
-            control.getAbstraction().getParameters().setWindDirection(dir);
+            control.setWindDirection(dir);
             updateWindUISelection();
         });
 
@@ -587,7 +555,7 @@ public class SimulationPresentation extends BorderPane {
     }
 
     private void updateWindUISelection() {
-        WindDirection currentDir = control.getAbstraction().getParameters().getWindDirection();
+        WindDirection currentDir = control.getWindDirection();
         for (Map.Entry<WindDirection, Button> entry : windDirButtons.entrySet()) {
             WindDirection dir = entry.getKey();
             Button btn = entry.getValue();

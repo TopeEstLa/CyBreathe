@@ -121,4 +121,72 @@ public class CLIController {
     public void loadSimulation(File file) throws IOException, ClassNotFoundException {
         this.abstraction = SimulationAbstraction.loadFromFile(file);
     }
+
+    public int getTickCount() {
+        return abstraction.getTickCount();
+    }
+
+    public int getGridWidth() {
+        return abstraction.getGrid().getWidth();
+    }
+
+    public int getGridHeight() {
+        return abstraction.getGrid().getHeight();
+    }
+
+    public char getCellConsoleChar(int x, int y) {
+        AbstractCell cell = abstraction.getGrid().getCell(x, y);
+        return cell != null ? cell.getConsoleChar() : ' ';
+    }
+
+    public double getCellPollutionLevel(int x, int y) {
+        AbstractCell cell = abstraction.getGrid().getCell(x, y);
+        return cell != null ? cell.getPollutionLevel() : 0.0;
+    }
+
+    public String getCellName(int x, int y) {
+        AbstractCell cell = abstraction.getGrid().getCell(x, y);
+        return cell != null ? cell.getName() : "";
+    }
+
+    public double getDiffusionRate() {
+        return abstraction.getParameters().getDiffusionRate();
+    }
+
+    public void setDiffusionRate(double rate) {
+        abstraction.getParameters().setDiffusionRate(rate);
+    }
+
+    public double getAbsorptionRate() {
+        return abstraction.getParameters().getAbsorptionRate();
+    }
+
+    public void setAbsorptionRate(double rate) {
+        abstraction.getParameters().setAbsorptionRate(rate);
+    }
+
+    public double getGenerationRate() {
+        return abstraction.getParameters().getGenerationRate();
+    }
+
+    public void setGenerationRate(double rate) {
+        abstraction.getParameters().setGenerationRate(rate);
+    }
+
+    public WindDirection getWindDirection() {
+        return abstraction.getParameters().getWindDirection();
+    }
+
+    public void setWindDirection(WindDirection direction) {
+        abstraction.getParameters().setWindDirection(direction);
+    }
+
+    public double getWindStrength() {
+        return abstraction.getParameters().getWindStrength();
+    }
+
+    public void setWindStrength(double strength) {
+        abstraction.getParameters().setWindStrength(strength);
+    }
+
 }
