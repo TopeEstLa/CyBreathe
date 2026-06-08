@@ -5,21 +5,21 @@ import io.squid.cypgl.models.Grid;
 import io.squid.cypgl.models.SimulationParameters;
 
 /**
- * Concrete implementation of AbstractCell representing a TREE cell.
+ * Concrete implementation of AbstractCell representing a Vegetation cell.
  * Absorbs pollution from its own cell.
  *
  * @author TopeEstLa
  */
-public class TreeCell extends AbstractCell {
+public class VegetationCell extends AbstractCell {
     private static final long serialVersionUID = 1L;
 
-    public TreeCell(int x, int y, double initialPollution) {
+    public VegetationCell(int x, int y, double initialPollution) {
         super(x, y, initialPollution);
     }
 
     @Override
     public String getName() {
-        return "TREE";
+        return "VEGETATION";
     }
 
     @Override

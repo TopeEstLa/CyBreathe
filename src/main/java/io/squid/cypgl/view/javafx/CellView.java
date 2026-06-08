@@ -69,7 +69,7 @@ public class CellView extends StackPane {
                 statusNode.setFill(Color.web("#ff5722"));
                 statusNode.setVisible(true);
             }
-            case "TREE" -> {
+            case "VEGETATION" -> {
                 cellColor = Color.web("#2e7d32");
                 borderRect.setFill(cellColor);
                 borderRect.setStroke(cellColor.darker());

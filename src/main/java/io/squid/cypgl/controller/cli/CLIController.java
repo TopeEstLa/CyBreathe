@@ -4,7 +4,7 @@ import io.squid.cypgl.models.*;
 import io.squid.cypgl.models.cells.AirCell;
 import io.squid.cypgl.models.cells.BuildingCell;
 import io.squid.cypgl.models.cells.FactoryCell;
-import io.squid.cypgl.models.cells.TreeCell;
+import io.squid.cypgl.models.cells.VegetationCell;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,7 +81,7 @@ public class CLIController {
         Grid grid = abstraction.getGrid();
         AbstractCell cell = switch (typeName.toUpperCase()) {
             case "AIR" -> new AirCell(x, y, pollution);
-            case "TREE" -> new TreeCell(x, y, pollution);
+            case "VEGETATION" -> new VegetationCell(x, y, pollution);
             case "FACTORY" -> new FactoryCell(x, y, pollution);
             case "BUILDING" -> new BuildingCell(x, y, pollution);
             default -> new AirCell(x, y, pollution);
@@ -106,7 +106,7 @@ public class CLIController {
                     if (rand.nextDouble() < percentage) {
                         AbstractCell newCell = switch (typeName.toUpperCase()) {
                             case "AIR" -> new AirCell(x, y, 0.0);
-                            case "TREE" -> new TreeCell(x, y, 0.0);
+                            case "VEGETATION" -> new VegetationCell(x, y, 0.0);
                             case "FACTORY" -> new FactoryCell(x, y, 0.0);
                             case "BUILDING" -> new BuildingCell(x, y, 0.0);
                             default -> new AirCell(x, y, 0.0);
@@ -143,7 +143,7 @@ public class CLIController {
         if (cell == null) return ' ';
         return switch (cell.getName()) {
             case "AIR" -> 'A';
-            case "TREE" -> 'T';
+            case "VEGETATION" -> 'V';
             case "FACTORY" -> 'F';
             case "BUILDING" -> 'B';
             default -> ' ';

@@ -175,14 +175,14 @@ public class SimulationView extends BorderPane {
         typeLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #78909c;");
         cellTypeGroup = new ToggleGroup();
         RadioButton airRadio = new RadioButton("AIR");
-        RadioButton treeRadio = new RadioButton("TREE");
+        RadioButton vegetationRadio = new RadioButton("VEGETATION");
         RadioButton factoryRadio = new RadioButton("FACTORY");
         RadioButton buildingRadio = new RadioButton("BUILDING");
         airRadio.setToggleGroup(cellTypeGroup);
-        treeRadio.setToggleGroup(cellTypeGroup);
+        vegetationRadio.setToggleGroup(cellTypeGroup);
         factoryRadio.setToggleGroup(cellTypeGroup);
         buildingRadio.setToggleGroup(cellTypeGroup);
-        cellTypeGroup.selectToggle(treeRadio);
+        cellTypeGroup.selectToggle(vegetationRadio);
 
         // Custom rate controls
         randomRateCheckbox = new CheckBox("Randomize Power (0.5x - 2.0x)");
@@ -209,7 +209,7 @@ public class SimulationView extends BorderPane {
 
         brushBox.getChildren().addAll(
                 brushHeading, individualRadio, brushRadio, zoneRadio, new Separator(),
-                typeLabel, airRadio, treeRadio, factoryRadio, buildingRadio, new Separator(),
+                typeLabel, airRadio, vegetationRadio, factoryRadio, buildingRadio, new Separator(),
                 randomRateCheckbox, brushCustomRateLabel, brushCustomRateSlider
         );
 
@@ -382,7 +382,7 @@ public class SimulationView extends BorderPane {
     private String getSelectedCellType() {
         RadioButton selected = (RadioButton) cellTypeGroup.getSelectedToggle();
         if (selected == null) return "AIR";
-        return selected.getText(); // returns "AIR", "TREE", "FACTORY", or "BUILDING"
+        return selected.getText(); // returns "AIR", "VEGETATION", "FACTORY", or "BUILDING"
     }
 
     private String getSelectedBrushMode() {

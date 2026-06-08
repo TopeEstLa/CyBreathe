@@ -4,7 +4,7 @@ import io.squid.cypgl.models.*;
 import io.squid.cypgl.models.cells.AirCell;
 import io.squid.cypgl.models.cells.BuildingCell;
 import io.squid.cypgl.models.cells.FactoryCell;
-import io.squid.cypgl.models.cells.TreeCell;
+import io.squid.cypgl.models.cells.VegetationCell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.File;
@@ -97,9 +97,9 @@ public class CyPGLTest {
     }
 
     @Test
-    public void testTreeAbsorption() {
+    public void testVegetationAbsorption() {
         Grid grid = new Grid(1, 1);
-        AbstractCell cell = new TreeCell(0, 0, 0.8);
+        AbstractCell cell = new VegetationCell(0, 0, 0.8);
         grid.setCell(0, 0, cell);
         cell.setCustomRate(1.0);
 
@@ -107,7 +107,7 @@ public class CyPGLTest {
         cell.computeNextState(grid, params);
         
         assertEquals(0.6, cell.getNextPollutionLevel(), 0.0001);
-        assertEquals("TREE", cell.getName());
+        assertEquals("VEGETATION", cell.getName());
 
         // Commit
         cell.commitState();
@@ -180,7 +180,7 @@ public class CyPGLTest {
     public void testBinarySerialization() throws IOException, ClassNotFoundException {
         Simulation originalAbs = new Simulation(2, 2);
         originalAbs.getGrid().setCell(0, 0, new FactoryCell(0, 0, 1.0));
-        originalAbs.getGrid().setCell(0, 1, new TreeCell(0, 1, 0.5));
+        originalAbs.getGrid().setCell(0, 1, new VegetationCell(0, 1, 0.5));
         originalAbs.getGrid().setCell(1, 0, new AirCell(1, 0, 0.1));
         originalAbs.getGrid().setCell(1, 1, new AirCell(1, 1, 0.0));
         
@@ -203,7 +203,7 @@ public class CyPGLTest {
             // Assertions
             assertEquals(0.44, restoredAbs.getParameters().getDiffusionRate(), 0.0001);
             assertEquals("FACTORY", restoredAbs.getGrid().getCell(0, 0).getName());
-            assertEquals("TREE", restoredAbs.getGrid().getCell(0, 1).getName());
+            assertEquals("VEGETATION", restoredAbs.getGrid().getCell(0, 1).getName());
             assertEquals("AIR", restoredAbs.getGrid().getCell(1, 0).getName());
             assertEquals("AIR", restoredAbs.getGrid().getCell(1, 1).getName());
             

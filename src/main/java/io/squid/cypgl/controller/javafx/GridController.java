@@ -4,7 +4,7 @@ import io.squid.cypgl.models.*;
 import io.squid.cypgl.models.cells.AirCell;
 import io.squid.cypgl.models.cells.BuildingCell;
 import io.squid.cypgl.models.cells.FactoryCell;
-import io.squid.cypgl.models.cells.TreeCell;
+import io.squid.cypgl.models.cells.VegetationCell;
 import io.squid.cypgl.view.javafx.GridView;
 
 /**
@@ -100,7 +100,7 @@ public class GridController {
 
             AbstractCell newCell = switch (typeName.toUpperCase()) {
                 case "AIR" -> new AirCell(x, y, currentPollution);
-                case "TREE" -> new TreeCell(x, y, currentPollution);
+                case "VEGETATION" -> new VegetationCell(x, y, currentPollution);
                 case "FACTORY" -> new FactoryCell(x, y, currentPollution);
                 case "BUILDING" -> new BuildingCell(x, y, currentPollution);
                 default -> new AirCell(x, y, currentPollution);

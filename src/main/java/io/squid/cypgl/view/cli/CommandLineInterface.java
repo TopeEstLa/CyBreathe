@@ -101,8 +101,8 @@ public class CommandLineInterface {
                     customRate = Double.parseDouble(tokens[5]);
                 }
 
-                if (!typeStr.equals("AIR") && !typeStr.equals("TREE") && !typeStr.equals("FACTORY") && !typeStr.equals("BUILDING")) {
-                    System.out.println("Unknown type: " + typeStr + ". Choose from: AIR, TREE, FACTORY, BUILDING");
+                if (!typeStr.equals("AIR") && !typeStr.equals("VEGETATION") && !typeStr.equals("FACTORY") && !typeStr.equals("BUILDING")) {
+                    System.out.println("Unknown type: " + typeStr + ". Choose from: AIR, VEGETATION, FACTORY, BUILDING");
                     return;
                 }
 
@@ -122,7 +122,7 @@ public class CommandLineInterface {
                 }
                 String typeStr = tokens[1].toUpperCase();
                 double pct = Double.parseDouble(tokens[2]) / 100.0;
-                if (!typeStr.equals("AIR") && !typeStr.equals("TREE") && !typeStr.equals("FACTORY") && !typeStr.equals("BUILDING")) {
+                if (!typeStr.equals("AIR") && !typeStr.equals("VEGETATION") && !typeStr.equals("FACTORY") && !typeStr.equals("BUILDING")) {
                     System.out.println("Unknown type: " + typeStr);
                     return;
                 }
@@ -248,7 +248,7 @@ public class CommandLineInterface {
         System.out.print("  +");
         System.out.print("--".repeat(w));
         System.out.println("+");
-        System.out.println("Legend: . (Clean Air), ░/▒/▓/█ (Polluted Air levels), T (Tree), # (Factory), B (Building)");
+        System.out.println("Legend: . (Clean Air), ░/▒/▓/█ (Polluted Air levels), V (Vegetation), # (Factory), B (Building)");
     }
 
     private void printHelp() {
@@ -257,7 +257,7 @@ public class CommandLineInterface {
         System.out.println("  init <width> <height>              - Create a clean grid of specified dimensions.");
         System.out.println("  show                               - Render the grid visually in ASCII format.");
         System.out.println("  tick [count]                       - Run simulation for count ticks (default 1).");
-        System.out.println("  set <x> <y> <type> [pollution] [rate] - Place a cell (AIR, TREE, FACTORY, BUILDING) at (x, y) with optional pollution and custom rate multiplier.");
+        System.out.println("  set <x> <y> <type> [pollution] [rate] - Place a cell (AIR, VEGETATION, FACTORY, BUILDING) at (x, y) with optional pollution and custom rate multiplier.");
         System.out.println("  random <type> <percentage>         - Randomly seed a % of clean cells with specified type.");
         System.out.println("  stats                              - View grid configurations and cell statistics.");
         System.out.println("  config <param> <value>             - Set parameters:");

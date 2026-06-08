@@ -17,7 +17,7 @@ public class GridView extends GridPane {
     private GridController gridController;
 
     // Suppliers to fetch active selection from SimulationPresentation at runtime
-    private Supplier<String> activeBrushTypeSupplier; // "AIR", "TREE", "FACTORY", "BUILDING"
+    private Supplier<String> activeBrushTypeSupplier; // "AIR", "VEGETATION", "FACTORY", "BUILDING"
     private Supplier<String> activeBrushModeSupplier; // "BRUSH", "ZONE", "INDIVIDUAL"
     private Supplier<Double> activeCustomRateSupplier;
 
