@@ -15,6 +15,10 @@ public class AirCell extends AbstractCell {
         super(x, y, initialPollution);
     }
 
+    public AirCell(int x, int y) {
+        this(x, y, 0.0);
+    }
+
     @Override
     public String getName() {
         return "AIR";

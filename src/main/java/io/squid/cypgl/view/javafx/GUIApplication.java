@@ -19,15 +19,7 @@ public class GUIApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
         int defaultSize = 30;
-        Simulation abstraction = new Simulation(defaultSize, defaultSize);
-
-        for (int x = 0; x < defaultSize; x++) {
-            for (int y = 0; y < defaultSize; y++) {
-                abstraction.getGrid().setCell(x, y, new AirCell(x, y, 0.0));
-            }
-        }
-
-        SimulationController control = new SimulationController(abstraction);
+        SimulationController control = new SimulationController(defaultSize, defaultSize);
 
         presentation = new SimulationPresentation(control);
         Scene scene = new Scene(presentation, 1280, 800);

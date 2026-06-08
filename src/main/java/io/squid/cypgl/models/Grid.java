@@ -20,6 +20,12 @@ public class Grid implements Serializable {
         this.width = width;
         this.height = height;
         this.cells = new AbstractCell[width][height];
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                cells[x][y] = new AirCell(x, y);
+            }
+        }
     }
 
     public int getWidth() {

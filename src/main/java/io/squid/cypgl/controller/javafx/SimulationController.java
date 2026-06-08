@@ -20,14 +20,10 @@ public class SimulationController {
     private Simulation abstraction;
     private SimulationPresentation presentation;
 
-    public SimulationController(Simulation abstraction) {
-        this.abstraction = abstraction;
+    public SimulationController(int gridWidth, int gridHeight) {
+        this.abstraction = new Simulation(gridWidth, gridHeight);
         this.gridController = new GridController(abstraction.getGrid());
-        recordCurrentStats(); // Seed initial statistics
-    }
-
-    public Simulation getAbstraction() {
-        return abstraction;
+        recordCurrentStats(); 
     }
 
     public SimulationPresentation getPresentation() {
