@@ -1,6 +1,10 @@
 package io.squid.cypgl;
 
 import io.squid.cypgl.models.*;
+import io.squid.cypgl.models.cells.AirCell;
+import io.squid.cypgl.models.cells.BuildingCell;
+import io.squid.cypgl.models.cells.FactoryCell;
+import io.squid.cypgl.models.cells.TreeCell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.File;

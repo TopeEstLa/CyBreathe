@@ -1,5 +1,7 @@
 package io.squid.cypgl.models;
 
+import io.squid.cypgl.models.cells.AirCell;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

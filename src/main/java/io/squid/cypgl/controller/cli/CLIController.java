@@ -1,6 +1,10 @@
 package io.squid.cypgl.controller.cli;
 
 import io.squid.cypgl.models.*;
+import io.squid.cypgl.models.cells.AirCell;
+import io.squid.cypgl.models.cells.BuildingCell;
+import io.squid.cypgl.models.cells.FactoryCell;
+import io.squid.cypgl.models.cells.TreeCell;
 
 import java.io.File;
 import java.io.IOException;

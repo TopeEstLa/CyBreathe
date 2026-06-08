@@ -1,4 +1,9 @@
-package io.squid.cypgl.models;
+package io.squid.cypgl.models.cells;
+
+import io.squid.cypgl.models.AbstractCell;
+import io.squid.cypgl.models.Grid;
+import io.squid.cypgl.models.SimulationParameters;
+import io.squid.cypgl.models.WindDirection;
 
 import java.util.List;
 

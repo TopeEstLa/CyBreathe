@@ -1,4 +1,8 @@
-package io.squid.cypgl.models;
+package io.squid.cypgl.models.cells;
+
+import io.squid.cypgl.models.AbstractCell;
+import io.squid.cypgl.models.Grid;
+import io.squid.cypgl.models.SimulationParameters;
 
 /**
  * Concrete implementation of AbstractCell representing a TREE cell.
