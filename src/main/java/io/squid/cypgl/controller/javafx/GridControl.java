@@ -3,8 +3,6 @@ package io.squid.cypgl.controller.javafx;
 import io.squid.cypgl.models.*;
 import io.squid.cypgl.view.javafx.GridPresentation;
 
-import java.util.Random;
-
 /**
  * Controller coordinating all grid CellControl elements for JavaFX GUI.
  *
@@ -12,11 +10,11 @@ import java.util.Random;
  */
 public class GridControl {
 
-    private final GridAbstraction abstraction;
+    private final Grid abstraction;
     private final CellControl[][] cellControls;
     private GridPresentation presentation;
 
-    public GridControl(GridAbstraction abstraction) {
+    public GridControl(Grid abstraction) {
         this.abstraction = abstraction;
         int w = abstraction.getWidth();
         int h = abstraction.getHeight();

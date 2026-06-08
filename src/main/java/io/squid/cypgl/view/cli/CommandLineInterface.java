@@ -52,7 +52,7 @@ public class CommandLineInterface {
         if (w <= 0 || h <= 0) {
             throw new IllegalArgumentException("Dimensions must be positive.");
         }
-        SimulationAbstraction simAbs = new SimulationAbstraction(w, h);
+        Simulation simAbs = new Simulation(w, h);
         this.cliController = new CLIController(simAbs);
         this.cliController.initGrid(w, h);
     }

@@ -25,7 +25,7 @@ public class BuildingCell extends AbstractCell {
     }
 
     @Override
-    public void computeNextState(GridAbstraction grid, SimulationParameters params) {
+    public void computeNextState(Grid grid, SimulationParameters params) {
         setNextPollutionLevel(0.0);
     }
 }

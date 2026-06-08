@@ -9,14 +9,14 @@ import java.util.List;
  *
  * @author TopeEstLa
  */
-public class GridAbstraction implements Serializable {
+public class Grid implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final int width;
     private final int height;
     private final AbstractCell[][] cells;
 
-    public GridAbstraction(int width, int height) {
+    public Grid(int width, int height) {
         this.width = width;
         this.height = height;
         this.cells = new AbstractCell[width][height];

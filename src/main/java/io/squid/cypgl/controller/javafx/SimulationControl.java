@@ -14,16 +14,16 @@ import java.io.IOException;
 public class SimulationControl {
 
     private final GridControl gridControl;
-    private SimulationAbstraction abstraction;
+    private Simulation abstraction;
     private SimulationPresentation presentation;
 
-    public SimulationControl(SimulationAbstraction abstraction) {
+    public SimulationControl(Simulation abstraction) {
         this.abstraction = abstraction;
         this.gridControl = new GridControl(abstraction.getGrid());
         recordCurrentStats(); // Seed initial statistics
     }
 
-    public SimulationAbstraction getAbstraction() {
+    public Simulation getAbstraction() {
         return abstraction;
     }
 
@@ -71,7 +71,7 @@ public class SimulationControl {
      * Scans the grid, calculates aggregate statistics, and records them in history.
      */
     public void recordCurrentStats() {
-        GridAbstraction grid = abstraction.getGrid();
+        Grid grid = abstraction.getGrid();
         int w = grid.getWidth();
         int h = grid.getHeight();
         int totalCells = w * h;
@@ -112,7 +112,7 @@ public class SimulationControl {
      */
     public void loadSimulation(File file) throws IOException, ClassNotFoundException {
         // Load the new abstraction
-        SimulationAbstraction loadedAbs = SimulationAbstraction.loadFromFile(file);
+        Simulation loadedAbs = Simulation.loadFromFile(file);
 
         // Swap active abstraction reference
         this.abstraction = loadedAbs;
@@ -149,7 +149,7 @@ public class SimulationControl {
      * Resets the entire simulation to a clean state.
      */
     public synchronized void clearSimulation() {
-        GridAbstraction grid = abstraction.getGrid();
+        Grid grid = abstraction.getGrid();
         int w = grid.getWidth();
         int h = grid.getHeight();
         for (int x = 0; x < w; x++) {

@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author TopeEstLa
  */
-public class SimulationAbstraction implements Serializable {
+public class Simulation implements Serializable {
     private static final long serialVersionUID = 1L;
 
     // Historical statistics for charting/trend purposes
@@ -19,13 +19,13 @@ public class SimulationAbstraction implements Serializable {
     private final List<Integer> treeCountHistory;
     private final List<Integer> factoryCountHistory;
     private final List<Integer> airCountHistory;
-    private GridAbstraction grid;
+    private Grid grid;
     private SimulationParameters parameters;
     private int tickCount;
     private int speedDelayMs = 200; // Delay between steps in milliseconds
 
-    public SimulationAbstraction(int gridWidth, int gridHeight) {
-        this.grid = new GridAbstraction(gridWidth, gridHeight);
+    public Simulation(int gridWidth, int gridHeight) {
+        this.grid = new Grid(gridWidth, gridHeight);
         this.parameters = new SimulationParameters();
         this.tickCount = 0;
         this.avgPollutionHistory = new ArrayList<>();
@@ -37,17 +37,17 @@ public class SimulationAbstraction implements Serializable {
     /**
      * Imports a saved simulation state from a binary file.
      */
-    public static SimulationAbstraction loadFromFile(File file) throws IOException, ClassNotFoundException {
+    public static Simulation loadFromFile(File file) throws IOException, ClassNotFoundException {
         try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
-            return (SimulationAbstraction) ois.readObject();
+            return (Simulation) ois.readObject();
         }
     }
 
-    public GridAbstraction getGrid() {
+    public Grid getGrid() {
         return grid;
     }
 
-    public void setGrid(GridAbstraction grid) {
+    public void setGrid(Grid grid) {
         this.grid = grid;
     }
 

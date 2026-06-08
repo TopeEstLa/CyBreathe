@@ -17,24 +17,18 @@ public class GUIApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // Create a default 30x30 simulation grid
         int defaultSize = 30;
-        SimulationAbstraction abstraction = new SimulationAbstraction(defaultSize, defaultSize);
+        Simulation abstraction = new Simulation(defaultSize, defaultSize);
 
-        // Pre-fill with standard clean AIR cells
         for (int x = 0; x < defaultSize; x++) {
             for (int y = 0; y < defaultSize; y++) {
                 abstraction.getGrid().setCell(x, y, new AirCell(x, y, 0.0));
             }
         }
 
-        // Initialize root agent Controller
         SimulationControl control = new SimulationControl(abstraction);
 
-        // Initialize root agent View
         presentation = new SimulationPresentation(control);
-
-        // Create main application Scene
         Scene scene = new Scene(presentation, 1280, 800);
 
         primaryStage.setTitle("CyBreathe v1.0");

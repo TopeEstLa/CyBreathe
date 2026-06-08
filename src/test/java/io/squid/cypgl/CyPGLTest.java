@@ -27,7 +27,7 @@ public class CyPGLTest {
 
     @Test
     public void testBoundedMooreNeighbors() {
-        GridAbstraction grid = new GridAbstraction(3, 3);
+        Grid grid = new Grid(3, 3);
 
         // Populate grid
         for (int x = 0; x < 3; x++) {
@@ -47,7 +47,7 @@ public class CyPGLTest {
 
     @Test
     public void testAirDiffusionMath() {
-        GridAbstraction grid = new GridAbstraction(3, 3);
+        Grid grid = new Grid(3, 3);
 
         // Populate: (1, 1) is AIR with 0.0 pollution.
         // Neighbors: 4 of them are 1.0, 4 of them are 0.0
@@ -79,7 +79,7 @@ public class CyPGLTest {
 
     @Test
     public void testFactoryCreation() {
-        GridAbstraction grid = new GridAbstraction(1, 1);
+        Grid grid = new Grid(1, 1);
         AbstractCell cell = new FactoryCell(0, 0, 0.0);
         cell.setCustomRate(1.0);
         grid.setCell(0, 0, cell);
@@ -94,7 +94,7 @@ public class CyPGLTest {
 
     @Test
     public void testTreeAbsorption() {
-        GridAbstraction grid = new GridAbstraction(1, 1);
+        Grid grid = new Grid(1, 1);
         AbstractCell cell = new TreeCell(0, 0, 0.8);
         grid.setCell(0, 0, cell);
         cell.setCustomRate(1.0);
@@ -112,7 +112,7 @@ public class CyPGLTest {
 
     @Test
     public void testBuildingBlocksPollution() {
-        GridAbstraction grid = new GridAbstraction(3, 3);
+        Grid grid = new Grid(3, 3);
         
         // (1, 1) is BUILDING
         grid.setCell(1, 1, new BuildingCell(1, 1, 0.0));
@@ -145,7 +145,7 @@ public class CyPGLTest {
 
     @Test
     public void testWindAdvectionMath() {
-        GridAbstraction grid = new GridAbstraction(3, 3);
+        Grid grid = new Grid(3, 3);
         for (int x = 0; x < 3; x++) {
             for (int y = 0; y < 3; y++) {
                 grid.setCell(x, y, new AirCell(x, y, 0.0));
@@ -174,7 +174,7 @@ public class CyPGLTest {
 
     @Test
     public void testBinarySerialization() throws IOException, ClassNotFoundException {
-        SimulationAbstraction originalAbs = new SimulationAbstraction(2, 2);
+        Simulation originalAbs = new Simulation(2, 2);
         originalAbs.getGrid().setCell(0, 0, new FactoryCell(0, 0, 1.0));
         originalAbs.getGrid().setCell(0, 1, new TreeCell(0, 1, 0.5));
         originalAbs.getGrid().setCell(1, 0, new AirCell(1, 0, 0.1));
@@ -193,7 +193,7 @@ public class CyPGLTest {
             assertTrue(tempFile.exists());
 
             // Load
-            SimulationAbstraction restoredAbs = SimulationAbstraction.loadFromFile(tempFile);
+            Simulation restoredAbs = Simulation.loadFromFile(tempFile);
             assertNotNull(restoredAbs);
 
             // Assertions

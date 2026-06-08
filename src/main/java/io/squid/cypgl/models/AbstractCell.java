@@ -78,7 +78,7 @@ public abstract class AbstractCell implements Serializable {
     /**
      * Calculates the next state of the cell and stores it in double-buffered fields.
      */
-    public abstract void computeNextState(GridAbstraction grid, SimulationParameters params);
+    public abstract void computeNextState(Grid grid, SimulationParameters params);
 
     /**
      * Commits the computed double-buffered state to the active state.

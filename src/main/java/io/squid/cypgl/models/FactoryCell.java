@@ -24,7 +24,7 @@ public class FactoryCell extends AbstractCell {
     }
 
     @Override
-    public void computeNextState(GridAbstraction grid, SimulationParameters params) {
+    public void computeNextState(Grid grid, SimulationParameters params) {
         setNextPollutionLevel(getCustomRate());
     }
 

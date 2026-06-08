@@ -14,13 +14,13 @@ import java.util.Random;
  */
 public class CLIController {
 
-    private SimulationAbstraction abstraction;
+    private Simulation abstraction;
 
-    public CLIController(SimulationAbstraction abstraction) {
+    public CLIController(Simulation abstraction) {
         this.abstraction = abstraction;
     }
 
-    public SimulationAbstraction getAbstraction() {
+    public Simulation getAbstraction() {
         return abstraction;
     }
 
@@ -28,7 +28,7 @@ public class CLIController {
      * Initializes the simulation model grid with clean AIR cells.
      */
     public void initGrid(int w, int h) {
-        this.abstraction = new SimulationAbstraction(w, h);
+        this.abstraction = new Simulation(w, h);
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
                 this.abstraction.getGrid().setCell(x, y, new AirCell(x, y, 0.0));
@@ -40,7 +40,7 @@ public class CLIController {
      * Runs simulation execution loop for a specific tick count.
      */
     public void tick(int count) {
-        GridAbstraction grid = abstraction.getGrid();
+        Grid grid = abstraction.getGrid();
         SimulationParameters params = abstraction.getParameters();
         int w = grid.getWidth();
         int h = grid.getHeight();
@@ -74,7 +74,7 @@ public class CLIController {
      * Replaces the cell at (x, y) with a new subclass representing the target type.
      */
     public void setCell(int x, int y, String typeName, double pollution, double customRate) {
-        GridAbstraction grid = abstraction.getGrid();
+        Grid grid = abstraction.getGrid();
         AbstractCell cell = switch (typeName.toUpperCase()) {
             case "AIR" -> new AirCell(x, y, pollution);
             case "TREE" -> new TreeCell(x, y, pollution);
@@ -91,7 +91,7 @@ public class CLIController {
      */
     public void massSpawn(String typeName, double percentage) {
         Random rand = new Random();
-        GridAbstraction grid = abstraction.getGrid();
+        Grid grid = abstraction.getGrid();
         int w = grid.getWidth();
         int h = grid.getHeight();
 
@@ -119,7 +119,7 @@ public class CLIController {
     }
 
     public void loadSimulation(File file) throws IOException, ClassNotFoundException {
-        this.abstraction = SimulationAbstraction.loadFromFile(file);
+        this.abstraction = Simulation.loadFromFile(file);
     }
 
     public int getTickCount() {

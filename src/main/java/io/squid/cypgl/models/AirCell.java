@@ -26,7 +26,7 @@ public class AirCell extends AbstractCell {
     }
 
     @Override
-    public void computeNextState(GridAbstraction grid, SimulationParameters params) {
+    public void computeNextState(Grid grid, SimulationParameters params) {
         List<AbstractCell> neighbors = grid.getNeighbors(x, y);
         double sum = 0.0;
         double totalWeight = 0.0;

@@ -24,7 +24,7 @@ public class TreeCell extends AbstractCell {
     }
 
     @Override
-    public void computeNextState(GridAbstraction grid, SimulationParameters params) {
+    public void computeNextState(Grid grid, SimulationParameters params) {
         double nextPollution = pollutionLevel - (params.getAbsorptionRate() * getCustomRate());
         setNextPollutionLevel(Math.max(0.0, nextPollution));
     }

@@ -33,7 +33,7 @@ public class CellControl {
     /**
      * Triggers the cell model to compute its double-buffered next state.
      */
-    public void computeNextState(GridAbstraction grid, SimulationParameters params) {
+    public void computeNextState(Grid grid, SimulationParameters params) {
         abstraction.computeNextState(grid, params);
     }
 
