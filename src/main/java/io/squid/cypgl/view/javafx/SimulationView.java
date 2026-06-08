@@ -21,10 +21,10 @@ import java.util.*;
  *
  * @author TopeEstLa
  */
-public class SimulationPresentation extends BorderPane {
+public class SimulationView extends BorderPane {
 
     private final SimulationController control;
-    private final GridPresentation gridPresentation;
+    private final GridView gridView;
     private final Map<WindDirection, Button> windDirButtons = new HashMap<>();
     // Timeline loop state
     private Timer timerLoop;
@@ -52,9 +52,9 @@ public class SimulationPresentation extends BorderPane {
     private LineChart<Number, Number> pollutionChart;
     private XYChart.Series<Number, Number> pollutionSeries;
 
-    public SimulationPresentation(SimulationController control) {
+    public SimulationView(SimulationController control) {
         this.control = control;
-        this.gridPresentation = new GridPresentation();
+        this.gridView = new GridView();
 
         // Build the GUI components FIRST
         setupTopToolbar();
@@ -100,7 +100,7 @@ public class SimulationPresentation extends BorderPane {
         clearBtn.setOnAction(e -> {
             stopSimulationLoop();
             control.clearSimulation();
-            gridPresentation.rebuildDisplay();
+            gridView.rebuildDisplay();
         });
 
         saveBtn.setOnAction(e -> {
@@ -138,7 +138,7 @@ public class SimulationPresentation extends BorderPane {
         CheckBox debugCheckbox = new CheckBox("🐞 Debug Values");
         debugCheckbox.setStyle("-fx-font-weight: bold; -fx-text-fill: #37474f;");
         debugCheckbox.setOnAction(e -> {
-            CellPresentation.setShowDebugValues(debugCheckbox.isSelected());
+            CellView.setShowDebugValues(debugCheckbox.isSelected());
             control.getGridControl().updateAllCellPresentations();
         });
 
@@ -288,7 +288,7 @@ public class SimulationPresentation extends BorderPane {
     }
 
     private void setupCenterGrid() {
-        StackPane gridContainer = new StackPane(gridPresentation);
+        StackPane gridContainer = new StackPane(gridView);
         gridContainer.setPadding(new Insets(15));
         gridContainer.setAlignment(Pos.CENTER);
         gridContainer.setStyle("-fx-background-color: #ffffff;");
@@ -364,7 +364,7 @@ public class SimulationPresentation extends BorderPane {
     }
 
     public void rebuildGridDisplay(GridController gridController) {
-        gridPresentation.initializeGrid(
+        gridView.initializeGrid(
                 gridController,
                 this::getSelectedCellType,
                 this::getSelectedBrushMode,
@@ -431,7 +431,6 @@ public class SimulationPresentation extends BorderPane {
         int h = control.getGridHeight();
         int total = w * h;
 
-        System.out.println(avgPollutionHistory);
         double pollution = avgPollutionHistory.isEmpty() ? 0.0 : avgPollutionHistory.getLast();
 
         // 3. Build summary statistics text

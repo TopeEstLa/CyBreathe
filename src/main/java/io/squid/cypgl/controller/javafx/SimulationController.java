@@ -4,7 +4,7 @@ import io.squid.cypgl.models.AbstractCell;
 import io.squid.cypgl.models.Grid;
 import io.squid.cypgl.models.Simulation;
 import io.squid.cypgl.models.WindDirection;
-import io.squid.cypgl.view.javafx.SimulationPresentation;
+import io.squid.cypgl.view.javafx.SimulationView;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class SimulationController {
 
     private final GridController gridController;
     private Simulation abstraction;
-    private SimulationPresentation presentation;
+    private SimulationView presentation;
 
     public SimulationController(int gridWidth, int gridHeight) {
         this.abstraction = new Simulation(gridWidth, gridHeight);
@@ -26,11 +26,11 @@ public class SimulationController {
         recordCurrentStats();
     }
 
-    public SimulationPresentation getPresentation() {
+    public SimulationView getPresentation() {
         return presentation;
     }
 
-    public void setPresentation(SimulationPresentation presentation) {
+    public void setPresentation(SimulationView presentation) {
         this.presentation = presentation;
         updatePresentation();
     }

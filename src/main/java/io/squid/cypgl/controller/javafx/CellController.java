@@ -3,7 +3,7 @@ package io.squid.cypgl.controller.javafx;
 import io.squid.cypgl.models.AbstractCell;
 import io.squid.cypgl.models.Grid;
 import io.squid.cypgl.models.SimulationParameters;
-import io.squid.cypgl.view.javafx.CellPresentation;
+import io.squid.cypgl.view.javafx.CellView;
 
 /**
  * Controller mediating communication between AbstractCell model and JavaFX CellPresentation view.
@@ -13,7 +13,7 @@ import io.squid.cypgl.view.javafx.CellPresentation;
 public class CellController {
 
     private AbstractCell abstraction;
-    private CellPresentation presentation;
+    private CellView presentation;
 
     public CellController(AbstractCell abstraction) {
         this.abstraction = abstraction;
@@ -23,11 +23,11 @@ public class CellController {
         return abstraction;
     }
 
-    public CellPresentation getPresentation() {
+    public CellView getPresentation() {
         return presentation;
     }
 
-    public void setPresentation(CellPresentation presentation) {
+    public void setPresentation(CellView presentation) {
         this.presentation = presentation;
         updatePresentation();
     }

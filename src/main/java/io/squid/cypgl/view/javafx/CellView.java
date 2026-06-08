@@ -11,14 +11,14 @@ import javafx.scene.shape.Rectangle;
  *
  * @author TopeEstLa
  */
-public class CellPresentation extends StackPane {
+public class CellView extends StackPane {
 
     private static boolean showDebugValues = false;
     private final Rectangle borderRect;
     private final Circle statusNode;
     private final Label debugLabel;
 
-    public CellPresentation(double cellSize) {
+    public CellView(double cellSize) {
         setPrefSize(cellSize, cellSize);
         setMinSize(cellSize, cellSize);
         setMaxSize(cellSize, cellSize);

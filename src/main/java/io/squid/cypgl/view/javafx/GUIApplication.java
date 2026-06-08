@@ -1,8 +1,6 @@
 package io.squid.cypgl.view.javafx;
 
 import io.squid.cypgl.controller.javafx.SimulationController;
-import io.squid.cypgl.models.AirCell;
-import io.squid.cypgl.models.Simulation;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -14,7 +12,7 @@ import javafx.stage.Stage;
  */
 public class GUIApplication extends Application {
 
-    private SimulationPresentation presentation;
+    private SimulationView presentation;
 
     @Override
     public void start(Stage primaryStage) {
@@ -22,7 +20,7 @@ public class GUIApplication extends Application {
             int defaultSize = 30;
             SimulationController control = new SimulationController(defaultSize, defaultSize);
 
-            presentation = new SimulationPresentation(control);
+            presentation = new SimulationView(control);
             Scene scene = new Scene(presentation, 1280, 800);
 
             primaryStage.setTitle("CyBreathe v1.0");

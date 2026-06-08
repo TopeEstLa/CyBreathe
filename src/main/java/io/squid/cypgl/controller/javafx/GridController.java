@@ -1,7 +1,7 @@
 package io.squid.cypgl.controller.javafx;
 
 import io.squid.cypgl.models.*;
-import io.squid.cypgl.view.javafx.GridPresentation;
+import io.squid.cypgl.view.javafx.GridView;
 
 /**
  * Controller coordinating all grid CellControl elements for JavaFX GUI.
@@ -12,7 +12,7 @@ public class GridController {
 
     private final Grid abstraction;
     private final CellController[][] cellControllers;
-    private GridPresentation presentation;
+    private GridView presentation;
 
     public GridController(Grid abstraction) {
         this.abstraction = abstraction;
@@ -40,11 +40,11 @@ public class GridController {
         return abstraction.getHeight();
     }
 
-    public GridPresentation getPresentation() {
+    public GridView getPresentation() {
         return presentation;
     }
 
-    public void setPresentation(GridPresentation presentation) {
+    public void setPresentation(GridView presentation) {
         this.presentation = presentation;
     }
 

@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  *
  * @author TopeEstLa
  */
-public class GridPresentation extends GridPane {
+public class GridView extends GridPane {
 
     private GridController gridController;
 
@@ -55,7 +55,7 @@ public class GridPresentation extends GridPane {
             for (int y = 0; y < h; y++) {
                 CellController cellCtrl = gridController.getCellControl(x, y);
 
-                CellPresentation cellPres = new CellPresentation(cellSize);
+                CellView cellPres = new CellView(cellSize);
                 cellCtrl.setPresentation(cellPres);
 
                 final int finalX = x;
