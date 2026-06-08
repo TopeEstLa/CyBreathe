@@ -2,7 +2,6 @@ package io.squid.cypgl.view.javafx;
 
 import io.squid.cypgl.controller.javafx.CellControl;
 import io.squid.cypgl.controller.javafx.GridControl;
-import io.squid.cypgl.models.AbstractCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 
@@ -50,18 +49,15 @@ public class GridPresentation extends GridPane {
         int w = gridControl.getWidth();
         int h = gridControl.getHeight();
 
-        // Calculate a responsive cell size based on grid size
         double cellSize = Math.clamp(600.0 / Math.max(w, h), 10.0, 40.0);
 
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
                 CellControl cellCtrl = gridControl.getCellControl(x, y);
 
-                // Create individual visual node
                 CellPresentation cellPres = new CellPresentation(cellSize);
                 cellCtrl.setPresentation(cellPres);
 
-                // Setup interactive mouse events on this specific cell coordinates
                 final int finalX = x;
                 final int finalY = y;
 
@@ -69,23 +65,19 @@ public class GridPresentation extends GridPane {
                     if (e.getButton() == MouseButton.PRIMARY) {
                         String mode = activeBrushModeSupplier.get();
                         if ("ZONE".equals(mode)) {
-                            // Record drag start coordinate
                             zoneStartX = finalX;
                             zoneStartY = finalY;
                         } else {
-                            // Single click edits cell immediately
                             applyActivePaint(finalX, finalY);
                         }
                     }
                 });
 
                 cellPres.setOnDragDetected(e -> {
-                    // Start full drag-over paint
                     cellPres.startFullDrag();
                 });
 
                 cellPres.setOnMouseDragEntered(e -> {
-                    // Paint cell when dragged over in BRUSH mode
                     if ("BRUSH".equals(activeBrushModeSupplier.get())) {
                         applyActivePaint(finalX, finalY);
                     }
@@ -93,7 +85,6 @@ public class GridPresentation extends GridPane {
 
                 cellPres.setOnMouseReleased(e -> {
                     if (e.getButton() == MouseButton.PRIMARY && "ZONE".equals(activeBrushModeSupplier.get())) {
-                        // Apply bulk zone rectangle on drag release
                         if (zoneStartX != -1 && zoneStartY != -1) {
                             String type = activeBrushTypeSupplier.get();
                             gridControl.applyZone(zoneStartX, zoneStartY, finalX, finalY, type);
@@ -119,7 +110,6 @@ public class GridPresentation extends GridPane {
                     }
                 });
 
-                // Add node to grid layout (column = x, row = y)
                 add(cellPres, x, y);
             }
         }

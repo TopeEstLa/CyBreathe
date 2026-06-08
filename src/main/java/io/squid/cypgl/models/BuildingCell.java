@@ -10,7 +10,6 @@ public class BuildingCell extends AbstractCell {
     private static final long serialVersionUID = 1L;
 
     public BuildingCell(int x, int y, double initialPollution) {
-        // Buildings are solid impermeable obstacles, they lock pollution at 0.0
         super(x, y, 0.0);
     }
 

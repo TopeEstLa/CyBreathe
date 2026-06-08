@@ -208,7 +208,6 @@ public class CommandLineInterface {
         int w = cliController.getGridWidth();
         int h = cliController.getGridHeight();
 
-        // Print header coordinate index
         System.out.print("   ");
         for (int x = 0; x < w; x++) {
             System.out.print(x % 10 + " ");
@@ -225,7 +224,6 @@ public class CommandLineInterface {
                 char c = cliController.getCellConsoleChar(x, y);
                 String typeName = cliController.getCellName(x, y);
 
-                // For AIR cells, show shaded intensity depending on pollution
                 if ("AIR".equals(typeName)) {
                     double poll = cliController.getCellPollutionLevel(x, y);
                     if (poll == 0.0) {

@@ -45,30 +45,25 @@ public class AirCell extends AbstractCell {
 
             double weight = 1.0;
             if (hasWind) {
-                // Relative direction vector from the neighbor to the current cell (-dx, -dy)
                 double dx = neighbor.getX() - x;
                 double dy = neighbor.getY() - y;
                 double vx = -dx;
                 double vy = -dy;
 
-                // Normalize neighbor-to-cell direction vector
                 double lenV = Math.hypot(vx, vy);
                 if (lenV > 0) {
                     vx /= lenV;
                     vy /= lenV;
                 }
 
-                // Normalize wind direction vector
                 double lenW = Math.hypot(wx, wy);
                 double wnx = wx / lenW;
                 double wny = wy / lenW;
 
-                // Dot product indicates alignment of wind direction with neighbor-to-cell vector
                 double dot = vx * wnx + vy * wny;
 
-                // Calculate wind influence weight: upstream neighbors get higher weight, downstream get lower
                 weight = 1.0 + windStrength * dot;
-                weight = Math.max(0.0, weight); // Guard against negative weights
+                weight = Math.max(0.0, weight);
             }
 
             sum += neighbor.getPollutionLevel() * weight;

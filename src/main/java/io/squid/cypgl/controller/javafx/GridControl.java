@@ -103,9 +103,7 @@ public class GridControl {
             };
             newCell.setCustomRate(currentCustomRate);
             
-            // Re-assign grid model cell
             abstraction.setCell(x, y, newCell);
-            // Re-assign control model cell
             ctrl.setCellType(newCell);
         }
     }

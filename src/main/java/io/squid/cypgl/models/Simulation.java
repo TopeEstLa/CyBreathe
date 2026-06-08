@@ -14,7 +14,6 @@ import java.util.List;
 public class Simulation implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    // Historical statistics for charting/trend purposes
     private final List<Double> avgPollutionHistory;
     private final List<Integer> treeCountHistory;
     private final List<Integer> factoryCountHistory;
@@ -22,7 +21,7 @@ public class Simulation implements Serializable {
     private Grid grid;
     private SimulationParameters parameters;
     private int tickCount;
-    private int speedDelayMs = 200; // Delay between steps in milliseconds
+    private int speedDelayMs = 200;
 
     public Simulation(int gridWidth, int gridHeight) {
         this.grid = new Grid(gridWidth, gridHeight);
@@ -104,7 +103,6 @@ public class Simulation implements Serializable {
         factoryCountHistory.add(factories);
         airCountHistory.add(air);
 
-        // Keep history size reasonable (e.g. 200 ticks)
         if (avgPollutionHistory.size() > 200) {
             avgPollutionHistory.removeFirst();
             treeCountHistory.removeFirst();

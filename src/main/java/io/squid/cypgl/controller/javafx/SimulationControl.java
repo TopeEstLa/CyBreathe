@@ -44,17 +44,12 @@ public class SimulationControl {
      * Performs a single simulation step (double-buffered tick).
      */
     public synchronized void tick() {
-        // Phase 1: Compute next state based on neighbors' current state
         gridControl.computeNextStates(abstraction.getParameters());
 
-        // Phase 2: Commit computed states to active states
         gridControl.commitStates();
 
-        // Update statistics
         abstraction.incrementTickCount();
         recordCurrentStats();
-
-        // Propagate UI update
         updatePresentation();
     }
 
@@ -111,19 +106,14 @@ public class SimulationControl {
      * Restores a simulation state from a binary file and rebuilds the controller links.
      */
     public void loadSimulation(File file) throws IOException, ClassNotFoundException {
-        // Load the new abstraction
         Simulation loadedAbs = Simulation.loadFromFile(file);
 
-        // Swap active abstraction reference
         this.abstraction = loadedAbs;
 
-        // Rebuild cell controls
         gridControl.rebuildCellControls();
 
-        // Update stats
         recordCurrentStats();
 
-        // Redraw GUI if active
         if (presentation != null) {
             presentation.rebuildGridDisplay(gridControl);
             updatePresentation();

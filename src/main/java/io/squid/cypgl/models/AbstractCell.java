@@ -14,11 +14,9 @@ public abstract class AbstractCell implements Serializable {
     protected final int x;
     protected final int y;
 
-    // Active state variables
     protected double pollutionLevel;
     protected double nextPollutionLevel;
 
-    // Individual properties: custom rate multiplier (e.g. tree absorption, factory emission power)
     protected double customRate;
 
     public AbstractCell(int x, int y, double initialPollution) {
