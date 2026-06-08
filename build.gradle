@@ -1,29 +1,27 @@
 plugins {
     id 'java'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 group = 'io.squid'
 version = '1.0-SNAPSHOT'
 
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
 repositories {
     mavenCentral()
 }
 
-def osName = System.getProperty('os.name').toLowerCase()
-def javafxPlatform = osName.contains('windows') ? 'win' : (osName.contains('mac') ? 'mac' : 'linux')
-
 dependencies {
-    implementation "org.openjfx:javafx-controls:21:${javafxPlatform}"
-    implementation "org.openjfx:javafx-graphics:21:${javafxPlatform}"
-    implementation "org.openjfx:javafx-base:21:${javafxPlatform}"
-
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-test {
-    useJUnitPlatform()
+
+javafx {
+    version = "21.0.11"
+    modules = [ 'javafx.controls' ]
 }
 
 jar {
@@ -34,6 +32,10 @@ jar {
                 "Implementation-Title": project.name
         )
     }
+}
+
+test {
+    useJUnitPlatform()
 }
 
 tasks.register('run', JavaExec) {
