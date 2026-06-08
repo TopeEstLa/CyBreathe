@@ -176,14 +176,6 @@ public class CLIController {
         abstraction.getParameters().setAbsorptionRate(rate);
     }
 
-    public double getGenerationRate() {
-        return abstraction.getParameters().getGenerationRate();
-    }
-
-    public void setGenerationRate(double rate) {
-        abstraction.getParameters().setGenerationRate(rate);
-    }
-
     public WindDirection getWindDirection() {
         return abstraction.getParameters().getWindDirection();
     }

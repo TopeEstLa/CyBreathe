@@ -36,8 +36,6 @@ public class SimulationView extends BorderPane {
     private Slider speedSlider;
     private Slider diffusionSlider;
     private Slider absorptionSlider;
-    private Slider generationSlider;
-    private Slider massSeedSlider;
     // Brush custom rate controls
     private CheckBox randomRateCheckbox;
     private Slider brushCustomRateSlider;
@@ -266,14 +264,12 @@ public class SimulationView extends BorderPane {
 
         diffusionSlider = new Slider(0.05, 0.8, 0.3);
         absorptionSlider = new Slider(0.02, 0.5, 0.15);
-        generationSlider = new Slider(0.1, 1.0, 0.5);
         speedSlider = new Slider(50, 1000, 200);
 
         ratesBox.getChildren().addAll(
                 ratesHeading,
                 new Label("Diffusion Rate:"), diffusionSlider,
                 new Label("Absorption Power:"), absorptionSlider,
-                new Label("Factory Output:"), generationSlider,
                 new Label("Tick Delay (ms):"), speedSlider
         );
 
@@ -342,7 +338,6 @@ public class SimulationView extends BorderPane {
         // Set initial values
         diffusionSlider.setValue(control.getDiffusionRate());
         absorptionSlider.setValue(control.getAbsorptionRate());
-        generationSlider.setValue(control.getGenerationRate());
         speedSlider.setValue(control.getSpeedDelayMs());
 
         windStrengthSlider.setValue(control.getWindStrength());
@@ -352,7 +347,6 @@ public class SimulationView extends BorderPane {
         // Bidirectional-like listener updates
         diffusionSlider.valueProperty().addListener((obs, ov, nv) -> control.setDiffusionRate(nv.doubleValue()));
         absorptionSlider.valueProperty().addListener((obs, ov, nv) -> control.setAbsorptionRate(nv.doubleValue()));
-        generationSlider.valueProperty().addListener((obs, ov, nv) -> control.setGenerationRate(nv.doubleValue()));
 
         speedSlider.valueProperty().addListener((obs, ov, nv) -> {
             control.setSpeedDelayMs(nv.intValue());

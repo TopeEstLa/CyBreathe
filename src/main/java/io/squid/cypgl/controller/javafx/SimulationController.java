@@ -157,14 +157,6 @@ public class SimulationController {
         abstraction.getParameters().setAbsorptionRate(rate);
     }
 
-    public double getGenerationRate() {
-        return abstraction.getParameters().getGenerationRate();
-    }
-
-    public void setGenerationRate(double rate) {
-        abstraction.getParameters().setGenerationRate(rate);
-    }
-
     public int getSpeedDelayMs() {
         return abstraction.getSpeedDelayMs();
     }

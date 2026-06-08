@@ -26,7 +26,6 @@ public class CyPGLTest {
         params = new SimulationParameters();
         params.setDiffusionRate(0.5);
         params.setAbsorptionRate(0.2);
-        params.setGenerationRate(0.4);
     }
 
     @Test

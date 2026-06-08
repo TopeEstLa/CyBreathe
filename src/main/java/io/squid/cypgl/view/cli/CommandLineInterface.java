@@ -179,10 +179,6 @@ public class CommandLineInterface {
                 cliController.setAbsorptionRate(Double.parseDouble(val));
                 System.out.printf("Absorption rate set to %.2f%n", cliController.getAbsorptionRate());
             }
-            case "generation" -> {
-                cliController.setGenerationRate(Double.parseDouble(val));
-                System.out.printf("Generation rate set to %.2f%n", cliController.getGenerationRate());
-            }
             case "wind_direction" -> {
                 try {
                     WindDirection dir = WindDirection.valueOf(val.toUpperCase().replace("-", "_"));
