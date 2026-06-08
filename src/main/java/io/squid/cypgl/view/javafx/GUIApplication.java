@@ -1,7 +1,7 @@
 package io.squid.cypgl.view.javafx;
 
 import io.squid.cypgl.models.*;
-import io.squid.cypgl.controller.javafx.SimulationControl;
+import io.squid.cypgl.controller.javafx.SimulationController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -26,7 +26,7 @@ public class GUIApplication extends Application {
             }
         }
 
-        SimulationControl control = new SimulationControl(abstraction);
+        SimulationController control = new SimulationController(abstraction);
 
         presentation = new SimulationPresentation(control);
         Scene scene = new Scene(presentation, 1280, 800);

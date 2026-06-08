@@ -1,7 +1,7 @@
 package io.squid.cypgl.view.javafx;
 
-import io.squid.cypgl.controller.javafx.GridControl;
-import io.squid.cypgl.controller.javafx.SimulationControl;
+import io.squid.cypgl.controller.javafx.GridController;
+import io.squid.cypgl.controller.javafx.SimulationController;
 import io.squid.cypgl.models.*;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -27,7 +27,7 @@ import java.util.TimerTask;
  */
 public class SimulationPresentation extends BorderPane {
 
-    private final SimulationControl control;
+    private final SimulationController control;
     private final GridPresentation gridPresentation;
 
     // Timeline loop state
@@ -66,7 +66,7 @@ public class SimulationPresentation extends BorderPane {
     private XYChart.Series<Number, Number> factorySeries;
     private XYChart.Series<Number, Number> pollutionSeries;
 
-    public SimulationPresentation(SimulationControl control) {
+    public SimulationPresentation(SimulationController control) {
         this.control = control;
         this.gridPresentation = new GridPresentation();
 
@@ -396,9 +396,9 @@ public class SimulationPresentation extends BorderPane {
         });
     }
 
-    public void rebuildGridDisplay(GridControl gridControl) {
+    public void rebuildGridDisplay(GridController gridController) {
         gridPresentation.initializeGrid(
-                gridControl,
+                gridController,
                 this::getSelectedCellType,
                 this::getSelectedBrushMode,
                 this::getBrushCustomRate

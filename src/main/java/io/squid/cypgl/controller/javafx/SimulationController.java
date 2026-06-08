@@ -11,15 +11,15 @@ import java.io.IOException;
  *
  * @author TopeEstLa
  */
-public class SimulationControl {
+public class SimulationController {
 
-    private final GridControl gridControl;
+    private final GridController gridController;
     private Simulation abstraction;
     private SimulationPresentation presentation;
 
-    public SimulationControl(Simulation abstraction) {
+    public SimulationController(Simulation abstraction) {
         this.abstraction = abstraction;
-        this.gridControl = new GridControl(abstraction.getGrid());
+        this.gridController = new GridController(abstraction.getGrid());
         recordCurrentStats(); // Seed initial statistics
     }
 
@@ -36,17 +36,17 @@ public class SimulationControl {
         updatePresentation();
     }
 
-    public GridControl getGridControl() {
-        return gridControl;
+    public GridController getGridControl() {
+        return gridController;
     }
 
     /**
      * Performs a single simulation step (double-buffered tick).
      */
     public synchronized void tick() {
-        gridControl.computeNextStates(abstraction.getParameters());
+        gridController.computeNextStates(abstraction.getParameters());
 
-        gridControl.commitStates();
+        gridController.commitStates();
 
         abstraction.incrementTickCount();
         recordCurrentStats();
@@ -110,12 +110,12 @@ public class SimulationControl {
 
         this.abstraction = loadedAbs;
 
-        gridControl.rebuildCellControls();
+        gridController.rebuildCellControls();
 
         recordCurrentStats();
 
         if (presentation != null) {
-            presentation.rebuildGridDisplay(gridControl);
+            presentation.rebuildGridDisplay(gridController);
             updatePresentation();
         }
     }
@@ -144,8 +144,8 @@ public class SimulationControl {
         int h = grid.getHeight();
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
-                gridControl.setCellType(x, y, "AIR");
-                gridControl.getCellControl(x, y).setPollution(0.0);
+                gridController.setCellType(x, y, "AIR");
+                gridController.getCellControl(x, y).setPollution(0.0);
             }
         }
         abstraction.resetTickCount();

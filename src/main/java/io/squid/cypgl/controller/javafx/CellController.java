@@ -8,12 +8,12 @@ import io.squid.cypgl.view.javafx.CellPresentation;
  *
  * @author TopeEstLa
  */
-public class CellControl {
+public class CellController {
 
     private AbstractCell abstraction;
     private CellPresentation presentation;
 
-    public CellControl(AbstractCell abstraction) {
+    public CellController(AbstractCell abstraction) {
         this.abstraction = abstraction;
     }
 

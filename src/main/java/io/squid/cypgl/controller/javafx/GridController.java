@@ -8,17 +8,17 @@ import io.squid.cypgl.view.javafx.GridPresentation;
  *
  * @author TopeEstLa
  */
-public class GridControl {
+public class GridController {
 
     private final Grid abstraction;
-    private final CellControl[][] cellControls;
+    private final CellController[][] cellControllers;
     private GridPresentation presentation;
 
-    public GridControl(Grid abstraction) {
+    public GridController(Grid abstraction) {
         this.abstraction = abstraction;
         int w = abstraction.getWidth();
         int h = abstraction.getHeight();
-        this.cellControls = new CellControl[w][h];
+        this.cellControllers = new CellController[w][h];
 
         // Initialize child cell controls
         for (int x = 0; x < w; x++) {
@@ -27,7 +27,7 @@ public class GridControl {
                 if (cellAbs == null) {
                     throw new IllegalStateException("Grid cells not initialized in Abstraction!");
                 }
-                this.cellControls[x][y] = new CellControl(cellAbs);
+                this.cellControllers[x][y] = new CellController(cellAbs);
             }
         }
     }
@@ -48,13 +48,13 @@ public class GridControl {
         this.presentation = presentation;
     }
 
-    public CellControl[][] getCellControls() {
-        return cellControls;
+    public CellController[][] getCellControls() {
+        return cellControllers;
     }
 
-    public CellControl getCellControl(int x, int y) {
+    public CellController getCellControl(int x, int y) {
         if (x >= 0 && x < abstraction.getWidth() && y >= 0 && y < abstraction.getHeight()) {
-            return cellControls[x][y];
+            return cellControllers[x][y];
         }
         return null;
     }
@@ -67,7 +67,7 @@ public class GridControl {
         int h = abstraction.getHeight();
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
-                cellControls[x][y].computeNextState(abstraction, params);
+                cellControllers[x][y].computeNextState(abstraction, params);
             }
         }
     }
@@ -80,7 +80,7 @@ public class GridControl {
         int h = abstraction.getHeight();
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
-                cellControls[x][y].commitState();
+                cellControllers[x][y].commitState();
             }
         }
     }
@@ -89,7 +89,7 @@ public class GridControl {
      * Applies a cell brush modification at coordinates (x, y).
      */
     public void setCellType(int x, int y, String typeName) {
-        CellControl ctrl = getCellControl(x, y);
+        CellController ctrl = getCellControl(x, y);
         if (ctrl != null) {
             double currentPollution = ctrl.getAbstraction().getPollutionLevel();
             double currentCustomRate = ctrl.getAbstraction().getCustomRate();
@@ -133,7 +133,7 @@ public class GridControl {
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
                 AbstractCell cellAbs = abstraction.getCell(x, y);
-                this.cellControls[x][y] = new CellControl(cellAbs);
+                this.cellControllers[x][y] = new CellController(cellAbs);
             }
         }
     }
@@ -146,8 +146,8 @@ public class GridControl {
         int h = abstraction.getHeight();
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
-                if (cellControls[x][y] != null) {
-                    cellControls[x][y].updatePresentation();
+                if (cellControllers[x][y] != null) {
+                    cellControllers[x][y].updatePresentation();
                 }
             }
         }

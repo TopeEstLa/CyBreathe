@@ -1,7 +1,7 @@
 package io.squid.cypgl.view.javafx;
 
-import io.squid.cypgl.controller.javafx.CellControl;
-import io.squid.cypgl.controller.javafx.GridControl;
+import io.squid.cypgl.controller.javafx.CellController;
+import io.squid.cypgl.controller.javafx.GridController;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 
@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  */
 public class GridPresentation extends GridPane {
 
-    private GridControl gridControl;
+    private GridController gridController;
 
     // Suppliers to fetch active selection from SimulationPresentation at runtime
     private Supplier<String> activeBrushTypeSupplier; // "AIR", "TREE", "FACTORY", "BUILDING"
@@ -26,12 +26,12 @@ public class GridPresentation extends GridPane {
     private int zoneStartY = -1;
 
     public void initializeGrid(
-            GridControl control,
+            GridController control,
             Supplier<String> activeBrushTypeSupplier,
             Supplier<String> activeBrushModeSupplier,
             Supplier<Double> activeCustomRateSupplier) {
 
-        this.gridControl = control;
+        this.gridController = control;
         this.activeBrushTypeSupplier = activeBrushTypeSupplier;
         this.activeBrushModeSupplier = activeBrushModeSupplier;
         this.activeCustomRateSupplier = activeCustomRateSupplier;
@@ -44,16 +44,16 @@ public class GridPresentation extends GridPane {
      */
     public void rebuildDisplay() {
         getChildren().clear();
-        if (gridControl == null) return;
+        if (gridController == null) return;
 
-        int w = gridControl.getWidth();
-        int h = gridControl.getHeight();
+        int w = gridController.getWidth();
+        int h = gridController.getHeight();
 
         double cellSize = Math.clamp(600.0 / Math.max(w, h), 10.0, 40.0);
 
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
-                CellControl cellCtrl = gridControl.getCellControl(x, y);
+                CellController cellCtrl = gridController.getCellControl(x, y);
 
                 CellPresentation cellPres = new CellPresentation(cellSize);
                 cellCtrl.setPresentation(cellPres);
@@ -87,17 +87,17 @@ public class GridPresentation extends GridPane {
                     if (e.getButton() == MouseButton.PRIMARY && "ZONE".equals(activeBrushModeSupplier.get())) {
                         if (zoneStartX != -1 && zoneStartY != -1) {
                             String type = activeBrushTypeSupplier.get();
-                            gridControl.applyZone(zoneStartX, zoneStartY, finalX, finalY, type);
+                            gridController.applyZone(zoneStartX, zoneStartY, finalX, finalY, type);
 
                             int minX = Math.max(0, Math.min(zoneStartX, finalX));
-                            int maxX = Math.min(gridControl.getWidth() - 1, Math.max(zoneStartX, finalX));
+                            int maxX = Math.min(gridController.getWidth() - 1, Math.max(zoneStartX, finalX));
                             int minY = Math.max(0, Math.min(zoneStartY, finalY));
-                            int maxY = Math.min(gridControl.getHeight() - 1, Math.max(zoneStartY, finalY));
+                            int maxY = Math.min(gridController.getHeight() - 1, Math.max(zoneStartY, finalY));
 
                             Double rate = activeCustomRateSupplier.get();
                             for (int zx = minX; zx <= maxX; zx++) {
                                 for (int zy = minY; zy <= maxY; zy++) {
-                                    CellControl zctrl = gridControl.getCellControl(zx, zy);
+                                    CellController zctrl = gridController.getCellControl(zx, zy);
                                     if (zctrl != null && rate != null) {
                                         zctrl.setCustomRate(rate);
                                     }
@@ -117,9 +117,9 @@ public class GridPresentation extends GridPane {
 
     private void applyActivePaint(int x, int y) {
         String brushType = activeBrushTypeSupplier.get();
-        CellControl ctrl = gridControl.getCellControl(x, y);
+        CellController ctrl = gridController.getCellControl(x, y);
         if (ctrl != null && brushType != null) {
-            gridControl.setCellType(x, y, brushType);
+            gridController.setCellType(x, y, brushType);
 
             // Assign customRate from active brush settings
             Double rate = activeCustomRateSupplier.get();
