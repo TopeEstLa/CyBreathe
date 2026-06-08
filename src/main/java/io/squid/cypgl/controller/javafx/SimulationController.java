@@ -16,7 +16,7 @@ import java.io.IOException;
  */
 public class SimulationController {
 
-    private final GridController gridController;
+    private GridController gridController;
     private Simulation abstraction;
     private SimulationView presentation;
 
@@ -99,13 +99,12 @@ public class SimulationController {
         Simulation loadedAbs = Simulation.loadFromFile(file);
 
         this.abstraction = loadedAbs;
-
-        gridController.rebuildCellControls();
+        this.gridController = new GridController(abstraction.getGrid());
 
         recordCurrentStats();
 
         if (presentation != null) {
-            presentation.rebuildGridDisplay(gridController);
+            presentation.rebuildGridDisplay();
             updatePresentation();
         }
     }

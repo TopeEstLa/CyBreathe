@@ -64,7 +64,7 @@ public class SimulationView extends BorderPane {
         this.control.setPresentation(this);
 
         // Initialize grid display
-        rebuildGridDisplay(control.getGridControl());
+        rebuildGridDisplay();
 
         // Bind UI values to simulation properties
         bindProperties();
@@ -357,9 +357,9 @@ public class SimulationView extends BorderPane {
         });
     }
 
-    public void rebuildGridDisplay(GridController gridController) {
+    public void rebuildGridDisplay() {
         gridView.initializeGrid(
-                gridController,
+                this.control.getGridControl(),
                 this::getSelectedCellType,
                 this::getSelectedBrushMode,
                 this::getBrushCustomRate
