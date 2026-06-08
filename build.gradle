@@ -25,12 +25,16 @@ javafx {
 }
 
 jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes(
                 "Main-Class": "io.squid.cypgl.CyPGL",
                 "Implementation-Version": version,
                 "Implementation-Title": project.name
         )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
