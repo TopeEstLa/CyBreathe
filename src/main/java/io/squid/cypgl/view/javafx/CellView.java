@@ -18,6 +18,11 @@ public class CellView extends StackPane {
     private final Circle statusNode;
     private final Label debugLabel;
 
+    private boolean highlighted;
+    private String lastTypeName;
+    private double lastPollutionLevel;
+    private double lastCustomRate;
+
     public CellView(double cellSize) {
         setPrefSize(cellSize, cellSize);
         setMinSize(cellSize, cellSize);
@@ -32,6 +37,11 @@ public class CellView extends StackPane {
 
         this.debugLabel = new Label();
         this.debugLabel.setMouseTransparent(true);
+
+        this.highlighted = false;
+        this.lastTypeName = "AIR";
+        this.lastPollutionLevel = 0.0;
+        this.lastCustomRate = 0.0;
 
         getChildren().addAll(borderRect, statusNode, debugLabel);
     }
@@ -48,6 +58,10 @@ public class CellView extends StackPane {
      * Renders the cell visually according to its type name, pollution level, and customRate strength.
      */
     public void draw(String typeName, double pollutionLevel, double customRate) {
+        this.lastTypeName = typeName;
+        this.lastPollutionLevel = pollutionLevel;
+        this.lastCustomRate = customRate;
+
         Color cellColor;
 
         switch (typeName) {
@@ -93,6 +107,11 @@ public class CellView extends StackPane {
             }
         }
 
+        if (highlighted) {
+            borderRect.setStroke(Color.GOLD);
+            borderRect.setStrokeWidth(2.0);
+        }
+
         if (showDebugValues) {
             debugLabel.setText(String.format("%.2f", pollutionLevel));
             if (typeName.equals("AIR") && pollutionLevel <= 0.4) {
@@ -103,6 +122,13 @@ public class CellView extends StackPane {
             debugLabel.setVisible(true);
         } else {
             debugLabel.setVisible(false);
+        }
+    }
+
+    public void setHighlighted(boolean highlighted) {
+        if (this.highlighted != highlighted) {
+            this.highlighted = highlighted;
+            draw(lastTypeName, lastPollutionLevel, lastCustomRate);
         }
     }
 }

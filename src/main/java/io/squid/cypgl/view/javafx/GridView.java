@@ -24,6 +24,8 @@ public class GridView extends GridPane {
     // Track state for Zone selection box
     private int zoneStartX = -1;
     private int zoneStartY = -1;
+    private boolean dragDetected = false;
+    private boolean zoneApplied = false;
 
     public void initializeGrid(
             GridController control,
@@ -67,6 +69,8 @@ public class GridView extends GridPane {
                         if ("ZONE".equals(mode)) {
                             zoneStartX = finalX;
                             zoneStartY = finalY;
+                            dragDetected = false;
+                            zoneApplied = false;
                         } else {
                             applyActivePaint(finalX, finalY);
                         }
@@ -74,43 +78,117 @@ public class GridView extends GridPane {
                 });
 
                 cellPres.setOnDragDetected(e -> {
-                    cellPres.startFullDrag();
+                    if (e.getButton() == MouseButton.PRIMARY) {
+                        String mode = activeBrushModeSupplier.get();
+                        if ("ZONE".equals(mode)) {
+                            dragDetected = true;
+                        }
+                        cellPres.startFullDrag();
+                    }
                 });
 
                 cellPres.setOnMouseDragEntered(e -> {
-                    if ("BRUSH".equals(activeBrushModeSupplier.get())) {
+                    String mode = activeBrushModeSupplier.get();
+                    if ("BRUSH".equals(mode)) {
                         applyActivePaint(finalX, finalY);
+                    } else if ("ZONE".equals(mode)) {
+                        if (zoneStartX != -1 && zoneStartY != -1) {
+                            highlightZone(zoneStartX, zoneStartY, finalX, finalY);
+                        }
+                    }
+                });
+
+                cellPres.setOnMouseDragReleased(e -> {
+                    if ("ZONE".equals(activeBrushModeSupplier.get())) {
+                        if (zoneStartX != -1 && zoneStartY != -1) {
+                            applyZonePaint(zoneStartX, zoneStartY, finalX, finalY);
+                        }
                     }
                 });
 
                 cellPres.setOnMouseReleased(e -> {
                     if (e.getButton() == MouseButton.PRIMARY && "ZONE".equals(activeBrushModeSupplier.get())) {
-                        if (zoneStartX != -1 && zoneStartY != -1) {
-                            String type = activeBrushTypeSupplier.get();
-                            gridController.applyZone(zoneStartX, zoneStartY, finalX, finalY, type);
-
-                            int minX = Math.max(0, Math.min(zoneStartX, finalX));
-                            int maxX = Math.min(gridController.getWidth() - 1, Math.max(zoneStartX, finalX));
-                            int minY = Math.max(0, Math.min(zoneStartY, finalY));
-                            int maxY = Math.min(gridController.getHeight() - 1, Math.max(zoneStartY, finalY));
-
-                            Double rate = activeCustomRateSupplier.get();
-                            for (int zx = minX; zx <= maxX; zx++) {
-                                for (int zy = minY; zy <= maxY; zy++) {
-                                    CellController zctrl = gridController.getCellControl(zx, zy);
-                                    if (zctrl != null && rate != null) {
-                                        zctrl.setCustomRate(rate);
-                                    }
-                                }
+                        if (!dragDetected) {
+                            if (zoneStartX != -1 && zoneStartY != -1) {
+                                applyZonePaint(zoneStartX, zoneStartY, finalX, finalY);
                             }
-
-                            zoneStartX = -1;
-                            zoneStartY = -1;
+                        } else {
+                            javafx.application.Platform.runLater(() -> {
+                                if (!zoneApplied && zoneStartX != -1) {
+                                    clearHighlight();
+                                    zoneStartX = -1;
+                                    zoneStartY = -1;
+                                }
+                            });
                         }
                     }
                 });
 
                 add(cellPres, x, y);
+            }
+        }
+    }
+
+    private void applyZonePaint(int startX, int startY, int endX, int endY) {
+        String type = activeBrushTypeSupplier.get();
+        gridController.applyZone(startX, startY, endX, endY, type);
+
+        int minX = Math.max(0, Math.min(startX, endX));
+        int maxX = Math.min(gridController.getWidth() - 1, Math.max(startX, endX));
+        int minY = Math.max(0, Math.min(startY, endY));
+        int maxY = Math.min(gridController.getHeight() - 1, Math.max(startY, endY));
+
+        Double rate = activeCustomRateSupplier.get();
+        for (int zx = minX; zx <= maxX; zx++) {
+            for (int zy = minY; zy <= maxY; zy++) {
+                CellController zctrl = gridController.getCellControl(zx, zy);
+                if (zctrl != null && rate != null) {
+                    zctrl.setCustomRate(rate);
+                }
+            }
+        }
+
+        clearHighlight();
+        zoneStartX = -1;
+        zoneStartY = -1;
+        zoneApplied = true;
+    }
+
+    private void highlightZone(int startX, int startY, int endX, int endY) {
+        int minX = Math.max(0, Math.min(startX, endX));
+        int maxX = Math.min(gridController.getWidth() - 1, Math.max(startX, endX));
+        int minY = Math.max(0, Math.min(startY, endY));
+        int maxY = Math.min(gridController.getHeight() - 1, Math.max(startY, endY));
+
+        int w = gridController.getWidth();
+        int h = gridController.getHeight();
+
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                CellController ctrl = gridController.getCellControl(x, y);
+                if (ctrl != null) {
+                    CellView view = ctrl.getPresentation();
+                    if (view != null) {
+                        boolean inZone = (x >= minX && x <= maxX && y >= minY && y <= maxY);
+                        view.setHighlighted(inZone);
+                    }
+                }
+            }
+        }
+    }
+
+    private void clearHighlight() {
+        int w = gridController.getWidth();
+        int h = gridController.getHeight();
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                CellController ctrl = gridController.getCellControl(x, y);
+                if (ctrl != null) {
+                    CellView view = ctrl.getPresentation();
+                    if (view != null) {
+                        view.setHighlighted(false);
+                    }
+                }
             }
         }
     }
