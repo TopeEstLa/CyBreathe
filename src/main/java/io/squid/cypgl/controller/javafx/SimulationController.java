@@ -8,6 +8,7 @@ import io.squid.cypgl.view.javafx.SimulationView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Controller mediating communication between SimulationAbstraction model and JavaFX SimulationPresentation view.
@@ -71,18 +72,22 @@ public class SimulationController {
         int totalCells = w * h;
 
         double sumPollution = 0.0;
+        int pollutedAirCount = 0;
 
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
                 AbstractCell cell = grid.getCell(x, y);
                 if (cell != null) {
                     sumPollution += cell.getPollutionLevel();
+                    if ("AIR".equals(cell.getName()) && cell.getPollutionLevel() > 0.0) {
+                        pollutedAirCount++;
+                    }
                 }
             }
         }
 
         double avgPollution = totalCells > 0 ? (sumPollution / totalCells) : 0.0;
-        abstraction.recordStats(avgPollution);
+        abstraction.recordStats(avgPollution, pollutedAirCount);
     }
 
     /**
@@ -117,9 +122,14 @@ public class SimulationController {
         if (presentation != null) {
             presentation.updateDashboard(
                     abstraction.getTickCount(),
-                    abstraction.getAvgPollutionHistory()
+                    abstraction.getAvgPollutionHistory(),
+                    abstraction.getPollutedAirHistory()
             );
         }
+    }
+
+    public java.util.List<Integer> getPollutedAirHistory() {
+        return abstraction.getPollutedAirHistory();
     }
 
     /**
@@ -188,4 +198,13 @@ public class SimulationController {
     public int getGridHeight() {
         return abstraction.getGrid().getHeight();
     }
+
+    public Map<String, Integer> getCellTypeCounts() {
+        return abstraction.getGrid().getCellTypeCounts();
+    }
+
+    public Map<String, Double> getCellTypePercentages() {
+        return abstraction.getGrid().getCellTypePercentages();
+    }
 }
+

@@ -5,6 +5,7 @@ import io.squid.cypgl.models.Simulation;
 import io.squid.cypgl.models.WindDirection;
 
 import java.io.File;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -138,6 +139,7 @@ public class CommandLineInterface {
                 String val = tokens[2].toLowerCase();
                 applyConfig(param, val);
             }
+            case "stats" -> printStats();
             case "save" -> {
                 if (tokens.length < 2) {
                     System.out.println("Usage: save <filename>");
@@ -265,5 +267,36 @@ public class CommandLineInterface {
         System.out.println("  save <filename>                    - Save current simulation state to a binary file.");
         System.out.println("  load <filename>                    - Load a simulation state from a binary file.");
         System.out.println("  exit / quit                        - Terminate the application.");
+    }
+
+    private void printStats() {
+        System.out.println("================================================");
+        System.out.println("  Simulation Statistics & Configurations  ");
+        System.out.println("================================================");
+        System.out.printf("Grid Size          : %d x %d%n", cliController.getGridWidth(), cliController.getGridHeight());
+        System.out.printf("Total Ticks        : %d%n", cliController.getTickCount());
+
+        double avgPoll = 0.0;
+        java.util.List<Double> history = cliController.getAbstraction().getAvgPollutionHistory();
+        if (!history.isEmpty()) {
+            avgPoll = history.get(history.size() - 1);
+        }
+        System.out.printf("Average Pollution  : %.4f%n", avgPoll);
+        System.out.println();
+        System.out.println("Cell Types Distribution:");
+        Map<String, Integer> counts = cliController.getCellTypeCounts();
+        Map<String, Double> percentages = cliController.getCellTypePercentages();
+        for (String type : counts.keySet()) {
+            int count = counts.get(type);
+            double pct = percentages.get(type) * 100.0;
+            System.out.printf("  %-10s: %d cells (%.1f%%)%n", type, count, pct);
+        }
+        System.out.println();
+        System.out.println("Configurations:");
+        System.out.printf("  Diffusion Rate   : %.2f%n", cliController.getDiffusionRate());
+        System.out.printf("  Absorption Rate  : %.2f%n", cliController.getAbsorptionRate());
+        System.out.printf("  Wind Direction   : %s%n", cliController.getWindDirection());
+        System.out.printf("  Wind Strength    : %.2f%n", cliController.getWindStrength());
+        System.out.println("================================================");
     }
 }

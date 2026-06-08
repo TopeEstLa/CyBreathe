@@ -49,6 +49,8 @@ public class SimulationView extends BorderPane {
     // Charts
     private LineChart<Number, Number> pollutionChart;
     private XYChart.Series<Number, Number> pollutionSeries;
+    private LineChart<Number, Number> pollutedAirChart;
+    private XYChart.Series<Number, Number> pollutedAirSeries;
 
     public SimulationView(SimulationController control) {
         this.control = control;
@@ -324,7 +326,20 @@ public class SimulationView extends BorderPane {
         pollutionSeries = new XYChart.Series<>();
         pollutionChart.getData().add(pollutionSeries);
 
-        rightBar.getChildren().addAll(statsTitle, statsSummaryLabel, pollutionChart);
+        NumberAxis x3 = new NumberAxis();
+        NumberAxis y3 = new NumberAxis();
+        x3.setLabel("Historical Ticks");
+        y3.setLabel("Count");
+        pollutedAirChart = new LineChart<>(x3, y3);
+        pollutedAirChart.setTitle("Polluted Air Cells Count");
+        pollutedAirChart.setCreateSymbols(false);
+        pollutedAirChart.setPrefHeight(200);
+        pollutedAirChart.setLegendVisible(false);
+
+        pollutedAirSeries = new XYChart.Series<>();
+        pollutedAirChart.getData().add(pollutedAirSeries);
+
+        rightBar.getChildren().addAll(statsTitle, statsSummaryLabel, pollutionChart, pollutedAirChart);
 
         // Wrap right panel in scroll pane
         ScrollPane scroller = new ScrollPane(rightBar);
@@ -422,7 +437,8 @@ public class SimulationView extends BorderPane {
      */
     public void updateDashboard(
             int tickCount,
-            List<Double> avgPollutionHistory) {
+            List<Double> avgPollutionHistory,
+            List<Integer> pollutedAirHistory) {
 
         // 1. Update Tick Count Label
         tickLabel.setText("Tick: " + tickCount);
@@ -435,15 +451,25 @@ public class SimulationView extends BorderPane {
         double pollution = avgPollutionHistory.isEmpty() ? 0.0 : avgPollutionHistory.getLast();
 
         // 3. Build summary statistics text
-        String summary = String.format(
-                "GRID SIZE : %d x %d %n" +
-                        "TOTALS    : %d cells%n" +
-                        "POLLUTION : %.4f (avg)%n",
-                w, h, total, pollution);
-        statsSummaryLabel.setText(summary);
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("GRID SIZE : %d x %d %n", w, h));
+        sb.append(String.format("TOTALS    : %d cells%n", total));
+        sb.append(String.format("POLLUTION : %.4f (avg)%n%n", pollution));
+        sb.append(String.format("CELL DISTRIBUTION:%n"));
+
+        Map<String, Integer> counts = control.getCellTypeCounts();
+        Map<String, Double> percentages = control.getCellTypePercentages();
+        for (String type : counts.keySet()) {
+            int count = counts.get(type);
+            double pct = percentages.get(type) * 100.0;
+            sb.append(String.format("- %-10s: %d (%.1f%%)%n", type, count, pct));
+        }
+
+        statsSummaryLabel.setText(sb.toString());
 
         // 5. Update Pollution chart
         updateSeriesDouble(pollutionSeries, avgPollutionHistory);
+        updateSeries(pollutedAirSeries, pollutedAirHistory);
     }
 
     private void updateSeries(XYChart.Series<Number, Number> series, List<Integer> history) {

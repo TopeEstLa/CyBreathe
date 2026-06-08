@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -184,7 +186,7 @@ public class CyPGLTest {
         originalAbs.getGrid().setCell(1, 1, new AirCell(1, 1, 0.0));
         
         originalAbs.getParameters().setDiffusionRate(0.44);
-        originalAbs.recordStats(0.4);
+        originalAbs.recordStats(0.4, 2);
 
         // Temp file inside the project workspace directory
         File tempFile = new File("run/temp_simulation_test.cyp");
@@ -212,6 +214,8 @@ public class CyPGLTest {
             
             assertEquals(1, restoredAbs.getAvgPollutionHistory().size());
             assertEquals(0.4, restoredAbs.getAvgPollutionHistory().get(0), 0.0001);
+            assertEquals(1, restoredAbs.getPollutedAirHistory().size());
+            assertEquals(2, restoredAbs.getPollutedAirHistory().get(0));
 
         } finally {
             // Cleanup
@@ -219,5 +223,28 @@ public class CyPGLTest {
                 tempFile.delete();
             }
         }
+    }
+
+    @Test
+    public void testCellTypeStats() {
+        Grid grid = new Grid(2, 3);
+        grid.setCell(0, 0, new FactoryCell(0, 0, 1.0));
+        grid.setCell(0, 1, new VegetationCell(0, 1, 0.5));
+        grid.setCell(1, 0, new BuildingCell(1, 0, 0.0));
+        grid.setCell(1, 1, new AirCell(1, 1, 0.5)); // Polluted Air cell
+
+        Map<String, Integer> counts = grid.getCellTypeCounts();
+        assertEquals(1, counts.get("FACTORY"));
+        assertEquals(1, counts.get("VEGETATION"));
+        assertEquals(1, counts.get("BUILDING"));
+        assertEquals(2, counts.get("AIR"));
+        assertEquals(1, counts.get("POLLUTED AIR"));
+
+        Map<String, Double> percentages = grid.getCellTypePercentages();
+        assertEquals(1.0 / 6.0, percentages.get("FACTORY"), 0.0001);
+        assertEquals(1.0 / 6.0, percentages.get("VEGETATION"), 0.0001);
+        assertEquals(1.0 / 6.0, percentages.get("BUILDING"), 0.0001);
+        assertEquals(2.0 / 6.0, percentages.get("AIR"), 0.0001);
+        assertEquals(1.0 / 6.0, percentages.get("POLLUTED AIR"), 0.0001);
     }
 }

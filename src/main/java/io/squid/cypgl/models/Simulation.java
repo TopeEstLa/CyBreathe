@@ -15,6 +15,7 @@ public class Simulation implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final List<Double> avgPollutionHistory;
+    private List<Integer> pollutedAirHistory;
 
     private Grid grid;
     private SimulationParameters parameters;
@@ -26,6 +27,7 @@ public class Simulation implements Serializable {
         this.parameters = new SimulationParameters();
         this.tickCount = 0;
         this.avgPollutionHistory = new ArrayList<>();
+        this.pollutedAirHistory = new ArrayList<>();
     }
 
     /**
@@ -77,19 +79,39 @@ public class Simulation implements Serializable {
         return avgPollutionHistory;
     }
 
+    public List<Integer> getPollutedAirHistory() {
+        if (pollutedAirHistory == null) {
+            pollutedAirHistory = new ArrayList<>();
+        }
+        return pollutedAirHistory;
+    }
+
     /**
      * Appends current tick stats to the historical lists.
      */
     public void recordStats(double avgPollution) {
-        avgPollutionHistory.add(avgPollution);
+        recordStats(avgPollution, 0);
+    }
 
-        if (avgPollutionHistory.size() > 200) {
-            avgPollutionHistory.removeFirst();
+    public void recordStats(double avgPollution, int pollutedAirCount) {
+        if (avgPollutionHistory != null) {
+            avgPollutionHistory.add(avgPollution);
+            if (avgPollutionHistory.size() > 200) {
+                avgPollutionHistory.removeFirst();
+            }
+        }
+        List<Integer> pah = getPollutedAirHistory();
+        pah.add(pollutedAirCount);
+        if (pah.size() > 200) {
+            pah.removeFirst();
         }
     }
 
     public void clearHistory() {
-        avgPollutionHistory.clear();
+        if (avgPollutionHistory != null) {
+            avgPollutionHistory.clear();
+        }
+        getPollutedAirHistory().clear();
     }
 
     /**

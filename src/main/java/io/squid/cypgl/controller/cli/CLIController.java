@@ -8,6 +8,7 @@ import io.squid.cypgl.models.cells.VegetationCell;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -192,4 +193,13 @@ public class CLIController {
         abstraction.getParameters().setWindStrength(strength);
     }
 
+    public Map<String, Integer> getCellTypeCounts() {
+        return abstraction.getGrid().getCellTypeCounts();
+    }
+
+    public Map<String, Double> getCellTypePercentages() {
+        return abstraction.getGrid().getCellTypePercentages();
+    }
+
 }
+
