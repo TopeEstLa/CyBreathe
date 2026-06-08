@@ -15,9 +15,7 @@ public class Simulation implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final List<Double> avgPollutionHistory;
-    private final List<Integer> treeCountHistory;
-    private final List<Integer> factoryCountHistory;
-    private final List<Integer> airCountHistory;
+
     private Grid grid;
     private SimulationParameters parameters;
     private int tickCount;
@@ -28,9 +26,6 @@ public class Simulation implements Serializable {
         this.parameters = new SimulationParameters();
         this.tickCount = 0;
         this.avgPollutionHistory = new ArrayList<>();
-        this.treeCountHistory = new ArrayList<>();
-        this.factoryCountHistory = new ArrayList<>();
-        this.airCountHistory = new ArrayList<>();
     }
 
     /**
@@ -82,40 +77,19 @@ public class Simulation implements Serializable {
         return avgPollutionHistory;
     }
 
-    public List<Integer> getTreeCountHistory() {
-        return treeCountHistory;
-    }
-
-    public List<Integer> getFactoryCountHistory() {
-        return factoryCountHistory;
-    }
-
-    public List<Integer> getAirCountHistory() {
-        return airCountHistory;
-    }
-
     /**
      * Appends current tick stats to the historical lists.
      */
-    public void recordStats(double avgPollution, int trees, int factories, int air) {
+    public void recordStats(double avgPollution) {
         avgPollutionHistory.add(avgPollution);
-        treeCountHistory.add(trees);
-        factoryCountHistory.add(factories);
-        airCountHistory.add(air);
 
         if (avgPollutionHistory.size() > 200) {
             avgPollutionHistory.removeFirst();
-            treeCountHistory.removeFirst();
-            factoryCountHistory.removeFirst();
-            airCountHistory.removeFirst();
         }
     }
 
     public void clearHistory() {
         avgPollutionHistory.clear();
-        treeCountHistory.clear();
-        factoryCountHistory.clear();
-        airCountHistory.clear();
     }
 
     /**

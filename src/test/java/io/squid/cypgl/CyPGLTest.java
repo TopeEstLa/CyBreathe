@@ -181,7 +181,7 @@ public class CyPGLTest {
         originalAbs.getGrid().setCell(1, 1, new AirCell(1, 1, 0.0));
         
         originalAbs.getParameters().setDiffusionRate(0.44);
-        originalAbs.recordStats(0.4, 1, 1, 2);
+        originalAbs.recordStats(0.4);
 
         // Temp file inside the project workspace directory
         File tempFile = new File("run/temp_simulation_test.cyp");

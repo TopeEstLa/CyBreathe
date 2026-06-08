@@ -23,7 +23,7 @@ public class SimulationController {
     public SimulationController(int gridWidth, int gridHeight) {
         this.abstraction = new Simulation(gridWidth, gridHeight);
         this.gridController = new GridController(abstraction.getGrid());
-        recordCurrentStats(); 
+        recordCurrentStats();
     }
 
     public SimulationPresentation getPresentation() {
@@ -71,27 +71,18 @@ public class SimulationController {
         int totalCells = w * h;
 
         double sumPollution = 0.0;
-        int treeCount = 0;
-        int factoryCount = 0;
-        int airCount = 0;
 
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
                 AbstractCell cell = grid.getCell(x, y);
                 if (cell != null) {
                     sumPollution += cell.getPollutionLevel();
-                    String typeName = cell.getName();
-                    switch (typeName) {
-                        case "TREE" -> treeCount++;
-                        case "FACTORY" -> factoryCount++;
-                        case "AIR" -> airCount++;
-                    }
                 }
             }
         }
 
         double avgPollution = totalCells > 0 ? (sumPollution / totalCells) : 0.0;
-        abstraction.recordStats(avgPollution, treeCount, factoryCount, airCount);
+        abstraction.recordStats(avgPollution);
     }
 
     /**
@@ -126,10 +117,7 @@ public class SimulationController {
         if (presentation != null) {
             presentation.updateDashboard(
                     abstraction.getTickCount(),
-                    abstraction.getAvgPollutionHistory(),
-                    abstraction.getTreeCountHistory(),
-                    abstraction.getFactoryCountHistory(),
-                    abstraction.getAirCountHistory()
+                    abstraction.getAvgPollutionHistory()
             );
         }
     }

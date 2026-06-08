@@ -18,17 +18,23 @@ public class GUIApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        int defaultSize = 30;
-        SimulationController control = new SimulationController(defaultSize, defaultSize);
+        try {
+            int defaultSize = 30;
+            SimulationController control = new SimulationController(defaultSize, defaultSize);
 
-        presentation = new SimulationPresentation(control);
-        Scene scene = new Scene(presentation, 1280, 800);
+            presentation = new SimulationPresentation(control);
+            Scene scene = new Scene(presentation, 1280, 800);
 
-        primaryStage.setTitle("CyBreathe v1.0");
-        primaryStage.setScene(scene);
-        primaryStage.setMinWidth(1000);
-        primaryStage.setMinHeight(700);
-        primaryStage.show();
+            primaryStage.setTitle("CyBreathe v1.0");
+            primaryStage.setScene(scene);
+            primaryStage.setMinWidth(1000);
+            primaryStage.setMinHeight(700);
+            primaryStage.show();
+        } catch (Throwable t) {
+            System.err.println("Error initializing GUI: " + t.getMessage());
+            t.printStackTrace();
+            throw new RuntimeException("Failed to initialize GUI", t);
+        }
     }
 
     @Override

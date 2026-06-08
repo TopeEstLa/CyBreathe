@@ -49,11 +49,7 @@ public class SimulationPresentation extends BorderPane {
     private Label statsSummaryLabel;
 
     // Charts
-    private LineChart<Number, Number> populationChart;
     private LineChart<Number, Number> pollutionChart;
-    private XYChart.Series<Number, Number> airSeries;
-    private XYChart.Series<Number, Number> treeSeries;
-    private XYChart.Series<Number, Number> factorySeries;
     private XYChart.Series<Number, Number> pollutionSeries;
 
     public SimulationPresentation(SimulationController control) {
@@ -319,25 +315,6 @@ public class SimulationPresentation extends BorderPane {
         statsSummaryLabel.setPrefWidth(Double.MAX_VALUE);
 
         // Setup Charts
-        // 1. Population counts chart
-        NumberAxis x1 = new NumberAxis();
-        NumberAxis y1 = new NumberAxis();
-        x1.setLabel("Historical Ticks");
-        y1.setLabel("Count");
-        populationChart = new LineChart<>(x1, y1);
-        populationChart.setTitle("Populations");
-        populationChart.setCreateSymbols(false);
-        populationChart.setPrefHeight(200);
-
-        airSeries = new XYChart.Series<>();
-        airSeries.setName("Air");
-        treeSeries = new XYChart.Series<>();
-        treeSeries.setName("Trees");
-        factorySeries = new XYChart.Series<>();
-        factorySeries.setName("Factories");
-        populationChart.getData().addAll(airSeries, treeSeries, factorySeries);
-
-        // 2. Average pollution level chart
         NumberAxis x2 = new NumberAxis();
         NumberAxis y2 = new NumberAxis();
         x2.setLabel("Historical Ticks");
@@ -351,7 +328,7 @@ public class SimulationPresentation extends BorderPane {
         pollutionSeries = new XYChart.Series<>();
         pollutionChart.getData().add(pollutionSeries);
 
-        rightBar.getChildren().addAll(statsTitle, statsSummaryLabel, populationChart, pollutionChart);
+        rightBar.getChildren().addAll(statsTitle, statsSummaryLabel, pollutionChart);
 
         // Wrap right panel in scroll pane
         ScrollPane scroller = new ScrollPane(rightBar);
@@ -444,10 +421,7 @@ public class SimulationPresentation extends BorderPane {
      */
     public void updateDashboard(
             int tickCount,
-            List<Double> avgPollutionHistory,
-            List<Integer> treeCountHistory,
-            List<Integer> factoryCountHistory,
-            List<Integer> airCountHistory) {
+            List<Double> avgPollutionHistory) {
 
         // 1. Update Tick Count Label
         tickLabel.setText("Tick: " + tickCount);
@@ -457,31 +431,16 @@ public class SimulationPresentation extends BorderPane {
         int h = control.getGridHeight();
         int total = w * h;
 
-        int air = airCountHistory.isEmpty() ? 0 : airCountHistory.getLast();
-        int trees = treeCountHistory.isEmpty() ? 0 : treeCountHistory.getLast();
-        int factories = factoryCountHistory.isEmpty() ? 0 : factoryCountHistory.getLast();
+        System.out.println(avgPollutionHistory);
         double pollution = avgPollutionHistory.isEmpty() ? 0.0 : avgPollutionHistory.getLast();
 
         // 3. Build summary statistics text
         String summary = String.format(
-                "GRID SIZE : %d x %d%n" +
+                "GRID SIZE : %d x %d %n" +
                         "TOTALS    : %d cells%n" +
-                        "POLLUTION : %.4f (avg)%n" +
-                        "POPULATIONS:%n" +
-                        " - AIR    : %d (%.1f%%)%n" +
-                        " - TREES  : %d (%.1f%%)%n" +
-                        " - FACT   : %d (%.1f%%)",
-                w, h, total, pollution,
-                air, (double) air / total * 100,
-                trees, (double) trees / total * 100,
-                factories, (double) factories / total * 100
-        );
+                        "POLLUTION : %.4f (avg)%n",
+                w, h, total, pollution);
         statsSummaryLabel.setText(summary);
-
-        // 4. Update Population charts
-        updateSeries(airSeries, airCountHistory);
-        updateSeries(treeSeries, treeCountHistory);
-        updateSeries(factorySeries, factoryCountHistory);
 
         // 5. Update Pollution chart
         updateSeriesDouble(pollutionSeries, avgPollutionHistory);
