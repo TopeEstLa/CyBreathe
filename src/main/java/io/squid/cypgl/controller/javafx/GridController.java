@@ -16,7 +16,6 @@ public class GridController {
 
     private final Grid abstraction;
     private final CellController[][] cellControllers;
-    private GridView presentation;
 
     public GridController(Grid abstraction) {
         this.abstraction = abstraction;
@@ -42,18 +41,6 @@ public class GridController {
 
     public int getHeight() {
         return abstraction.getHeight();
-    }
-
-    public GridView getPresentation() {
-        return presentation;
-    }
-
-    public void setPresentation(GridView presentation) {
-        this.presentation = presentation;
-    }
-
-    public CellController[][] getCellControls() {
-        return cellControllers;
     }
 
     public CellController getCellControl(int x, int y) {
