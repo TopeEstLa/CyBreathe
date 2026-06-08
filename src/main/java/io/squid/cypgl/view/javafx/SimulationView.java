@@ -336,13 +336,7 @@ public class SimulationView extends BorderPane {
 
     private void bindProperties() {
         // Set initial values
-        diffusionSlider.setValue(control.getDiffusionRate());
-        absorptionSlider.setValue(control.getAbsorptionRate());
-        speedSlider.setValue(control.getSpeedDelayMs());
-
-        windStrengthSlider.setValue(control.getWindStrength());
-        windStrengthLabel.setText(String.format("Wind Strength: %.0f%%", control.getWindStrength() * 100));
-        updateWindUISelection();
+        syncUIWithModel();
 
         // Bidirectional-like listener updates
         diffusionSlider.valueProperty().addListener((obs, ov, nv) -> control.setDiffusionRate(nv.doubleValue()));
@@ -355,6 +349,19 @@ public class SimulationView extends BorderPane {
                 startSimulationLoop();
             }
         });
+    }
+
+    /**
+     * Synchronizes all sliders and wind controls with the current simulation model parameters.
+     */
+    public void syncUIWithModel() {
+        diffusionSlider.setValue(control.getDiffusionRate());
+        absorptionSlider.setValue(control.getAbsorptionRate());
+        speedSlider.setValue(control.getSpeedDelayMs());
+
+        windStrengthSlider.setValue(control.getWindStrength());
+        windStrengthLabel.setText(String.format("Wind Strength: %.0f%%", control.getWindStrength() * 100));
+        updateWindUISelection();
     }
 
     public void rebuildGridDisplay() {

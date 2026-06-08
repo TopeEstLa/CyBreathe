@@ -105,6 +105,7 @@ public class SimulationController {
 
         if (presentation != null) {
             presentation.rebuildGridDisplay();
+            presentation.syncUIWithModel();
             updatePresentation();
         }
     }
