@@ -1,7 +1,8 @@
 package io.squid.cypgl.view.javafx;
 
-import io.squid.cypgl.models.*;
 import io.squid.cypgl.controller.javafx.SimulationController;
+import io.squid.cypgl.models.AirCell;
+import io.squid.cypgl.models.Simulation;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

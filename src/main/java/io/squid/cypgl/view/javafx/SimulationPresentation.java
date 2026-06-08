@@ -2,7 +2,7 @@ package io.squid.cypgl.view.javafx;
 
 import io.squid.cypgl.controller.javafx.GridController;
 import io.squid.cypgl.controller.javafx.SimulationController;
-import io.squid.cypgl.models.*;
+import io.squid.cypgl.models.WindDirection;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,11 +14,7 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 /**
  * JavaFX Dashboard presentation layer.
@@ -29,32 +25,26 @@ public class SimulationPresentation extends BorderPane {
 
     private final SimulationController control;
     private final GridPresentation gridPresentation;
-
+    private final Map<WindDirection, Button> windDirButtons = new HashMap<>();
     // Timeline loop state
     private Timer timerLoop;
-
     // UI Controls
     private ToggleGroup brushModeGroup;
     private ToggleGroup cellTypeGroup;
     private Label tickLabel;
-
     // Sliders
     private Slider speedSlider;
     private Slider diffusionSlider;
     private Slider absorptionSlider;
     private Slider generationSlider;
     private Slider massSeedSlider;
-
     // Brush custom rate controls
     private CheckBox randomRateCheckbox;
     private Slider brushCustomRateSlider;
     private Label brushCustomRateLabel;
-
     // Wind controls
     private Slider windStrengthSlider;
     private Label windStrengthLabel;
-    private final Map<WindDirection, Button> windDirButtons = new HashMap<>();
-
     // Stats Labels
     private Label statsSummaryLabel;
 

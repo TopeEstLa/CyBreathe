@@ -1,7 +1,8 @@
 package io.squid.cypgl.view.cli;
 
-import io.squid.cypgl.models.*;
 import io.squid.cypgl.controller.cli.CLIController;
+import io.squid.cypgl.models.Simulation;
+import io.squid.cypgl.models.WindDirection;
 
 import java.io.File;
 import java.util.Scanner;
@@ -200,7 +201,8 @@ public class CommandLineInterface {
                     System.out.println("Invalid strength value. Must be a double between 0.0 and 1.0.");
                 }
             }
-            default -> System.out.println("Unknown config parameter. Use: diffusion, absorption, generation, wind_direction, wind_strength");
+            default ->
+                    System.out.println("Unknown config parameter. Use: diffusion, absorption, generation, wind_direction, wind_strength");
         }
     }
 

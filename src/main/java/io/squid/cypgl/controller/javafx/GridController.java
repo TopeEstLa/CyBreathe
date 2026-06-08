@@ -93,7 +93,7 @@ public class GridController {
         if (ctrl != null) {
             double currentPollution = ctrl.getAbstraction().getPollutionLevel();
             double currentCustomRate = ctrl.getAbstraction().getCustomRate();
-            
+
             AbstractCell newCell = switch (typeName.toUpperCase()) {
                 case "AIR" -> new AirCell(x, y, currentPollution);
                 case "TREE" -> new TreeCell(x, y, currentPollution);
@@ -102,7 +102,7 @@ public class GridController {
                 default -> new AirCell(x, y, currentPollution);
             };
             newCell.setCustomRate(currentCustomRate);
-            
+
             abstraction.setCell(x, y, newCell);
             ctrl.setCellType(newCell);
         }

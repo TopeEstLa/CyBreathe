@@ -13,19 +13,10 @@ import javafx.scene.shape.Rectangle;
  */
 public class CellPresentation extends StackPane {
 
+    private static boolean showDebugValues = false;
     private final Rectangle borderRect;
     private final Circle statusNode;
     private final Label debugLabel;
-
-    private static boolean showDebugValues = false;
-
-    public static void setShowDebugValues(boolean show) {
-        showDebugValues = show;
-    }
-
-    public static boolean isShowDebugValues() {
-        return showDebugValues;
-    }
 
     public CellPresentation(double cellSize) {
         setPrefSize(cellSize, cellSize);
@@ -43,6 +34,14 @@ public class CellPresentation extends StackPane {
         this.debugLabel.setMouseTransparent(true);
 
         getChildren().addAll(borderRect, statusNode, debugLabel);
+    }
+
+    public static boolean isShowDebugValues() {
+        return showDebugValues;
+    }
+
+    public static void setShowDebugValues(boolean show) {
+        showDebugValues = show;
     }
 
     /**

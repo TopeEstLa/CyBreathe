@@ -14,7 +14,7 @@ public class SimulationParameters implements Serializable {
     private double diffusionRate = 0.3;     // Speed at which pollution spreads from Air cells (0.0 to 1.0)
     private double absorptionRate = 0.15;   // Rate at which Trees absorb pollution (0.0 to 1.0)
     private double generationRate = 0.5;   // Rate at which Factories emit pollution to neighbors (0.0 to 1.0)
-    
+
     private WindDirection windDirection = WindDirection.NONE; // Direction of atmospheric wind
     private double windStrength = 0.5;      // Strength of the wind advection effect (0.0 to 1.0)
 

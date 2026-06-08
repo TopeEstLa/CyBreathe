@@ -68,7 +68,7 @@ public class AirCell extends AbstractCell {
 
             sum += neighbor.getPollutionLevel() * weight;
             totalWeight += weight;
-            
+
             if (neighbor instanceof TreeCell) {
                 neighborAbsorptionSum += params.getAbsorptionRate() * 0.5 * neighbor.getCustomRate();
             }

@@ -1,6 +1,9 @@
 package io.squid.cypgl.controller.javafx;
 
-import io.squid.cypgl.models.*;
+import io.squid.cypgl.models.AbstractCell;
+import io.squid.cypgl.models.Grid;
+import io.squid.cypgl.models.Simulation;
+import io.squid.cypgl.models.WindDirection;
 import io.squid.cypgl.view.javafx.SimulationPresentation;
 
 import java.io.File;
