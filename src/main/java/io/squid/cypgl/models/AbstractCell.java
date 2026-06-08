@@ -38,8 +38,6 @@ public abstract class AbstractCell implements Serializable {
 
     public abstract String getName();
 
-    public abstract char getConsoleChar();
-
     public double getPollutionLevel() {
         return pollutionLevel;
     }

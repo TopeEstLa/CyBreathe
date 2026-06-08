@@ -19,11 +19,6 @@ public class FactoryCell extends AbstractCell {
     }
 
     @Override
-    public char getConsoleChar() {
-        return '#';
-    }
-
-    @Override
     public void computeNextState(Grid grid, SimulationParameters params) {
         setNextPollutionLevel(getCustomRate());
     }

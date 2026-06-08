@@ -136,7 +136,14 @@ public class CLIController {
 
     public char getCellConsoleChar(int x, int y) {
         AbstractCell cell = abstraction.getGrid().getCell(x, y);
-        return cell != null ? cell.getConsoleChar() : ' ';
+        if (cell == null) return ' ';
+        return switch (cell.getName()) {
+            case "AIR" -> 'A';
+            case "TREE" -> 'T';
+            case "FACTORY" -> 'F';
+            case "BUILDING" -> 'B';
+            default -> ' ';
+        };
     }
 
     public double getCellPollutionLevel(int x, int y) {

@@ -19,11 +19,6 @@ public class BuildingCell extends AbstractCell {
     }
 
     @Override
-    public char getConsoleChar() {
-        return 'B';
-    }
-
-    @Override
     public void computeNextState(Grid grid, SimulationParameters params) {
         setNextPollutionLevel(0.0);
     }
