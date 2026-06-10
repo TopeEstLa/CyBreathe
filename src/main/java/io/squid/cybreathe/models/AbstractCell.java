@@ -119,13 +119,6 @@ public abstract class AbstractCell implements Serializable {
     }
 
     /**
-     * Resets the next state buffer to match the current pollution level.
-     */
-    public void resetNextBuffer() {
-        this.nextPollutionLevel = this.pollutionLevel;
-    }
-
-    /**
      * Convenience method to compute the next state without a tick parameter, defaulting to 0.
      *
      * @param params the simulation parameters to use for calculations
