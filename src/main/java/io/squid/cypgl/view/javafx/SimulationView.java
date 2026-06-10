@@ -1,6 +1,5 @@
 package io.squid.cypgl.view.javafx;
 
-import io.squid.cypgl.controller.javafx.GridController;
 import io.squid.cypgl.controller.javafx.SimulationController;
 import io.squid.cypgl.models.WindDirection;
 import javafx.application.Platform;
@@ -62,19 +61,15 @@ public class SimulationView extends BorderPane {
         this.control = control;
         this.gridView = new GridView();
 
-        // Build the GUI components FIRST
         setupTopToolbar();
         setupLeftSidebar();
         setupCenterGrid();
         setupRightStatsPanel();
 
-        // Link control back to this presentation AFTER components are initialized
         this.control.setPresentation(this);
 
-        // Initialize grid display
         rebuildGridDisplay();
 
-        // Bind UI values to simulation properties
         bindProperties();
     }
 
@@ -94,7 +89,6 @@ public class SimulationView extends BorderPane {
         tickLabel = new Label("Tick: 0");
         tickLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #37474f;");
 
-        // Styling buttons
         playBtn.setStyle("-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-weight: bold;");
         pauseBtn.setStyle("-fx-background-color: #ff8f00; -fx-text-fill: white; -fx-font-weight: bold;");
         stepBtn.setStyle("-fx-background-color: #0277bd; -fx-text-fill: white; -fx-font-weight: bold;");
@@ -160,6 +154,41 @@ public class SimulationView extends BorderPane {
         sidebar.setPrefWidth(260);
         sidebar.setStyle("-fx-background-color: #f5f7f8; -fx-border-color: #cfd8dc; -fx-border-width: 0 1 0 0;");
 
+        // 0. Grid Size Configuration
+        VBox sizeBox = new VBox(8);
+        sizeBox.setStyle("-fx-border-color: #cfd8dc; -fx-border-width: 1; -fx-border-radius: 4; -fx-padding: 10; -fx-background-color: white;");
+        Label sizeHeading = new Label("Grid Size Configuration");
+        sizeHeading.setStyle("-fx-font-weight: bold; -fx-text-fill: #1a237e;");
+
+        HBox inputsBox = new HBox(8);
+        inputsBox.setAlignment(Pos.CENTER_LEFT);
+
+        Label wLabel = new Label("W:");
+        wLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #37474f; -fx-font-weight: bold;");
+        Spinner<Integer> widthSpinner = new Spinner<>(5, 100, control.getGridWidth(), 1);
+        widthSpinner.setPrefWidth(70);
+        widthSpinner.setEditable(true);
+
+        Label hLabel = new Label("H:");
+        hLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #37474f; -fx-font-weight: bold;");
+        Spinner<Integer> heightSpinner = new Spinner<>(5, 100, control.getGridHeight(), 1);
+        heightSpinner.setPrefWidth(70);
+        heightSpinner.setEditable(true);
+
+        inputsBox.getChildren().addAll(wLabel, widthSpinner, hLabel, heightSpinner);
+
+        Button resizeBtn = new Button("Apply & Reset");
+        resizeBtn.setMaxWidth(Double.MAX_VALUE);
+        resizeBtn.setStyle("-fx-background-color: #0277bd; -fx-text-fill: white; -fx-font-weight: bold;");
+        resizeBtn.setOnAction(e -> {
+            stopSimulationLoop();
+            int newW = widthSpinner.getValue();
+            int newH = heightSpinner.getValue();
+            control.resizeAndReset(newW, newH);
+        });
+
+        sizeBox.getChildren().addAll(sizeHeading, inputsBox, resizeBtn);
+
         // 1. Brush Tool Configuration
         VBox brushBox = new VBox(8);
         brushBox.setStyle("-fx-border-color: #cfd8dc; -fx-border-width: 1; -fx-border-radius: 4; -fx-padding: 10; -fx-background-color: white;");
@@ -190,7 +219,6 @@ public class SimulationView extends BorderPane {
         buildingRadio.setToggleGroup(cellTypeGroup);
         cellTypeGroup.selectToggle(vegetationRadio);
 
-        // Custom rate controls
         randomRateCheckbox = new CheckBox("Randomize Power (0.5x - 2.0x)");
         randomRateCheckbox.setStyle("-fx-font-size: 11px; -fx-text-fill: #37474f;");
         randomRateCheckbox.setSelected(false);
@@ -219,19 +247,16 @@ public class SimulationView extends BorderPane {
                 randomRateCheckbox, brushCustomRateLabel, brushCustomRateSlider
         );
 
-        // 3. Wind Control Configuration
         VBox windBox = new VBox(8);
         windBox.setStyle("-fx-border-color: #cfd8dc; -fx-border-width: 1; -fx-border-radius: 4; -fx-padding: 10; -fx-background-color: white;");
         Label windHeading = new Label("Wind Settings");
         windHeading.setStyle("-fx-font-weight: bold; -fx-text-fill: #1a237e;");
 
-        // Grid of Direction Buttons (3x3 compass layout)
         GridPane compassGrid = new GridPane();
         compassGrid.setHgap(5);
         compassGrid.setVgap(5);
         compassGrid.setAlignment(Pos.CENTER);
 
-        // Compass layout mapping: row, col -> Direction
         setupCompassButton(compassGrid, WindDirection.NORTH_WEST, "NW", 0, 0);
         setupCompassButton(compassGrid, WindDirection.NORTH, "N ⬆", 0, 1);
         setupCompassButton(compassGrid, WindDirection.NORTH_EAST, "NE", 0, 2);
@@ -242,7 +267,6 @@ public class SimulationView extends BorderPane {
         setupCompassButton(compassGrid, WindDirection.SOUTH, "S ⬇", 2, 1);
         setupCompassButton(compassGrid, WindDirection.SOUTH_EAST, "SE", 2, 2);
 
-        // Wind Strength Slider
         windStrengthLabel = new Label("Wind Strength: 50%");
         windStrengthLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #37474f; -fx-font-weight: bold;");
 
@@ -264,7 +288,6 @@ public class SimulationView extends BorderPane {
                 windStrengthLabel, windStrengthSlider
         );
 
-        // 4. Sliders and Rates
         VBox ratesBox = new VBox(8);
         ratesBox.setStyle("-fx-border-color: #cfd8dc; -fx-border-width: 1; -fx-border-radius: 4; -fx-padding: 10; -fx-background-color: white;");
         Label ratesHeading = new Label("Simulation Rates");
@@ -281,9 +304,8 @@ public class SimulationView extends BorderPane {
                 new Label("Tick Delay (ms):"), speedSlider
         );
 
-        sidebar.getChildren().addAll(brushBox, windBox, ratesBox);
+        sidebar.getChildren().addAll(brushBox, windBox, ratesBox, sizeBox);
 
-        // Wrap sidebar in ScrollPane for safety
         ScrollPane scroller = new ScrollPane(sidebar);
         scroller.setFitToWidth(true);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -313,12 +335,10 @@ public class SimulationView extends BorderPane {
         Label statsTitle = new Label("Simulation Analytics");
         statsTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #37474f;");
 
-        // Aggregate statistics summary panel
         statsSummaryLabel = new Label("Initializing statistics...");
         statsSummaryLabel.setStyle("-fx-font-family: monospace; -fx-font-size: 12px; -fx-background-color: white; -fx-border-color: #cfd8dc; -fx-border-radius: 4; -fx-padding: 8;");
         statsSummaryLabel.setPrefWidth(Double.MAX_VALUE);
 
-        // Setup Charts
         NumberAxis x2 = new NumberAxis();
         NumberAxis y2 = new NumberAxis();
         x2.setLabel("Historical Ticks");
@@ -347,7 +367,6 @@ public class SimulationView extends BorderPane {
 
         rightBar.getChildren().addAll(statsTitle, statsSummaryLabel, pollutionChart, pollutedAirChart);
 
-        // Wrap right panel in scroll pane
         ScrollPane scroller = new ScrollPane(rightBar);
         scroller.setFitToWidth(true);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -356,16 +375,13 @@ public class SimulationView extends BorderPane {
     }
 
     private void bindProperties() {
-        // Set initial values
         syncUIWithModel();
 
-        // Bidirectional-like listener updates
         diffusionSlider.valueProperty().addListener((obs, ov, nv) -> control.setDiffusionRate(nv.doubleValue()));
         absorptionSlider.valueProperty().addListener((obs, ov, nv) -> control.setAbsorptionRate(nv.doubleValue()));
 
         speedSlider.valueProperty().addListener((obs, ov, nv) -> {
             control.setSpeedDelayMs(nv.intValue());
-            // If running, restart the timer with new delay immediately
             if (timerLoop != null) {
                 startSimulationLoop();
             }
@@ -447,9 +463,9 @@ public class SimulationView extends BorderPane {
     /**
      * Updates statistical text and graphs on the UI panel.
      *
-     * @param tickCount the current tick count of the simulation
+     * @param tickCount           the current tick count of the simulation
      * @param avgPollutionHistory the historical list of average pollution levels
-     * @param pollutedAirHistory the historical list of polluted air cell counts
+     * @param pollutedAirHistory  the historical list of polluted air cell counts
      */
     public void updateDashboard(
             int tickCount,
@@ -459,14 +475,12 @@ public class SimulationView extends BorderPane {
         // 1. Update Tick Count Label
         tickLabel.setText("Tick: " + tickCount);
 
-        // 2. Compute aggregate values
         int w = control.getGridWidth();
         int h = control.getGridHeight();
         int total = w * h;
 
         double pollution = avgPollutionHistory.isEmpty() ? 0.0 : avgPollutionHistory.getLast();
 
-        // 3. Build summary statistics text
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("GRID SIZE : %d x %d %n", w, h));
         sb.append(String.format("TOTALS    : %d cells%n", total));
@@ -483,7 +497,6 @@ public class SimulationView extends BorderPane {
 
         statsSummaryLabel.setText(sb.toString());
 
-        // 5. Update Pollution chart
         updateSeriesDouble(pollutionSeries, avgPollutionHistory);
         updateSeries(pollutedAirSeries, pollutedAirHistory);
     }
@@ -505,7 +518,7 @@ public class SimulationView extends BorderPane {
     /**
      * Displays an information alert dialog.
      *
-     * @param title the title of the alert dialog
+     * @param title   the title of the alert dialog
      * @param content the context message to display
      */
     private void showInfoAlert(String title, String content) {
@@ -519,7 +532,7 @@ public class SimulationView extends BorderPane {
     /**
      * Displays an error alert dialog.
      *
-     * @param title the title of the alert dialog
+     * @param title   the title of the alert dialog
      * @param content the error message context to display
      */
     private void showErrorAlert(String title, String content) {
@@ -533,11 +546,11 @@ public class SimulationView extends BorderPane {
     /**
      * Sets up a single compass direction button in the grid layout.
      *
-     * @param grid the grid layout pane to place the button in
-     * @param dir the wind direction associated with the button
+     * @param grid  the grid layout pane to place the button in
+     * @param dir   the wind direction associated with the button
      * @param label the text label of the button
-     * @param row the grid row index
-     * @param col the grid column index
+     * @param row   the grid row index
+     * @param col   the grid column index
      */
     private void setupCompassButton(GridPane grid, WindDirection dir, String label, int row, int col) {
         Button btn = new Button(label);
@@ -545,7 +558,6 @@ public class SimulationView extends BorderPane {
         btn.setPrefSize(60, 30);
         btn.setStyle("-fx-background-color: #f0f4c3; -fx-text-fill: #37474f; -fx-font-weight: bold; -fx-font-size: 10px; -fx-background-radius: 4; -fx-border-color: #d4e157; -fx-border-radius: 4;");
 
-        // Subtle modern hover effect
         btn.setOnMouseEntered(e -> {
             if (control.getWindDirection() != dir) {
                 btn.setStyle("-fx-background-color: #d4e157; -fx-text-fill: #1a237e; -fx-font-weight: bold; -fx-font-size: 10px; -fx-background-radius: 4; -fx-border-color: #afb42b; -fx-border-radius: 4;");

@@ -55,7 +55,7 @@ public class CellController {
     /**
      * Triggers the cell model to compute its double-buffered next state.
      *
-     * @param grid the grid containing this cell and its neighbors
+     * @param grid   the grid containing this cell and its neighbors
      * @param params the global simulation parameters
      */
     public void computeNextState(Grid grid, SimulationParameters params) {

@@ -16,8 +16,8 @@ public class VegetationCell extends AbstractCell {
     /**
      * Constructs a VegetationCell at the specified coordinates with an initial pollution level.
      *
-     * @param x the x-coordinate of the cell
-     * @param y the y-coordinate of the cell
+     * @param x                the x-coordinate of the cell
+     * @param y                the y-coordinate of the cell
      * @param initialPollution the initial pollution level
      */
     public VegetationCell(int x, int y, double initialPollution) {
@@ -37,7 +37,7 @@ public class VegetationCell extends AbstractCell {
     /**
      * Computes the next state of the cell by absorbing pollution from its own cell.
      *
-     * @param grid the grid containing this cell
+     * @param grid   the grid containing this cell
      * @param params the simulation parameters controlling the absorption rate
      */
     @Override

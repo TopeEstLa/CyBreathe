@@ -19,8 +19,8 @@ public class AirCell extends AbstractCell {
     /**
      * Constructs an AirCell at the specified coordinates with an initial pollution level.
      *
-     * @param x the x-coordinate of the cell
-     * @param y the y-coordinate of the cell
+     * @param x                the x-coordinate of the cell
+     * @param y                the y-coordinate of the cell
      * @param initialPollution the initial pollution level
      */
     public AirCell(int x, int y, double initialPollution) {
@@ -51,7 +51,7 @@ public class AirCell extends AbstractCell {
      * Calculates the next state of the air cell, applying wind-weighted advection-diffusion
      * and subtracting neighboring vegetation absorption.
      *
-     * @param grid the grid containing this cell and its neighbors
+     * @param grid   the grid containing this cell and its neighbors
      * @param params the simulation parameters controlling diffusion, wind, and absorption rates
      */
     @Override

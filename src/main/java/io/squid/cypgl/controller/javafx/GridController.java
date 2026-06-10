@@ -1,11 +1,12 @@
 package io.squid.cypgl.controller.javafx;
 
-import io.squid.cypgl.models.*;
+import io.squid.cypgl.models.AbstractCell;
+import io.squid.cypgl.models.Grid;
+import io.squid.cypgl.models.SimulationParameters;
 import io.squid.cypgl.models.cells.AirCell;
 import io.squid.cypgl.models.cells.BuildingCell;
 import io.squid.cypgl.models.cells.FactoryCell;
 import io.squid.cypgl.models.cells.VegetationCell;
-import io.squid.cypgl.view.javafx.GridView;
 
 /**
  * Controller coordinating all grid CellControl elements for JavaFX GUI.
@@ -105,8 +106,8 @@ public class GridController {
     /**
      * Applies a cell brush modification at coordinates (x, y).
      *
-     * @param x the x-coordinate of the target cell
-     * @param y the y-coordinate of the target cell
+     * @param x        the x-coordinate of the target cell
+     * @param y        the y-coordinate of the target cell
      * @param typeName the name of the new cell type (e.g. "AIR", "VEGETATION", "FACTORY", "BUILDING")
      */
     public void setCellType(int x, int y, String typeName) {
@@ -132,10 +133,10 @@ public class GridController {
     /**
      * Applies a zone-selection brush filling a rectangle with a cell type.
      *
-     * @param startX the starting x-coordinate of the selection rectangle
-     * @param startY the starting y-coordinate of the selection rectangle
-     * @param endX the ending x-coordinate of the selection rectangle
-     * @param endY the ending y-coordinate of the selection rectangle
+     * @param startX   the starting x-coordinate of the selection rectangle
+     * @param startY   the starting y-coordinate of the selection rectangle
+     * @param endX     the ending x-coordinate of the selection rectangle
+     * @param endY     the ending y-coordinate of the selection rectangle
      * @param typeName the name of the cell type to fill the rectangle with
      */
     public void applyZone(int startX, int startY, int endX, int endY, String typeName) {

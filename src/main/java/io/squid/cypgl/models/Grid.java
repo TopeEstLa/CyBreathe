@@ -23,7 +23,7 @@ public class Grid implements Serializable {
     /**
      * Constructs a Grid with the specified dimensions and fills it with default clean AirCell instances.
      *
-     * @param width the width of the grid
+     * @param width  the width of the grid
      * @param height the height of the grid
      */
     public Grid(int width, int height) {
@@ -73,8 +73,8 @@ public class Grid implements Serializable {
     /**
      * Sets the cell at the specified coordinates.
      *
-     * @param x the x-coordinate where the cell should be placed
-     * @param y the y-coordinate where the cell should be placed
+     * @param x    the x-coordinate where the cell should be placed
+     * @param y    the y-coordinate where the cell should be placed
      * @param cell the cell to set
      */
     public void setCell(int x, int y, AbstractCell cell) {

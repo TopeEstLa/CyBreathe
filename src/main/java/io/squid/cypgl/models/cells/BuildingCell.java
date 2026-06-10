@@ -17,8 +17,8 @@ public class BuildingCell extends AbstractCell {
      * Constructs a BuildingCell at the specified coordinates.
      * The pollution level is locked at 0.0.
      *
-     * @param x the x-coordinate of the cell
-     * @param y the y-coordinate of the cell
+     * @param x                the x-coordinate of the cell
+     * @param y                the y-coordinate of the cell
      * @param initialPollution ignored, as buildings always have 0.0 pollution
      */
     public BuildingCell(int x, int y, double initialPollution) {
@@ -38,7 +38,7 @@ public class BuildingCell extends AbstractCell {
     /**
      * Keeps the next state pollution level locked at 0.0.
      *
-     * @param grid the grid containing this cell
+     * @param grid   the grid containing this cell
      * @param params the simulation parameters
      */
     @Override

@@ -192,7 +192,7 @@ public class CommandLineInterface {
      * Applies a configuration parameter change to the simulation model.
      *
      * @param param the parameter name to change
-     * @param val the new value to apply
+     * @param val   the new value to apply
      */
     private void applyConfig(String param, String val) {
         switch (param) {

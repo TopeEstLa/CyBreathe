@@ -30,9 +30,9 @@ public class GridView extends GridPane {
     /**
      * Initializes the GridView with its controller and the configuration suppliers.
      *
-     * @param control the grid controller mediating cell model updates
-     * @param activeBrushTypeSupplier supplier for the current active cell brush type (e.g. "AIR", "VEGETATION")
-     * @param activeBrushModeSupplier supplier for the current active brush mode (e.g. "BRUSH", "ZONE", "INDIVIDUAL")
+     * @param control                  the grid controller mediating cell model updates
+     * @param activeBrushTypeSupplier  supplier for the current active cell brush type (e.g. "AIR", "VEGETATION")
+     * @param activeBrushModeSupplier  supplier for the current active brush mode (e.g. "BRUSH", "ZONE", "INDIVIDUAL")
      * @param activeCustomRateSupplier supplier for the current active custom rate parameter
      */
     public void initializeGrid(
@@ -143,8 +143,8 @@ public class GridView extends GridPane {
      *
      * @param startX the starting x-coordinate of the rectangle
      * @param startY the starting y-coordinate of the rectangle
-     * @param endX the ending x-coordinate of the rectangle
-     * @param endY the ending y-coordinate of the rectangle
+     * @param endX   the ending x-coordinate of the rectangle
+     * @param endY   the ending y-coordinate of the rectangle
      */
     private void applyZonePaint(int startX, int startY, int endX, int endY) {
         String type = activeBrushTypeSupplier.get();
@@ -176,8 +176,8 @@ public class GridView extends GridPane {
      *
      * @param startX the starting x-coordinate
      * @param startY the starting y-coordinate
-     * @param endX the ending x-coordinate
-     * @param endY the ending y-coordinate
+     * @param endX   the ending x-coordinate
+     * @param endY   the ending y-coordinate
      */
     private void highlightZone(int startX, int startY, int endX, int endY) {
         int minX = Math.max(0, Math.min(startX, endX));

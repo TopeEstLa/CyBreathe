@@ -22,8 +22,8 @@ public abstract class AbstractCell implements Serializable {
     /**
      * Constructs an AbstractCell at the specified coordinates with an initial pollution level.
      *
-     * @param x the x-coordinate of the cell
-     * @param y the y-coordinate of the cell
+     * @param x                the x-coordinate of the cell
+     * @param y                the y-coordinate of the cell
      * @param initialPollution the initial pollution level, clamped between 0.0 and 3.0
      */
     public AbstractCell(int x, int y, double initialPollution) {
@@ -129,7 +129,7 @@ public abstract class AbstractCell implements Serializable {
      * Calculates the next state of the cell based on neighbors and parameters,
      * and stores it in the double-buffered next state field.
      *
-     * @param grid the grid containing this cell
+     * @param grid   the grid containing this cell
      * @param params the simulation parameters
      */
     public abstract void computeNextState(Grid grid, SimulationParameters params);

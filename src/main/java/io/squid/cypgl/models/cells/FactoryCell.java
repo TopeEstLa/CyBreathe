@@ -16,8 +16,8 @@ public class FactoryCell extends AbstractCell {
     /**
      * Constructs a FactoryCell at the specified coordinates with an initial pollution level.
      *
-     * @param x the x-coordinate of the cell
-     * @param y the y-coordinate of the cell
+     * @param x                the x-coordinate of the cell
+     * @param y                the y-coordinate of the cell
      * @param initialPollution the initial pollution level
      */
     public FactoryCell(int x, int y, double initialPollution) {
@@ -37,7 +37,7 @@ public class FactoryCell extends AbstractCell {
     /**
      * Computes the next state of the cell by locking its pollution level at its custom rate.
      *
-     * @param grid the grid containing this cell
+     * @param grid   the grid containing this cell
      * @param params the simulation parameters
      */
     @Override

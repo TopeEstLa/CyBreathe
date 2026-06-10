@@ -1,9 +1,6 @@
 package io.squid.cypgl.controller.javafx;
 
-import io.squid.cypgl.models.AbstractCell;
-import io.squid.cypgl.models.Grid;
-import io.squid.cypgl.models.Simulation;
-import io.squid.cypgl.models.WindDirection;
+import io.squid.cypgl.models.*;
 import io.squid.cypgl.view.javafx.SimulationView;
 
 import java.io.File;
@@ -25,7 +22,7 @@ public class SimulationController {
     /**
      * Constructs a SimulationController with a new simulation of the specified grid dimensions.
      *
-     * @param gridWidth the width of the grid
+     * @param gridWidth  the width of the grid
      * @param gridHeight the height of the grid
      */
     public SimulationController(int gridWidth, int gridHeight) {
@@ -128,7 +125,7 @@ public class SimulationController {
      * Restores a simulation state from a binary file and rebuilds the controller links.
      *
      * @param file the source file to load the simulation from
-     * @throws IOException if an I/O error occurs during loading
+     * @throws IOException            if an I/O error occurs during loading
      * @throws ClassNotFoundException if the class of a serialized object cannot be found
      */
     public void loadSimulation(File file) throws IOException, ClassNotFoundException {
@@ -311,6 +308,31 @@ public class SimulationController {
      */
     public Map<String, Double> getCellTypePercentages() {
         return abstraction.getGrid().getCellTypePercentages();
+    }
+
+    /**
+     * Resets the simulation with a new grid size, preserving the existing simulation parameters.
+     *
+     * @param width  the new width of the grid
+     * @param height the new height of the grid
+     */
+    public synchronized void resizeAndReset(int width, int height) {
+        SimulationParameters oldParams = this.abstraction.getParameters();
+        int oldSpeed = this.abstraction.getSpeedDelayMs();
+
+        this.abstraction = new Simulation(width, height);
+
+        // Preserve parameters and speed delay
+        this.abstraction.setParameters(oldParams);
+        this.abstraction.setSpeedDelayMs(oldSpeed);
+
+        this.gridController = new GridController(abstraction.getGrid());
+        recordCurrentStats();
+        if (presentation != null) {
+            presentation.rebuildGridDisplay();
+            presentation.syncUIWithModel();
+            updatePresentation();
+        }
     }
 }
 

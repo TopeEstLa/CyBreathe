@@ -52,15 +52,6 @@ public class CellView extends StackPane {
     }
 
     /**
-     * Checks if debug values (pollution numbers overlay) are globally enabled.
-     *
-     * @return true if debug values are visible, false otherwise
-     */
-    public static boolean isShowDebugValues() {
-        return showDebugValues;
-    }
-
-    /**
      * Enables or disables debug values display globally.
      *
      * @param show true to show debug values overlay, false to hide
@@ -72,9 +63,9 @@ public class CellView extends StackPane {
     /**
      * Renders the cell visually according to its type name, pollution level, and customRate strength.
      *
-     * @param typeName the cell type name (e.g. "AIR", "VEGETATION", "FACTORY", "BUILDING")
+     * @param typeName       the cell type name (e.g. "AIR", "VEGETATION", "FACTORY", "BUILDING")
      * @param pollutionLevel the current pollution level of the cell
-     * @param customRate the custom rate multiplier (absorption/production strength)
+     * @param customRate     the custom rate multiplier (absorption/production strength)
      */
     public void draw(String typeName, double pollutionLevel, double customRate) {
         this.lastTypeName = typeName;

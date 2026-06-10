@@ -54,5 +54,5 @@ tasks.register('run', JavaExec) {
     file.mkdirs()
     workingDir = file
 
-    jvmArgs = ['-Xmx512m']
+    jvmArgs = ['-Xmx2g']
 }

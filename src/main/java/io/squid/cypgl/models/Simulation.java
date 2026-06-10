@@ -25,7 +25,7 @@ public class Simulation implements Serializable {
     /**
      * Constructs a Simulation with the specified grid width and height.
      *
-     * @param gridWidth the width of the simulation grid
+     * @param gridWidth  the width of the simulation grid
      * @param gridHeight the height of the simulation grid
      */
     public Simulation(int gridWidth, int gridHeight) {
@@ -41,7 +41,7 @@ public class Simulation implements Serializable {
      *
      * @param file the source file to load the simulation from
      * @return the deserialized Simulation instance
-     * @throws IOException if an I/O error occurs
+     * @throws IOException            if an I/O error occurs
      * @throws ClassNotFoundException if the class of a serialized object cannot be found
      */
     public static Simulation loadFromFile(File file) throws IOException, ClassNotFoundException {
@@ -161,7 +161,7 @@ public class Simulation implements Serializable {
      * Appends the current average pollution level and polluted air cell count to the historical lists.
      * Limits history size to the last 200 ticks.
      *
-     * @param avgPollution the average pollution level
+     * @param avgPollution     the average pollution level
      * @param pollutedAirCount the count of polluted air cells
      */
     public void recordStats(double avgPollution, int pollutedAirCount) {

@@ -93,10 +93,10 @@ public class CLIController {
     /**
      * Replaces the cell at (x, y) with a new subclass representing the target type.
      *
-     * @param x the x-coordinate of the cell
-     * @param y the y-coordinate of the cell
-     * @param typeName the type of the cell (e.g., "AIR", "VEGETATION", "FACTORY", "BUILDING")
-     * @param pollution the initial pollution level of the cell
+     * @param x          the x-coordinate of the cell
+     * @param y          the y-coordinate of the cell
+     * @param typeName   the type of the cell (e.g., "AIR", "VEGETATION", "FACTORY", "BUILDING")
+     * @param pollution  the initial pollution level of the cell
      * @param customRate the custom rate for absorption or production for the cell
      */
     public void setCell(int x, int y, String typeName, double pollution, double customRate) {
@@ -115,7 +115,7 @@ public class CLIController {
     /**
      * Randomly spawns a percentage of cells of a target type across active clean air tiles.
      *
-     * @param typeName the type of cells to spawn (e.g., "VEGETATION", "FACTORY", "BUILDING")
+     * @param typeName   the type of cells to spawn (e.g., "VEGETATION", "FACTORY", "BUILDING")
      * @param percentage the percentage of clean air cells to replace (between 0.0 and 1.0)
      */
     public void massSpawn(String typeName, double percentage) {
@@ -157,7 +157,7 @@ public class CLIController {
      * Loads a simulation state from a file.
      *
      * @param file the file from which the simulation will be loaded
-     * @throws IOException if an I/O error occurs during loading
+     * @throws IOException            if an I/O error occurs during loading
      * @throws ClassNotFoundException if the class of a serialized object cannot be found
      */
     public void loadSimulation(File file) throws IOException, ClassNotFoundException {
