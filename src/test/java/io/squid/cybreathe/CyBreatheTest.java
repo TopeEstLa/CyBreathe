@@ -1,10 +1,10 @@
-package io.squid.cypgl;
+package io.squid.cybreathe;
 
-import io.squid.cypgl.models.*;
-import io.squid.cypgl.models.cells.AirCell;
-import io.squid.cypgl.models.cells.BuildingCell;
-import io.squid.cypgl.models.cells.FactoryCell;
-import io.squid.cypgl.models.cells.VegetationCell;
+import io.squid.cybreathe.models.*;
+import io.squid.cybreathe.models.cells.AirCell;
+import io.squid.cybreathe.models.cells.BuildingCell;
+import io.squid.cybreathe.models.cells.FactoryCell;
+import io.squid.cybreathe.models.cells.VegetationCell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.File;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * 
  * @author TopeEstLa
  */
-public class CyPGLTest {
+public class CyBreatheTest {
 
     private SimulationParameters params;
 
@@ -157,20 +157,17 @@ public class CyPGLTest {
             }
         }
         
-        // Set a source of pollution in the center
         grid.getCell(1, 1).setPollutionLevel(1.0);
         
-        // Configure EAST wind (blowing West to East)
         params.setWindDirection(WindDirection.EAST);
         params.setWindStrength(1.0);
         
-        AbstractCell eastCell = grid.getCell(2, 1);  // Downstream cell
-        AbstractCell westCell = grid.getCell(0, 1);  // Upstream cell
+        AbstractCell eastCell = grid.getCell(2, 1);
+        AbstractCell westCell = grid.getCell(0, 1);
         
         eastCell.computeNextState(grid, params);
         westCell.computeNextState(grid, params);
         
-        // Downstream cell should receive significantly more pollution than the upstream cell
         assertTrue(eastCell.getNextPollutionLevel() > westCell.getNextPollutionLevel(),
                 "Downstream cell must receive higher pollution under easterly wind.");
         assertEquals(0.0, westCell.getNextPollutionLevel(), 0.0001,
@@ -188,20 +185,16 @@ public class CyPGLTest {
         originalAbs.getParameters().setDiffusionRate(0.44);
         originalAbs.recordStats(0.4, 2);
 
-        // Temp file inside the project workspace directory
         File tempFile = new File("run/temp_simulation_test.cyp");
         tempFile.getParentFile().mkdirs();
 
         try {
-            // Save
             originalAbs.saveToFile(tempFile);
             assertTrue(tempFile.exists());
 
-            // Load
             Simulation restoredAbs = Simulation.loadFromFile(tempFile);
             assertNotNull(restoredAbs);
 
-            // Assertions
             assertEquals(0.44, restoredAbs.getParameters().getDiffusionRate(), 0.0001);
             assertEquals("FACTORY", restoredAbs.getGrid().getCell(0, 0).getName());
             assertEquals("VEGETATION", restoredAbs.getGrid().getCell(0, 1).getName());

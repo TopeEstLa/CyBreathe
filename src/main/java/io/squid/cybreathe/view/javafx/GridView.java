@@ -1,7 +1,7 @@
-package io.squid.cypgl.view.javafx;
+package io.squid.cybreathe.view.javafx;
 
-import io.squid.cypgl.controller.javafx.CellController;
-import io.squid.cypgl.controller.javafx.GridController;
+import io.squid.cybreathe.controller.javafx.CellController;
+import io.squid.cybreathe.controller.javafx.GridController;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 

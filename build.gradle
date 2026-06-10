@@ -28,7 +28,7 @@ jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes(
-                "Main-Class": "io.squid.cypgl.CyPGL",
+                "Main-Class": "io.squid.cybreathe.CyBreathe",
                 "Implementation-Version": version,
                 "Implementation-Title": project.name
         )
@@ -46,7 +46,7 @@ tasks.register('run', JavaExec) {
     dependsOn 'build'
     group = "application"
     description = "Run the application"
-    mainClass = 'io.squid.cypgl.CyPGL'
+    mainClass = 'io.squid.cybreathe.CyBreathe'
 
     classpath = sourceSets.main.runtimeClasspath
 

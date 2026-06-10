@@ -1,7 +1,7 @@
-package io.squid.cypgl.view.javafx;
+package io.squid.cybreathe.view.javafx;
 
-import io.squid.cypgl.controller.javafx.SimulationController;
-import io.squid.cypgl.models.WindDirection;
+import io.squid.cybreathe.controller.javafx.SimulationController;
+import io.squid.cybreathe.models.WindDirection;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

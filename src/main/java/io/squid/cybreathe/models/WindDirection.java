@@ -1,4 +1,4 @@
-package io.squid.cypgl.models;
+package io.squid.cybreathe.models;
 
 /**
  * Enumeration representing wind directions and their corresponding 2D grid offset vectors.

@@ -1,16 +1,16 @@
-package io.squid.cypgl;
+package io.squid.cybreathe;
 
-import io.squid.cypgl.view.cli.CommandLineInterface;
-import io.squid.cypgl.view.javafx.GUIApplication;
+import io.squid.cybreathe.view.cli.CommandLineInterface;
+import io.squid.cybreathe.view.javafx.GUIApplication;
 import javafx.application.Application;
 
 /**
- * Main application launcher for the 2D Cellular Pollution Simulation.
+ * CyBreathe launcher.
  * Supports launching in interactive GUI mode (default) or CLI mode (via '--cli' argument).
  *
  * @author TopeEstLa
  */
-public class CyPGL {
+public class CyBreathe {
 
     /**
      * Main entry point of the application.

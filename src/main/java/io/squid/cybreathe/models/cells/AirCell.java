@@ -1,9 +1,9 @@
-package io.squid.cypgl.models.cells;
+package io.squid.cybreathe.models.cells;
 
-import io.squid.cypgl.models.AbstractCell;
-import io.squid.cypgl.models.Grid;
-import io.squid.cypgl.models.SimulationParameters;
-import io.squid.cypgl.models.WindDirection;
+import io.squid.cybreathe.models.AbstractCell;
+import io.squid.cybreathe.models.Grid;
+import io.squid.cybreathe.models.SimulationParameters;
+import io.squid.cybreathe.models.WindDirection;
 
 import java.util.List;
 

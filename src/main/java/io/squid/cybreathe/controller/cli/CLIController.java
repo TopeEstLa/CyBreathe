@@ -1,10 +1,10 @@
-package io.squid.cypgl.controller.cli;
+package io.squid.cybreathe.controller.cli;
 
-import io.squid.cypgl.models.*;
-import io.squid.cypgl.models.cells.AirCell;
-import io.squid.cypgl.models.cells.BuildingCell;
-import io.squid.cypgl.models.cells.FactoryCell;
-import io.squid.cypgl.models.cells.VegetationCell;
+import io.squid.cybreathe.models.*;
+import io.squid.cybreathe.models.cells.AirCell;
+import io.squid.cybreathe.models.cells.BuildingCell;
+import io.squid.cybreathe.models.cells.FactoryCell;
+import io.squid.cybreathe.models.cells.VegetationCell;
 
 import java.io.File;
 import java.io.IOException;

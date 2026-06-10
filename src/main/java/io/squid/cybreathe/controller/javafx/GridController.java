@@ -1,12 +1,12 @@
-package io.squid.cypgl.controller.javafx;
+package io.squid.cybreathe.controller.javafx;
 
-import io.squid.cypgl.models.AbstractCell;
-import io.squid.cypgl.models.Grid;
-import io.squid.cypgl.models.SimulationParameters;
-import io.squid.cypgl.models.cells.AirCell;
-import io.squid.cypgl.models.cells.BuildingCell;
-import io.squid.cypgl.models.cells.FactoryCell;
-import io.squid.cypgl.models.cells.VegetationCell;
+import io.squid.cybreathe.models.AbstractCell;
+import io.squid.cybreathe.models.Grid;
+import io.squid.cybreathe.models.SimulationParameters;
+import io.squid.cybreathe.models.cells.AirCell;
+import io.squid.cybreathe.models.cells.BuildingCell;
+import io.squid.cybreathe.models.cells.FactoryCell;
+import io.squid.cybreathe.models.cells.VegetationCell;
 
 /**
  * Controller coordinating all grid CellControl elements for JavaFX GUI.

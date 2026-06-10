@@ -1,6 +1,6 @@
-package io.squid.cypgl.models;
+package io.squid.cybreathe.models;
 
-import io.squid.cypgl.models.cells.AirCell;
+import io.squid.cybreathe.models.cells.AirCell;
 
 import java.io.Serializable;
 import java.util.ArrayList;

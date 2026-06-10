@@ -1,4 +1,4 @@
-package io.squid.cypgl.view.javafx;
+package io.squid.cybreathe.view.javafx;
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;

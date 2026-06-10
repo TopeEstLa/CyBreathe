@@ -1,9 +1,9 @@
-package io.squid.cypgl.controller.javafx;
+package io.squid.cybreathe.controller.javafx;
 
-import io.squid.cypgl.models.AbstractCell;
-import io.squid.cypgl.models.Grid;
-import io.squid.cypgl.models.SimulationParameters;
-import io.squid.cypgl.view.javafx.CellView;
+import io.squid.cybreathe.models.AbstractCell;
+import io.squid.cybreathe.models.Grid;
+import io.squid.cybreathe.models.SimulationParameters;
+import io.squid.cybreathe.view.javafx.CellView;
 
 /**
  * Controller mediating communication between AbstractCell model and JavaFX CellPresentation view.

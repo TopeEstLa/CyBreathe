@@ -1,6 +1,6 @@
-package io.squid.cypgl.view.javafx;
+package io.squid.cybreathe.view.javafx;
 
-import io.squid.cypgl.controller.javafx.SimulationController;
+import io.squid.cybreathe.controller.javafx.SimulationController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -29,7 +29,7 @@ public class GUIApplication extends Application {
             presentation = new SimulationView(control);
             Scene scene = new Scene(presentation, 1280, 800);
 
-            primaryStage.setTitle("CyBreathe v1.0");
+            primaryStage.setTitle("CyBreathe - SquidDevelopment");
             primaryStage.setScene(scene);
             primaryStage.setMinWidth(1000);
             primaryStage.setMinHeight(700);

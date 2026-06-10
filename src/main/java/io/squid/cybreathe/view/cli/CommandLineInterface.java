@@ -1,8 +1,8 @@
-package io.squid.cypgl.view.cli;
+package io.squid.cybreathe.view.cli;
 
-import io.squid.cypgl.controller.cli.CLIController;
-import io.squid.cypgl.models.Simulation;
-import io.squid.cypgl.models.WindDirection;
+import io.squid.cybreathe.controller.cli.CLIController;
+import io.squid.cybreathe.models.Simulation;
+import io.squid.cybreathe.models.WindDirection;
 
 import java.io.File;
 import java.util.List;

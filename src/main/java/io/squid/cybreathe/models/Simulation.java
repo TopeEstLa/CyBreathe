@@ -1,4 +1,4 @@
-package io.squid.cypgl.models;
+package io.squid.cybreathe.models;
 
 import java.io.*;
 import java.util.ArrayList;

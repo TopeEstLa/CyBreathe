@@ -1,7 +1,7 @@
-package io.squid.cypgl.controller.javafx;
+package io.squid.cybreathe.controller.javafx;
 
-import io.squid.cypgl.models.*;
-import io.squid.cypgl.view.javafx.SimulationView;
+import io.squid.cybreathe.models.*;
+import io.squid.cybreathe.view.javafx.SimulationView;
 
 import java.io.File;
 import java.io.IOException;
