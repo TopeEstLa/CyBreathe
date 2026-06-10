@@ -13,15 +13,33 @@ import io.squid.cypgl.models.SimulationParameters;
 public class VegetationCell extends AbstractCell {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Constructs a VegetationCell at the specified coordinates with an initial pollution level.
+     *
+     * @param x the x-coordinate of the cell
+     * @param y the y-coordinate of the cell
+     * @param initialPollution the initial pollution level
+     */
     public VegetationCell(int x, int y, double initialPollution) {
         super(x, y, initialPollution);
     }
 
+    /**
+     * Gets the name of the cell type.
+     *
+     * @return "VEGETATION"
+     */
     @Override
     public String getName() {
         return "VEGETATION";
     }
 
+    /**
+     * Computes the next state of the cell by absorbing pollution from its own cell.
+     *
+     * @param grid the grid containing this cell
+     * @param params the simulation parameters controlling the absorption rate
+     */
     @Override
     public void computeNextState(Grid grid, SimulationParameters params) {
         double nextPollution = pollutionLevel - (params.getAbsorptionRate() * getCustomRate());

@@ -16,19 +16,44 @@ import java.util.List;
 public class AirCell extends AbstractCell {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Constructs an AirCell at the specified coordinates with an initial pollution level.
+     *
+     * @param x the x-coordinate of the cell
+     * @param y the y-coordinate of the cell
+     * @param initialPollution the initial pollution level
+     */
     public AirCell(int x, int y, double initialPollution) {
         super(x, y, initialPollution);
     }
 
+    /**
+     * Constructs an AirCell at the specified coordinates with a default pollution level of 0.0.
+     *
+     * @param x the x-coordinate of the cell
+     * @param y the y-coordinate of the cell
+     */
     public AirCell(int x, int y) {
         this(x, y, 0.0);
     }
 
+    /**
+     * Gets the name of the cell type.
+     *
+     * @return "AIR"
+     */
     @Override
     public String getName() {
         return "AIR";
     }
 
+    /**
+     * Calculates the next state of the air cell, applying wind-weighted advection-diffusion
+     * and subtracting neighboring vegetation absorption.
+     *
+     * @param grid the grid containing this cell and its neighbors
+     * @param params the simulation parameters controlling diffusion, wind, and absorption rates
+     */
     @Override
     public void computeNextState(Grid grid, SimulationParameters params) {
         List<AbstractCell> neighbors = grid.getNeighbors(x, y);

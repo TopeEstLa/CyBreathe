@@ -15,18 +15,38 @@ public class CellController {
     private AbstractCell abstraction;
     private CellView presentation;
 
+    /**
+     * Constructs a CellController with the given cell model abstraction.
+     *
+     * @param abstraction the cell model abstraction
+     */
     public CellController(AbstractCell abstraction) {
         this.abstraction = abstraction;
     }
 
+    /**
+     * Gets the cell model abstraction.
+     *
+     * @return the cell model
+     */
     public AbstractCell getAbstraction() {
         return abstraction;
     }
 
+    /**
+     * Gets the cell view presentation.
+     *
+     * @return the cell view
+     */
     public CellView getPresentation() {
         return presentation;
     }
 
+    /**
+     * Sets the cell view presentation and updates it.
+     *
+     * @param presentation the cell view presentation to associate with this controller
+     */
     public void setPresentation(CellView presentation) {
         this.presentation = presentation;
         updatePresentation();
@@ -34,6 +54,9 @@ public class CellController {
 
     /**
      * Triggers the cell model to compute its double-buffered next state.
+     *
+     * @param grid the grid containing this cell and its neighbors
+     * @param params the global simulation parameters
      */
     public void computeNextState(Grid grid, SimulationParameters params) {
         abstraction.computeNextState(grid, params);
@@ -49,6 +72,8 @@ public class CellController {
 
     /**
      * Programmatically changes the cell type by swapping the subclass instance in-place.
+     *
+     * @param newCell the new cell model instance
      */
     public void setCellType(AbstractCell newCell) {
         this.abstraction = newCell;
@@ -57,6 +82,8 @@ public class CellController {
 
     /**
      * Changes the pollution level directly.
+     *
+     * @param pollution the new pollution level
      */
     public void setPollution(double pollution) {
         abstraction.setPollutionLevel(pollution);
@@ -66,6 +93,8 @@ public class CellController {
 
     /**
      * Changes the custom rate directly.
+     *
+     * @param rate the new custom rate
      */
     public void setCustomRate(double rate) {
         abstraction.setCustomRate(rate);

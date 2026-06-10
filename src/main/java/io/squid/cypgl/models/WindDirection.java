@@ -20,15 +20,31 @@ public enum WindDirection {
     private final int dx;
     private final int dy;
 
+    /**
+     * Constructs a WindDirection enum value with the specified grid offset components.
+     *
+     * @param dx the horizontal offset step (-1, 0, or 1)
+     * @param dy the vertical offset step (-1, 0, or 1)
+     */
     WindDirection(int dx, int dy) {
         this.dx = dx;
         this.dy = dy;
     }
 
+    /**
+     * Gets the horizontal offset step of the wind.
+     *
+     * @return the x-coordinate offset
+     */
     public int getDx() {
         return dx;
     }
 
+    /**
+     * Gets the vertical offset step of the wind.
+     *
+     * @return the y-coordinate offset
+     */
     public int getDy() {
         return dy;
     }

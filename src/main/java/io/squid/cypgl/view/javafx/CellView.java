@@ -23,6 +23,11 @@ public class CellView extends StackPane {
     private double lastPollutionLevel;
     private double lastCustomRate;
 
+    /**
+     * Constructs a CellView of the specified graphical size.
+     *
+     * @param cellSize the width and height of the cell visual square
+     */
     public CellView(double cellSize) {
         setPrefSize(cellSize, cellSize);
         setMinSize(cellSize, cellSize);
@@ -46,16 +51,30 @@ public class CellView extends StackPane {
         getChildren().addAll(borderRect, statusNode, debugLabel);
     }
 
+    /**
+     * Checks if debug values (pollution numbers overlay) are globally enabled.
+     *
+     * @return true if debug values are visible, false otherwise
+     */
     public static boolean isShowDebugValues() {
         return showDebugValues;
     }
 
+    /**
+     * Enables or disables debug values display globally.
+     *
+     * @param show true to show debug values overlay, false to hide
+     */
     public static void setShowDebugValues(boolean show) {
         showDebugValues = show;
     }
 
     /**
      * Renders the cell visually according to its type name, pollution level, and customRate strength.
+     *
+     * @param typeName the cell type name (e.g. "AIR", "VEGETATION", "FACTORY", "BUILDING")
+     * @param pollutionLevel the current pollution level of the cell
+     * @param customRate the custom rate multiplier (absorption/production strength)
      */
     public void draw(String typeName, double pollutionLevel, double customRate) {
         this.lastTypeName = typeName;
@@ -125,6 +144,11 @@ public class CellView extends StackPane {
         }
     }
 
+    /**
+     * Sets the highlighted border style for this cell view (e.g. during zone-brush selections).
+     *
+     * @param highlighted true to highlight the cell, false to restore normal border
+     */
     public void setHighlighted(boolean highlighted) {
         if (this.highlighted != highlighted) {
             this.highlighted = highlighted;

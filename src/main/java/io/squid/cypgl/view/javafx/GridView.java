@@ -27,6 +27,14 @@ public class GridView extends GridPane {
     private boolean dragDetected = false;
     private boolean zoneApplied = false;
 
+    /**
+     * Initializes the GridView with its controller and the configuration suppliers.
+     *
+     * @param control the grid controller mediating cell model updates
+     * @param activeBrushTypeSupplier supplier for the current active cell brush type (e.g. "AIR", "VEGETATION")
+     * @param activeBrushModeSupplier supplier for the current active brush mode (e.g. "BRUSH", "ZONE", "INDIVIDUAL")
+     * @param activeCustomRateSupplier supplier for the current active custom rate parameter
+     */
     public void initializeGrid(
             GridController control,
             Supplier<String> activeBrushTypeSupplier,
@@ -42,7 +50,8 @@ public class GridView extends GridPane {
     }
 
     /**
-     * Constructs the visual representation of the grid board.
+     * Rebuilds the visual grid by clear-adding all individual CellView children
+     * and setting up their mouse and drag event handlers.
      */
     public void rebuildDisplay() {
         getChildren().clear();
@@ -129,6 +138,14 @@ public class GridView extends GridPane {
         }
     }
 
+    /**
+     * Applies the active paint tool to a rectangular zone defined by start and end coordinates.
+     *
+     * @param startX the starting x-coordinate of the rectangle
+     * @param startY the starting y-coordinate of the rectangle
+     * @param endX the ending x-coordinate of the rectangle
+     * @param endY the ending y-coordinate of the rectangle
+     */
     private void applyZonePaint(int startX, int startY, int endX, int endY) {
         String type = activeBrushTypeSupplier.get();
         gridController.applyZone(startX, startY, endX, endY, type);
@@ -154,6 +171,14 @@ public class GridView extends GridPane {
         zoneApplied = true;
     }
 
+    /**
+     * Highlights the rectangular area during active zone drag.
+     *
+     * @param startX the starting x-coordinate
+     * @param startY the starting y-coordinate
+     * @param endX the ending x-coordinate
+     * @param endY the ending y-coordinate
+     */
     private void highlightZone(int startX, int startY, int endX, int endY) {
         int minX = Math.max(0, Math.min(startX, endX));
         int maxX = Math.min(gridController.getWidth() - 1, Math.max(startX, endX));
@@ -177,6 +202,9 @@ public class GridView extends GridPane {
         }
     }
 
+    /**
+     * Clears highlights from all grid cells.
+     */
     private void clearHighlight() {
         int w = gridController.getWidth();
         int h = gridController.getHeight();
@@ -193,6 +221,12 @@ public class GridView extends GridPane {
         }
     }
 
+    /**
+     * Applies the active paint type and custom rate to a single cell coordinate.
+     *
+     * @param x the x-coordinate of the cell
+     * @param y the y-coordinate of the cell
+     */
     private void applyActivePaint(int x, int y) {
         String brushType = activeBrushTypeSupplier.get();
         CellController ctrl = gridController.getCellControl(x, y);

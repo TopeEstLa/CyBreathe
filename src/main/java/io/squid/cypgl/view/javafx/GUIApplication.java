@@ -14,6 +14,12 @@ public class GUIApplication extends Application {
 
     private SimulationView presentation;
 
+    /**
+     * Entry point to launch the graphical user interface.
+     * Initializes the controller, the presentation view, and setup the primary stage.
+     *
+     * @param primaryStage the stage for this application, on which the scene will be set
+     */
     @Override
     public void start(Stage primaryStage) {
         try {
@@ -35,6 +41,11 @@ public class GUIApplication extends Application {
         }
     }
 
+    /**
+     * Performs cleanup tasks when the application is stopped, such as shutting down background threads.
+     *
+     * @throws Exception if an error occurs during stop
+     */
     @Override
     public void stop() throws Exception {
         if (presentation != null) {

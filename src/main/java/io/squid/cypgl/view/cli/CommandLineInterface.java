@@ -5,6 +5,7 @@ import io.squid.cypgl.models.Simulation;
 import io.squid.cypgl.models.WindDirection;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -19,6 +20,10 @@ public class CommandLineInterface {
     private CLIController cliController;
     private boolean running = true;
 
+    /**
+     * Starts the interactive command-line interface loop.
+     * Continuously reads user input and executes commands until the user exits.
+     */
     public void start() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("=================================================");
@@ -50,6 +55,13 @@ public class CommandLineInterface {
         System.out.println("Exiting CyPGL CLI. Goodbye!");
     }
 
+    /**
+     * Initializes the simulation grid with the specified width and height.
+     *
+     * @param w the width of the grid
+     * @param h the height of the grid
+     * @throws IllegalArgumentException if dimensions are not positive
+     */
     private void initGrid(int w, int h) {
         if (w <= 0 || h <= 0) {
             throw new IllegalArgumentException("Dimensions must be positive.");
@@ -59,6 +71,11 @@ public class CommandLineInterface {
         this.cliController.initGrid(w, h);
     }
 
+    /**
+     * Processes a single command line input.
+     *
+     * @param inputLine the raw input string from the console
+     */
     private void processCommand(String inputLine) {
         String[] tokens = inputLine.split("\\s+");
         String cmd = tokens[0].toLowerCase();
@@ -171,6 +188,12 @@ public class CommandLineInterface {
         }
     }
 
+    /**
+     * Applies a configuration parameter change to the simulation model.
+     *
+     * @param param the parameter name to change
+     * @param val the new value to apply
+     */
     private void applyConfig(String param, String val) {
         switch (param) {
             case "diffusion" -> {
@@ -204,6 +227,9 @@ public class CommandLineInterface {
         }
     }
 
+    /**
+     * Renders the grid in an ASCII-based visual format on the standard output.
+     */
     private void showGrid() {
         int w = cliController.getGridWidth();
         int h = cliController.getGridHeight();
@@ -249,6 +275,9 @@ public class CommandLineInterface {
         System.out.println("Legend: . (Clean Air), ░/▒/▓/█ (Polluted Air levels), V (Vegetation), # (Factory), B (Building)");
     }
 
+    /**
+     * Prints the help instructions and lists all available commands in the CLI.
+     */
     private void printHelp() {
         System.out.println("Commands:");
         System.out.println("  help                               - Show this guide.");
@@ -269,6 +298,9 @@ public class CommandLineInterface {
         System.out.println("  exit / quit                        - Terminate the application.");
     }
 
+    /**
+     * Prints the current simulation parameters, configurations, and grid cell statistics to standard output.
+     */
     private void printStats() {
         System.out.println("================================================");
         System.out.println("  Simulation Statistics & Configurations  ");
@@ -277,7 +309,7 @@ public class CommandLineInterface {
         System.out.printf("Total Ticks        : %d%n", cliController.getTickCount());
 
         double avgPoll = 0.0;
-        java.util.List<Double> history = cliController.getAbstraction().getAvgPollutionHistory();
+        List<Double> history = cliController.getAbstraction().getAvgPollutionHistory();
         if (!history.isEmpty()) {
             avgPoll = history.get(history.size() - 1);
         }

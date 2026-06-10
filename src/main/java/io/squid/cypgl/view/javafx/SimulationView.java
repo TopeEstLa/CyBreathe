@@ -52,6 +52,12 @@ public class SimulationView extends BorderPane {
     private LineChart<Number, Number> pollutedAirChart;
     private XYChart.Series<Number, Number> pollutedAirSeries;
 
+    /**
+     * Constructs a SimulationView with the associated simulation controller.
+     * Initializes all UI components, setups event listeners, and synchronizes properties.
+     *
+     * @param control the simulation controller
+     */
     public SimulationView(SimulationController control) {
         this.control = control;
         this.gridView = new GridView();
@@ -379,6 +385,9 @@ public class SimulationView extends BorderPane {
         updateWindUISelection();
     }
 
+    /**
+     * Rebuilds the grid visual display.
+     */
     public void rebuildGridDisplay() {
         gridView.initializeGrid(
                 this.control.getGridControl(),
@@ -425,6 +434,9 @@ public class SimulationView extends BorderPane {
         }, 0, control.getSpeedDelayMs());
     }
 
+    /**
+     * Stops the running simulation background thread loop.
+     */
     private synchronized void stopSimulationLoop() {
         if (timerLoop != null) {
             timerLoop.cancel();
@@ -434,6 +446,10 @@ public class SimulationView extends BorderPane {
 
     /**
      * Updates statistical text and graphs on the UI panel.
+     *
+     * @param tickCount the current tick count of the simulation
+     * @param avgPollutionHistory the historical list of average pollution levels
+     * @param pollutedAirHistory the historical list of polluted air cell counts
      */
     public void updateDashboard(
             int tickCount,
@@ -486,6 +502,12 @@ public class SimulationView extends BorderPane {
         }
     }
 
+    /**
+     * Displays an information alert dialog.
+     *
+     * @param title the title of the alert dialog
+     * @param content the context message to display
+     */
     private void showInfoAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -494,6 +516,12 @@ public class SimulationView extends BorderPane {
         alert.showAndWait();
     }
 
+    /**
+     * Displays an error alert dialog.
+     *
+     * @param title the title of the alert dialog
+     * @param content the error message context to display
+     */
     private void showErrorAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -502,6 +530,15 @@ public class SimulationView extends BorderPane {
         alert.showAndWait();
     }
 
+    /**
+     * Sets up a single compass direction button in the grid layout.
+     *
+     * @param grid the grid layout pane to place the button in
+     * @param dir the wind direction associated with the button
+     * @param label the text label of the button
+     * @param row the grid row index
+     * @param col the grid column index
+     */
     private void setupCompassButton(GridPane grid, WindDirection dir, String label, int row, int col) {
         Button btn = new Button(label);
         btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -542,6 +579,9 @@ public class SimulationView extends BorderPane {
         }
     }
 
+    /**
+     * Cleans up simulation resources, stopping the execution loop.
+     */
     public void cleanup() {
         stopSimulationLoop();
     }

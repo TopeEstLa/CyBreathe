@@ -17,34 +17,74 @@ public class SimulationParameters implements Serializable {
     private WindDirection windDirection = WindDirection.NONE; // Direction of atmospheric wind
     private double windStrength = 0.5;      // Strength of the wind advection effect (0.0 to 1.0)
 
+    /**
+     * Gets the global diffusion rate of pollution.
+     *
+     * @return the diffusion rate (value between 0.0 and 1.0)
+     */
     public double getDiffusionRate() {
         return diffusionRate;
     }
 
+    /**
+     * Sets the global diffusion rate of pollution, clamped between 0.0 and 1.0.
+     *
+     * @param diffusionRate the new diffusion rate
+     */
     public void setDiffusionRate(double diffusionRate) {
         this.diffusionRate = Math.clamp(diffusionRate, 0.0, 1.0);
     }
 
+    /**
+     * Gets the global absorption rate of vegetation cells.
+     *
+     * @return the absorption rate (value between 0.0 and 1.0)
+     */
     public double getAbsorptionRate() {
         return absorptionRate;
     }
 
+    /**
+     * Sets the global absorption rate of vegetation cells, clamped between 0.0 and 1.0.
+     *
+     * @param absorptionRate the new absorption rate
+     */
     public void setAbsorptionRate(double absorptionRate) {
         this.absorptionRate = Math.clamp(absorptionRate, 0.0, 1.0);
     }
 
+    /**
+     * Gets the current wind direction.
+     *
+     * @return the wind direction
+     */
     public WindDirection getWindDirection() {
         return windDirection;
     }
 
+    /**
+     * Sets the wind direction. If null, sets it to WindDirection.NONE.
+     *
+     * @param windDirection the new wind direction
+     */
     public void setWindDirection(WindDirection windDirection) {
         this.windDirection = windDirection != null ? windDirection : WindDirection.NONE;
     }
 
+    /**
+     * Gets the wind strength.
+     *
+     * @return the wind strength (value between 0.0 and 1.0)
+     */
     public double getWindStrength() {
         return windStrength;
     }
 
+    /**
+     * Sets the wind strength, clamped between 0.0 and 1.0.
+     *
+     * @param windStrength the new wind strength
+     */
     public void setWindStrength(double windStrength) {
         this.windStrength = Math.clamp(windStrength, 0.0, 1.0);
     }

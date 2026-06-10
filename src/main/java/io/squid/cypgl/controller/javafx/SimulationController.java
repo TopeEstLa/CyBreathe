@@ -8,6 +8,7 @@ import io.squid.cypgl.view.javafx.SimulationView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,21 +22,42 @@ public class SimulationController {
     private Simulation abstraction;
     private SimulationView presentation;
 
+    /**
+     * Constructs a SimulationController with a new simulation of the specified grid dimensions.
+     *
+     * @param gridWidth the width of the grid
+     * @param gridHeight the height of the grid
+     */
     public SimulationController(int gridWidth, int gridHeight) {
         this.abstraction = new Simulation(gridWidth, gridHeight);
         this.gridController = new GridController(abstraction.getGrid());
         recordCurrentStats();
     }
 
+    /**
+     * Gets the associated simulation view presentation.
+     *
+     * @return the simulation view presentation
+     */
     public SimulationView getPresentation() {
         return presentation;
     }
 
+    /**
+     * Sets the simulation view presentation and updates it.
+     *
+     * @param presentation the simulation view presentation to associate
+     */
     public void setPresentation(SimulationView presentation) {
         this.presentation = presentation;
         updatePresentation();
     }
 
+    /**
+     * Gets the grid controller managed by this simulation.
+     *
+     * @return the grid controller
+     */
     public GridController getGridControl() {
         return gridController;
     }
@@ -55,6 +77,8 @@ public class SimulationController {
 
     /**
      * Loops a specified number of ticks.
+     *
+     * @param count the number of ticks to run
      */
     public void tickMultiple(int count) {
         for (int i = 0; i < count; i++) {
@@ -92,6 +116,9 @@ public class SimulationController {
 
     /**
      * Saves the current simulation abstraction to a binary file.
+     *
+     * @param file the target file to save the simulation
+     * @throws IOException if an I/O error occurs during saving
      */
     public void saveSimulation(File file) throws IOException {
         abstraction.saveToFile(file);
@@ -99,6 +126,10 @@ public class SimulationController {
 
     /**
      * Restores a simulation state from a binary file and rebuilds the controller links.
+     *
+     * @param file the source file to load the simulation from
+     * @throws IOException if an I/O error occurs during loading
+     * @throws ClassNotFoundException if the class of a serialized object cannot be found
      */
     public void loadSimulation(File file) throws IOException, ClassNotFoundException {
         Simulation loadedAbs = Simulation.loadFromFile(file);
@@ -128,7 +159,12 @@ public class SimulationController {
         }
     }
 
-    public java.util.List<Integer> getPollutedAirHistory() {
+    /**
+     * Gets the history of the number of polluted air cells.
+     *
+     * @return a list of polluted air counts per tick
+     */
+    public List<Integer> getPollutedAirHistory() {
         return abstraction.getPollutedAirHistory();
     }
 
@@ -151,58 +187,128 @@ public class SimulationController {
         updatePresentation();
     }
 
+    /**
+     * Gets the global diffusion rate for pollution.
+     *
+     * @return the diffusion rate
+     */
     public double getDiffusionRate() {
         return abstraction.getParameters().getDiffusionRate();
     }
 
+    /**
+     * Sets the global diffusion rate for pollution.
+     *
+     * @param rate the new diffusion rate
+     */
     public void setDiffusionRate(double rate) {
         abstraction.getParameters().setDiffusionRate(rate);
     }
 
+    /**
+     * Gets the global absorption rate for pollution.
+     *
+     * @return the absorption rate
+     */
     public double getAbsorptionRate() {
         return abstraction.getParameters().getAbsorptionRate();
     }
 
+    /**
+     * Sets the global absorption rate for pollution.
+     *
+     * @param rate the new absorption rate
+     */
     public void setAbsorptionRate(double rate) {
         abstraction.getParameters().setAbsorptionRate(rate);
     }
 
+    /**
+     * Gets the delay between simulation steps in milliseconds for GUI execution.
+     *
+     * @return the speed delay in milliseconds
+     */
     public int getSpeedDelayMs() {
         return abstraction.getSpeedDelayMs();
     }
 
+    /**
+     * Sets the delay between simulation steps in milliseconds for GUI execution.
+     *
+     * @param delayMs the new delay in milliseconds
+     */
     public void setSpeedDelayMs(int delayMs) {
         abstraction.setSpeedDelayMs(delayMs);
     }
 
+    /**
+     * Gets the wind strength.
+     *
+     * @return the wind strength
+     */
     public double getWindStrength() {
         return abstraction.getParameters().getWindStrength();
     }
 
+    /**
+     * Sets the wind strength.
+     *
+     * @param strength the new wind strength
+     */
     public void setWindStrength(double strength) {
         abstraction.getParameters().setWindStrength(strength);
     }
 
+    /**
+     * Gets the wind direction.
+     *
+     * @return the wind direction
+     */
     public WindDirection getWindDirection() {
         return abstraction.getParameters().getWindDirection();
     }
 
+    /**
+     * Sets the wind direction.
+     *
+     * @param direction the new wind direction
+     */
     public void setWindDirection(WindDirection direction) {
         abstraction.getParameters().setWindDirection(direction);
     }
 
+    /**
+     * Gets the width of the simulation grid.
+     *
+     * @return the grid width
+     */
     public int getGridWidth() {
         return abstraction.getGrid().getWidth();
     }
 
+    /**
+     * Gets the height of the simulation grid.
+     *
+     * @return the grid height
+     */
     public int getGridHeight() {
         return abstraction.getGrid().getHeight();
     }
 
+    /**
+     * Gets the count of each cell type in the grid.
+     *
+     * @return a map mapping cell type names to their counts
+     */
     public Map<String, Integer> getCellTypeCounts() {
         return abstraction.getGrid().getCellTypeCounts();
     }
 
+    /**
+     * Gets the percentage of each cell type in the grid.
+     *
+     * @return a map mapping cell type names to their percentage share
+     */
     public Map<String, Double> getCellTypePercentages() {
         return abstraction.getGrid().getCellTypePercentages();
     }

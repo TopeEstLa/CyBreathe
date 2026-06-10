@@ -20,6 +20,12 @@ public class Grid implements Serializable {
     private final int height;
     private final AbstractCell[][] cells;
 
+    /**
+     * Constructs a Grid with the specified dimensions and fills it with default clean AirCell instances.
+     *
+     * @param width the width of the grid
+     * @param height the height of the grid
+     */
     public Grid(int width, int height) {
         this.width = width;
         this.height = height;
@@ -32,14 +38,31 @@ public class Grid implements Serializable {
         }
     }
 
+    /**
+     * Gets the width of the grid.
+     *
+     * @return the width
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * Gets the height of the grid.
+     *
+     * @return the height
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * Gets the cell at the specified coordinates.
+     *
+     * @param x the x-coordinate of the cell
+     * @param y the y-coordinate of the cell
+     * @return the AbstractCell at (x, y), or null if the coordinates are out of bounds
+     */
     public AbstractCell getCell(int x, int y) {
         if (x >= 0 && x < width && y >= 0 && y < height) {
             return cells[x][y];
@@ -47,6 +70,13 @@ public class Grid implements Serializable {
         return null;
     }
 
+    /**
+     * Sets the cell at the specified coordinates.
+     *
+     * @param x the x-coordinate where the cell should be placed
+     * @param y the y-coordinate where the cell should be placed
+     * @param cell the cell to set
+     */
     public void setCell(int x, int y, AbstractCell cell) {
         if (x >= 0 && x < width && y >= 0 && y < height) {
             cells[x][y] = cell;
@@ -54,7 +84,12 @@ public class Grid implements Serializable {
     }
 
     /**
-     * Moore neighbors (8 orthogonal and diagonal directions, ignoring out of bounds).
+     * Gets the Moore neighbors (8 orthogonal and diagonal directions) of the cell at (x, y),
+     * ignoring any neighbors that are out of bounds.
+     *
+     * @param x the x-coordinate of the cell
+     * @param y the y-coordinate of the cell
+     * @return a list of neighboring cells
      */
     public List<AbstractCell> getNeighbors(int x, int y) {
         List<AbstractCell> neighbors = new ArrayList<>();
@@ -78,6 +113,9 @@ public class Grid implements Serializable {
 
     /**
      * Calculates the count of cells for each type in the grid.
+     * Splitting Air cells into clean "AIR" and "POLLUTED AIR" (pollution > 0).
+     *
+     * @return a map containing cell type names and their respective counts
      */
     public Map<String, Integer> getCellTypeCounts() {
         Map<String, Integer> counts = new LinkedHashMap<>();
@@ -103,7 +141,9 @@ public class Grid implements Serializable {
     }
 
     /**
-     * Calculates the percentage of cells for each type in the grid.
+     * Calculates the percentage distribution of cells for each type in the grid.
+     *
+     * @return a map containing cell type names and their respective percentage values (0.0 to 1.0)
      */
     public Map<String, Double> getCellTypePercentages() {
         Map<String, Integer> counts = getCellTypeCounts();

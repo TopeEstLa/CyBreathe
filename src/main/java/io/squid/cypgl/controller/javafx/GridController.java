@@ -17,6 +17,13 @@ public class GridController {
     private final Grid abstraction;
     private final CellController[][] cellControllers;
 
+    /**
+     * Constructs a GridController for the given grid abstraction model and initializes
+     * child CellController instances for all grid coordinates.
+     *
+     * @param abstraction the grid model containing the initial grid configuration
+     * @throws IllegalStateException if any grid cell is not initialized in the grid model
+     */
     public GridController(Grid abstraction) {
         this.abstraction = abstraction;
         int w = abstraction.getWidth();
@@ -35,14 +42,31 @@ public class GridController {
         }
     }
 
+    /**
+     * Gets the width of the grid model.
+     *
+     * @return the width of the grid
+     */
     public int getWidth() {
         return abstraction.getWidth();
     }
 
+    /**
+     * Gets the height of the grid model.
+     *
+     * @return the height of the grid
+     */
     public int getHeight() {
         return abstraction.getHeight();
     }
 
+    /**
+     * Gets the CellController for the cell at coordinates (x, y).
+     *
+     * @param x the x-coordinate of the cell
+     * @param y the y-coordinate of the cell
+     * @return the associated CellController, or null if coordinates are out of bounds
+     */
     public CellController getCellControl(int x, int y) {
         if (x >= 0 && x < abstraction.getWidth() && y >= 0 && y < abstraction.getHeight()) {
             return cellControllers[x][y];
@@ -52,6 +76,8 @@ public class GridController {
 
     /**
      * Ticks Phase 1: Triggers all cells to compute their double-buffered next states.
+     *
+     * @param params the global simulation parameters used to calculate pollution diffusion and absorption
      */
     public void computeNextStates(SimulationParameters params) {
         int w = abstraction.getWidth();
@@ -78,6 +104,10 @@ public class GridController {
 
     /**
      * Applies a cell brush modification at coordinates (x, y).
+     *
+     * @param x the x-coordinate of the target cell
+     * @param y the y-coordinate of the target cell
+     * @param typeName the name of the new cell type (e.g. "AIR", "VEGETATION", "FACTORY", "BUILDING")
      */
     public void setCellType(int x, int y, String typeName) {
         CellController ctrl = getCellControl(x, y);
@@ -101,6 +131,12 @@ public class GridController {
 
     /**
      * Applies a zone-selection brush filling a rectangle with a cell type.
+     *
+     * @param startX the starting x-coordinate of the selection rectangle
+     * @param startY the starting y-coordinate of the selection rectangle
+     * @param endX the ending x-coordinate of the selection rectangle
+     * @param endY the ending y-coordinate of the selection rectangle
+     * @param typeName the name of the cell type to fill the rectangle with
      */
     public void applyZone(int startX, int startY, int endX, int endY, String typeName) {
         int minX = Math.max(0, Math.min(startX, endX));
