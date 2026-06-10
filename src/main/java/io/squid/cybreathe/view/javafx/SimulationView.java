@@ -314,6 +314,7 @@ public class SimulationView extends BorderPane {
     }
 
     private void setupCenterGrid() {
+        gridView.setAlignment(Pos.CENTER);
         StackPane gridContainer = new StackPane(gridView);
         gridContainer.setPadding(new Insets(15));
         gridContainer.setAlignment(Pos.CENTER);
