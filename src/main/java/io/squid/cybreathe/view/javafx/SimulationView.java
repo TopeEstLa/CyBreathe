@@ -86,7 +86,7 @@ public class SimulationView extends BorderPane {
         Button saveBtn = new Button("💾 Save");
         Button loadBtn = new Button("📂 Load");
 
-        tickLabel = new Label("Tick: 0");
+        tickLabel = new Label("Tick: 0 (00:00)");
         tickLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #37474f;");
 
         playBtn.setStyle("-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-weight: bold;");
@@ -475,7 +475,7 @@ public class SimulationView extends BorderPane {
             List<Integer> pollutedAirHistory) {
 
         // 1. Update Tick Count Label
-        tickLabel.setText("Tick: " + tickCount);
+        tickLabel.setText(String.format("Tick: %d (%02d:%02d)", tickCount, (tickCount / 60) % 24, tickCount % 60));
 
         int w = control.getGridWidth();
         int h = control.getGridHeight();
