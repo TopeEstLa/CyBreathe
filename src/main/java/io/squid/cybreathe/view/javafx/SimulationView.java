@@ -35,6 +35,9 @@ public class SimulationView extends BorderPane {
     private Slider speedSlider;
     private Slider diffusionSlider;
     private Slider absorptionSlider;
+    private Label speedLabel;
+    private Label diffusionLabel;
+    private Label absorptionLabel;
     // Brush custom rate controls
     private CheckBox randomRateCheckbox;
     private Slider brushCustomRateSlider;
@@ -294,15 +297,23 @@ public class SimulationView extends BorderPane {
         Label ratesHeading = new Label("Simulation Rates");
         ratesHeading.setStyle("-fx-font-weight: bold; -fx-text-fill: #1a237e;");
 
+        diffusionLabel = new Label("Diffusion Rate:");
+        diffusionLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #37474f; -fx-font-weight: bold;");
         diffusionSlider = new Slider(0.05, 0.8, 0.3);
+
+        absorptionLabel = new Label("Absorption Power:");
+        absorptionLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #37474f; -fx-font-weight: bold;");
         absorptionSlider = new Slider(0.02, 0.5, 0.15);
+
+        speedLabel = new Label("Tick Delay (ms):");
+        speedLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #37474f; -fx-font-weight: bold;");
         speedSlider = new Slider(50, 1000, 200);
 
         ratesBox.getChildren().addAll(
                 ratesHeading,
-                new Label("Diffusion Rate:"), diffusionSlider,
-                new Label("Absorption Power:"), absorptionSlider,
-                new Label("Tick Delay (ms):"), speedSlider
+                diffusionLabel, diffusionSlider,
+                absorptionLabel, absorptionSlider,
+                speedLabel, speedSlider
         );
 
         sidebar.getChildren().addAll(brushBox, windBox, ratesBox, sizeBox);
@@ -379,11 +390,18 @@ public class SimulationView extends BorderPane {
     private void bindProperties() {
         syncUIWithModel();
 
-        diffusionSlider.valueProperty().addListener((obs, ov, nv) -> control.setDiffusionRate(nv.doubleValue()));
-        absorptionSlider.valueProperty().addListener((obs, ov, nv) -> control.setAbsorptionRate(nv.doubleValue()));
+        diffusionSlider.valueProperty().addListener((obs, ov, nv) -> {
+            control.setDiffusionRate(nv.doubleValue());
+            diffusionLabel.setText(String.format("Diffusion Rate: %.2f", nv.doubleValue()));
+        });
+        absorptionSlider.valueProperty().addListener((obs, ov, nv) -> {
+            control.setAbsorptionRate(nv.doubleValue());
+            absorptionLabel.setText(String.format("Absorption Power: %.2f", nv.doubleValue()));
+        });
 
         speedSlider.valueProperty().addListener((obs, ov, nv) -> {
             control.setSpeedDelayMs(nv.intValue());
+            speedLabel.setText(String.format("Tick Delay: %d ms", nv.intValue()));
             if (timerLoop != null) {
                 startSimulationLoop();
             }
@@ -395,8 +413,13 @@ public class SimulationView extends BorderPane {
      */
     public void syncUIWithModel() {
         diffusionSlider.setValue(control.getDiffusionRate());
+        diffusionLabel.setText(String.format("Diffusion Rate: %.2f", control.getDiffusionRate()));
+
         absorptionSlider.setValue(control.getAbsorptionRate());
+        absorptionLabel.setText(String.format("Absorption Power: %.2f", control.getAbsorptionRate()));
+
         speedSlider.setValue(control.getSpeedDelayMs());
+        speedLabel.setText(String.format("Tick Delay: %d ms", control.getSpeedDelayMs()));
 
         windStrengthSlider.setValue(control.getWindStrength());
         windStrengthLabel.setText(String.format("Wind Strength: %.0f%%", control.getWindStrength() * 100));
@@ -473,8 +496,6 @@ public class SimulationView extends BorderPane {
             int tickCount,
             List<Double> avgPollutionHistory,
             List<Integer> pollutedAirHistory) {
-
-        // 1. Update Tick Count Label
         tickLabel.setText(String.format("Tick: %d (%02d:%02d)", tickCount, (tickCount / 60) % 24, tickCount % 60));
 
         int w = control.getGridWidth();
