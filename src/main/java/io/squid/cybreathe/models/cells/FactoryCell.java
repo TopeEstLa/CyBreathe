@@ -43,7 +43,10 @@ public class FactoryCell extends AbstractCell {
      */
     @Override
     public void computeNextState(SimulationParameters params, Grid grid, int tick) {
-        setNextPollutionLevel(getCustomRate());
+        int hour = (tick/60)%24;     //one tick is 1 minute
+        boolean isRunning = (hour<22&&hour>6)||tick==0;
+        double rate= isRunning? getCustomRate() : 0.8*getCustomRate() ;
+        setNextPollutionLevel(rate);
     }
 
 }
