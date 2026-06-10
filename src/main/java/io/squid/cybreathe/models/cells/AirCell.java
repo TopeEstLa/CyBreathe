@@ -57,7 +57,7 @@ public class AirCell extends AbstractCell {
      */
     @Override
     public void computeNextState(SimulationParameters params, Grid grid, int tick) {
-        List<AbstractCell> neighbors = grid.getNeighbors(x, y);
+        List<AbstractCell> neighbors = grid.getNeighbors(getX(), getY());
         double sum = 0.0;
         double totalWeight = 0.0;
         double neighborAbsorptionSum = 0.0;
@@ -75,8 +75,8 @@ public class AirCell extends AbstractCell {
 
             double weight = 1.0;
             if (hasWind) {
-                double dx = neighbor.getX() - x;
-                double dy = neighbor.getY() - y;
+                double dx = neighbor.getX() - getX();
+                double dy = neighbor.getY() - getY();
                 double vx = -dx;
                 double vy = -dy;
 
@@ -104,8 +104,8 @@ public class AirCell extends AbstractCell {
             }
         }
 
-        double avg = totalWeight == 0.0 ? pollutionLevel : sum / totalWeight;
-        double nextPollution = pollutionLevel + params.getDiffusionRate() * (avg - pollutionLevel);
+        double avg = totalWeight == 0.0 ? getPollutionLevel() : sum / totalWeight;
+        double nextPollution = getPollutionLevel() + params.getDiffusionRate() * (avg - getPollutionLevel());
 
         nextPollution -= neighborAbsorptionSum;
 

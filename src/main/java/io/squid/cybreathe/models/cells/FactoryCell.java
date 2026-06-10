@@ -43,7 +43,7 @@ public class FactoryCell extends AbstractCell {
      */
     @Override
     public void computeNextState(SimulationParameters params, Grid grid, int tick) {
-        setNextPollutionLevel(customRate);
+        setNextPollutionLevel(getCustomRate());
     }
 
 }

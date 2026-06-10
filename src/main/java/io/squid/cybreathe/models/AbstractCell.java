@@ -11,13 +11,13 @@ import java.io.Serializable;
 public abstract class AbstractCell implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    protected final int x;
-    protected final int y;
+    private final int x;
+    private final int y;
 
-    protected double pollutionLevel;
-    protected double nextPollutionLevel;
+    private double pollutionLevel;
+    private double nextPollutionLevel;
 
-    protected double customRate;
+    private double customRate;
 
     /**
      * Constructs an AbstractCell at the specified coordinates with an initial pollution level.

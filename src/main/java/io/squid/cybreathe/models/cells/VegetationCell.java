@@ -43,7 +43,7 @@ public class VegetationCell extends AbstractCell {
      */
     @Override
     public void computeNextState(SimulationParameters params, Grid grid, int tick) {
-        double nextPollution = pollutionLevel - (params.getAbsorptionRate() * getCustomRate());
+        double nextPollution = getPollutionLevel() - (params.getAbsorptionRate() * getCustomRate());
         setNextPollutionLevel(Math.max(0.0, nextPollution));
     }
 }
