@@ -3,6 +3,7 @@ package io.squid.cybreathe.view.javafx;
 import io.squid.cybreathe.controller.javafx.SimulationController;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -30,6 +31,12 @@ public class GUIApplication extends Application {
             Scene scene = new Scene(presentation, 1280, 800);
 
             primaryStage.setTitle("CyBreathe - SquidDevelopment");
+            try {
+                primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/squidicon.png")));
+            } catch (Exception ex) {
+                System.err.println("Failed to load application icon: " + ex.getMessage());
+            }
+
             primaryStage.setScene(scene);
             primaryStage.setMinWidth(1000);
             primaryStage.setMinHeight(700);
