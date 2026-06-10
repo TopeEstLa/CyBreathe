@@ -83,6 +83,26 @@ public class Grid implements Serializable {
         }
     }
 
+    public void computeNextStates(Simulation simulation) {
+        int w = getWidth();
+        int h = getHeight();
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                cells[x][y].computeNextState(simulation.getParameters(), simulation.getGrid(), simulation.getTickCount());
+            }
+        }
+    }
+
+    public void commitNextStates() {
+        int w = getWidth();
+        int h = getHeight();
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                cells[x][y].commitState();
+            }
+        }
+    }
+
     /**
      * Gets the Moore neighbors (8 orthogonal and diagonal directions) of the cell at (x, y),
      * ignoring any neighbors that are out of bounds.

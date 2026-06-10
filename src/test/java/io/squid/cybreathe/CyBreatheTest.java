@@ -7,6 +7,7 @@ import io.squid.cybreathe.models.cells.FactoryCell;
 import io.squid.cybreathe.models.cells.VegetationCell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * JUnit 5 Unit Tests verifying the PAC polymorphic model behaviors.
- * 
+ *
  * @author TopeEstLa
  */
 public class CyBreatheTest {
@@ -54,14 +55,6 @@ public class CyBreatheTest {
     public void testAirDiffusionMath() {
         Grid grid = new Grid(3, 3);
 
-        // Populate: (1, 1) is AIR with 0.0 pollution.
-        // Neighbors: 4 of them are 1.0, 4 of them are 0.0
-        for (int x = 0; x < 3; x++) {
-            for (int y = 0; y < 3; y++) {
-                grid.setCell(x, y, new AirCell(x, y, 0.0));
-            }
-        }
-
         grid.getCell(0, 0).setPollutionLevel(1.0);
         grid.getCell(0, 2).setPollutionLevel(1.0);
         grid.getCell(2, 0).setPollutionLevel(1.0);
@@ -71,8 +64,8 @@ public class CyBreatheTest {
         assertEquals(0.0, center.getPollutionLevel());
 
         // Run compute next state on the center cell
-        center.computeNextState(grid, params);
-        
+        center.computeNextState(params, grid);
+
         // Expected average of neighbors: (1.0 * 4 + 0.0 * 4) / 8 = 0.5
         // Expected next state: 0.0 + 0.5 * (0.5 - 0.0) = 0.25
         assertEquals(0.25, center.getNextPollutionLevel(), 0.0001);
@@ -90,7 +83,7 @@ public class CyBreatheTest {
         grid.setCell(0, 0, cell);
 
         // Factory computeNextState should always set pollution to 1.0 (its custom rate)
-        cell.computeNextState(grid, params);
+        cell.computeNextState(params, grid);
         assertEquals(1.0, cell.getNextPollutionLevel());
 
         cell.commitState();
@@ -105,8 +98,8 @@ public class CyBreatheTest {
         cell.setCustomRate(1.0);
 
         // Absorption: 0.8 - absorptionRate (0.2) = 0.6
-        cell.computeNextState(grid, params);
-        
+        cell.computeNextState(params, grid);
+
         assertEquals(0.6, cell.getNextPollutionLevel(), 0.0001);
         assertEquals("VEGETATION", cell.getName());
 
@@ -118,10 +111,10 @@ public class CyBreatheTest {
     @Test
     public void testBuildingBlocksPollution() {
         Grid grid = new Grid(3, 3);
-        
+
         // (1, 1) is BUILDING
         grid.setCell(1, 1, new BuildingCell(1, 1, 0.0));
-        
+
         // Populate others as AIR
         for (int x = 0; x < 3; x++) {
             for (int y = 0; y < 3; y++) {
@@ -129,20 +122,20 @@ public class CyBreatheTest {
                 grid.setCell(x, y, new AirCell(x, y, 0.0));
             }
         }
-        
+
         // Set all neighbors of (1, 2) to 1.0 (excluding (1, 1) which is BUILDING)
         // Neighbors of (1, 2) in a 3x3 grid are: (0, 1), (1, 1) BUILDING, (2, 1), (0, 2), (2, 2)
         grid.getCell(0, 1).setPollutionLevel(1.0);
         grid.getCell(2, 1).setPollutionLevel(1.0);
         grid.getCell(0, 2).setPollutionLevel(1.0);
         grid.getCell(2, 2).setPollutionLevel(1.0);
-        
+
         AbstractCell testCell = grid.getCell(1, 2);
         assertEquals(0.0, testCell.getPollutionLevel());
-        
+
         // Compute next state on testCell
-        testCell.computeNextState(grid, params);
-        
+        testCell.computeNextState(params, grid);
+
         // Expected avg of active neighbors: (1.0 * 4) / 4 = 1.0 (completely ignoring (1, 1) BUILDING)
         // nextPollution = 0.0 + 0.5 * (1.0 - 0.0) = 0.5
         assertEquals(0.5, testCell.getNextPollutionLevel(), 0.0001);
@@ -156,18 +149,18 @@ public class CyBreatheTest {
                 grid.setCell(x, y, new AirCell(x, y, 0.0));
             }
         }
-        
+
         grid.getCell(1, 1).setPollutionLevel(1.0);
-        
+
         params.setWindDirection(WindDirection.EAST);
         params.setWindStrength(1.0);
-        
+
         AbstractCell eastCell = grid.getCell(2, 1);
         AbstractCell westCell = grid.getCell(0, 1);
-        
-        eastCell.computeNextState(grid, params);
-        westCell.computeNextState(grid, params);
-        
+
+        eastCell.computeNextState(params, grid);
+        westCell.computeNextState(params, grid);
+
         assertTrue(eastCell.getNextPollutionLevel() > westCell.getNextPollutionLevel(),
                 "Downstream cell must receive higher pollution under easterly wind.");
         assertEquals(0.0, westCell.getNextPollutionLevel(), 0.0001,
@@ -181,7 +174,7 @@ public class CyBreatheTest {
         originalAbs.getGrid().setCell(0, 1, new VegetationCell(0, 1, 0.5));
         originalAbs.getGrid().setCell(1, 0, new AirCell(1, 0, 0.1));
         originalAbs.getGrid().setCell(1, 1, new AirCell(1, 1, 0.0));
-        
+
         originalAbs.getParameters().setDiffusionRate(0.44);
         originalAbs.recordStats(0.4, 2);
 
@@ -200,11 +193,11 @@ public class CyBreatheTest {
             assertEquals("VEGETATION", restoredAbs.getGrid().getCell(0, 1).getName());
             assertEquals("AIR", restoredAbs.getGrid().getCell(1, 0).getName());
             assertEquals("AIR", restoredAbs.getGrid().getCell(1, 1).getName());
-            
+
             assertEquals(1.0, restoredAbs.getGrid().getCell(0, 0).getPollutionLevel());
             assertEquals(0.5, restoredAbs.getGrid().getCell(0, 1).getPollutionLevel());
             assertEquals(0.1, restoredAbs.getGrid().getCell(1, 0).getPollutionLevel());
-            
+
             assertEquals(1, restoredAbs.getAvgPollutionHistory().size());
             assertEquals(0.4, restoredAbs.getAvgPollutionHistory().get(0), 0.0001);
             assertEquals(1, restoredAbs.getPollutedAirHistory().size());

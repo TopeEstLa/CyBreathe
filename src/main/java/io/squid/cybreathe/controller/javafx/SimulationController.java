@@ -63,12 +63,9 @@ public class SimulationController {
      * Performs a single simulation step (double-buffered tick).
      */
     public synchronized void tick() {
-        gridController.computeNextStates(abstraction.getParameters());
-
-        gridController.commitStates();
-
-        abstraction.incrementTickCount();
+        abstraction.tick();
         recordCurrentStats();
+        gridController.updateCellPresentation();
         updatePresentation();
     }
 

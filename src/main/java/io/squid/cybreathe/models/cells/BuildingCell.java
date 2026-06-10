@@ -2,6 +2,7 @@ package io.squid.cybreathe.models.cells;
 
 import io.squid.cybreathe.models.AbstractCell;
 import io.squid.cybreathe.models.Grid;
+import io.squid.cybreathe.models.Simulation;
 import io.squid.cybreathe.models.SimulationParameters;
 
 /**
@@ -38,11 +39,12 @@ public class BuildingCell extends AbstractCell {
     /**
      * Keeps the next state pollution level locked at 0.0.
      *
-     * @param grid   the grid containing this cell
-     * @param params the simulation parameters
+     * @param params the simulation parameters to use for calculations
+     * @param grid   the grid containing this cell and its neighbors
+     * @param tick   the current simulation tick count
      */
     @Override
-    public void computeNextState(Grid grid, SimulationParameters params) {
+    public void computeNextState(SimulationParameters params, Grid grid, int tick) {
         setNextPollutionLevel(0.0);
     }
 }

@@ -53,24 +53,6 @@ public class CellController {
     }
 
     /**
-     * Triggers the cell model to compute its double-buffered next state.
-     *
-     * @param grid   the grid containing this cell and its neighbors
-     * @param params the global simulation parameters
-     */
-    public void computeNextState(Grid grid, SimulationParameters params) {
-        abstraction.computeNextState(grid, params);
-    }
-
-    /**
-     * Commits the computed double-buffered state and updates the UI visual display.
-     */
-    public void commitState() {
-        abstraction.commitState();
-        updatePresentation();
-    }
-
-    /**
      * Programmatically changes the cell type by swapping the subclass instance in-place.
      *
      * @param newCell the new cell model instance

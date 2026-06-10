@@ -75,30 +75,12 @@ public class GridController {
         return null;
     }
 
-    /**
-     * Ticks Phase 1: Triggers all cells to compute their double-buffered next states.
-     *
-     * @param params the global simulation parameters used to calculate pollution diffusion and absorption
-     */
-    public void computeNextStates(SimulationParameters params) {
-        int w = abstraction.getWidth();
-        int h = abstraction.getHeight();
-        for (int x = 0; x < w; x++) {
-            for (int y = 0; y < h; y++) {
-                cellControllers[x][y].computeNextState(abstraction, params);
-            }
-        }
-    }
-
-    /**
-     * Ticks Phase 2: Commits the double-buffered states.
-     */
-    public void commitStates() {
-        int w = abstraction.getWidth();
-        int h = abstraction.getHeight();
-        for (int x = 0; x < w; x++) {
-            for (int y = 0; y < h; y++) {
-                cellControllers[x][y].commitState();
+    public void updateCellPresentation() {
+        for (int x = 0; x < abstraction.getWidth(); x++) {
+            for (int y = 0; y < abstraction.getHeight(); y++) {
+                if (cellControllers[x][y] != null) {
+                    cellControllers[x][y].updatePresentation();
+                }
             }
         }
     }

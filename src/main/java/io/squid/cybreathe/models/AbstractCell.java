@@ -126,13 +126,24 @@ public abstract class AbstractCell implements Serializable {
     }
 
     /**
+     * Convenience method to compute the next state without a tick parameter, defaulting to 0.
+     *
+     * @param params the simulation parameters to use for calculations
+     * @param grid   the grid containing this cell and its neighbors
+     */
+    public void computeNextState(SimulationParameters params, Grid grid) {
+        this.computeNextState(params, grid, 0);
+    }
+
+    /**
      * Calculates the next state of the cell based on neighbors and parameters,
      * and stores it in the double-buffered next state field.
      *
-     * @param grid   the grid containing this cell
-     * @param params the simulation parameters
+     * @param params the simulation parameters to use for calculations
+     * @param grid   the grid containing this cell and its neighbors
+     * @param tick   the current simulation tick count
      */
-    public abstract void computeNextState(Grid grid, SimulationParameters params);
+    public abstract void computeNextState(SimulationParameters params, Grid grid, int tick);
 
     /**
      * Commits the computed double-buffered state to the active state.

@@ -2,6 +2,7 @@ package io.squid.cybreathe.models.cells;
 
 import io.squid.cybreathe.models.AbstractCell;
 import io.squid.cybreathe.models.Grid;
+import io.squid.cybreathe.models.Simulation;
 import io.squid.cybreathe.models.SimulationParameters;
 
 /**
@@ -37,11 +38,12 @@ public class VegetationCell extends AbstractCell {
     /**
      * Computes the next state of the cell by absorbing pollution from its own cell.
      *
-     * @param grid   the grid containing this cell
-     * @param params the simulation parameters controlling the absorption rate
+     * @param params the simulation parameters to use for calculations
+     * @param grid   the grid containing this cell and its neighbors
+     * @param tick   the current simulation tick count
      */
     @Override
-    public void computeNextState(Grid grid, SimulationParameters params) {
+    public void computeNextState(SimulationParameters params, Grid grid, int tick) {
         double nextPollution = pollutionLevel - (params.getAbsorptionRate() * getCustomRate());
         setNextPollutionLevel(Math.max(0.0, nextPollution));
     }

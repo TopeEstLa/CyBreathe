@@ -1,9 +1,6 @@
 package io.squid.cybreathe.models.cells;
 
-import io.squid.cybreathe.models.AbstractCell;
-import io.squid.cybreathe.models.Grid;
-import io.squid.cybreathe.models.SimulationParameters;
-import io.squid.cybreathe.models.WindDirection;
+import io.squid.cybreathe.models.*;
 
 import java.util.List;
 
@@ -51,11 +48,12 @@ public class AirCell extends AbstractCell {
      * Calculates the next state of the air cell, applying wind-weighted advection-diffusion
      * and subtracting neighboring vegetation absorption.
      *
+     * @param params the simulation parameters to use for calculations
      * @param grid   the grid containing this cell and its neighbors
-     * @param params the simulation parameters controlling diffusion, wind, and absorption rates
+     * @param tick   the current simulation tick count
      */
     @Override
-    public void computeNextState(Grid grid, SimulationParameters params) {
+    public void computeNextState(SimulationParameters params, Grid grid, int tick) {
         List<AbstractCell> neighbors = grid.getNeighbors(x, y);
         double sum = 0.0;
         double totalWeight = 0.0;

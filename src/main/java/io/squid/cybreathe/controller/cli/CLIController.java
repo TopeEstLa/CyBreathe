@@ -66,27 +66,7 @@ public class CLIController {
         int h = grid.getHeight();
 
         for (int i = 0; i < count; i++) {
-            // Phase 1: Compute next state based on neighbors' current state
-            for (int x = 0; x < w; x++) {
-                for (int y = 0; y < h; y++) {
-                    AbstractCell cell = grid.getCell(x, y);
-                    if (cell != null) {
-                        cell.computeNextState(grid, params);
-                    }
-                }
-            }
-
-            // Phase 2: Commit computed states to active states
-            for (int x = 0; x < w; x++) {
-                for (int y = 0; y < h; y++) {
-                    AbstractCell cell = grid.getCell(x, y);
-                    if (cell != null) {
-                        cell.commitState();
-                    }
-                }
-            }
-
-            abstraction.incrementTickCount();
+            abstraction.tick();
         }
     }
 

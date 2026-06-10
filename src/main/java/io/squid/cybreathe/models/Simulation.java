@@ -149,12 +149,12 @@ public class Simulation implements Serializable {
     }
 
     /**
-     * Appends the current average pollution level to the historical list, using a default polluted air count of 0.
-     *
-     * @param avgPollution the average pollution level
+     * Advances the simulation by one tick, computing and committing the next states of all cells, and incrementing the tick count.
      */
-    public void recordStats(double avgPollution) {
-        recordStats(avgPollution, 0);
+    public void tick() {
+        grid.computeNextStates(this);
+        grid.commitNextStates();
+        incrementTickCount();
     }
 
     /**

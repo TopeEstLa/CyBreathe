@@ -130,6 +130,7 @@ public class SimulationView extends BorderPane {
                     control.loadSimulation(file);
                     showInfoAlert("Import Success", "Simulation loaded successfully from:\n" + file.getName());
                 } catch (Exception ex) {
+                    ex.printStackTrace();
                     showErrorAlert("Import Failed", ex.getMessage());
                 }
             }
@@ -143,7 +144,7 @@ public class SimulationView extends BorderPane {
         });
 
         toolbar.getChildren().addAll(playBtn, pauseBtn, stepBtn, clearBtn, new Separator(), saveBtn, loadBtn, new Separator(), debugCheckbox, new Pane(), tickLabel);
-        HBox.setHgrow(toolbar.getChildren().get(9), Priority.ALWAYS); // Spacer
+        HBox.setHgrow(toolbar.getChildren().get(9), Priority.ALWAYS);
 
         setTop(toolbar);
     }
