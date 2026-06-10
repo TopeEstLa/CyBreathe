@@ -2,7 +2,6 @@ package io.squid.cybreathe.models.cells;
 
 import io.squid.cybreathe.models.AbstractCell;
 import io.squid.cybreathe.models.Grid;
-import io.squid.cybreathe.models.Simulation;
 import io.squid.cybreathe.models.SimulationParameters;
 
 /**

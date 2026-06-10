@@ -2,7 +2,6 @@ package io.squid.cybreathe.controller.javafx;
 
 import io.squid.cybreathe.models.AbstractCell;
 import io.squid.cybreathe.models.Grid;
-import io.squid.cybreathe.models.SimulationParameters;
 import io.squid.cybreathe.models.cells.AirCell;
 import io.squid.cybreathe.models.cells.BuildingCell;
 import io.squid.cybreathe.models.cells.FactoryCell;
