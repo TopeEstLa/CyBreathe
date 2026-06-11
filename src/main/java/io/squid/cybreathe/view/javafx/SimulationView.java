@@ -5,6 +5,7 @@ import io.squid.cybreathe.models.WindDirection;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -47,6 +48,11 @@ public class SimulationView extends BorderPane {
     private Label windStrengthLabel;
     // Stats Labels
     private Label statsSummaryLabel;
+
+    // Zoom control
+    private Group zoomGroup;
+    private double zoomFactor = 1.0;
+    private Label zoomLabel;
 
     // Charts
     private LineChart<Number, Number> pollutionChart;
@@ -146,8 +152,29 @@ public class SimulationView extends BorderPane {
             control.getGridControl().updateAllCellPresentations();
         });
 
-        toolbar.getChildren().addAll(playBtn, pauseBtn, stepBtn, clearBtn, new Separator(), saveBtn, loadBtn, new Separator(), debugCheckbox, new Pane(), tickLabel);
-        HBox.setHgrow(toolbar.getChildren().get(9), Priority.ALWAYS);
+        Button zoomOutBtn = new Button("🔍-");
+        zoomLabel = new Label("Zoom: 100%");
+        zoomLabel.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #37474f;");
+        Button zoomInBtn = new Button("🔍+");
+        Button zoomResetBtn = new Button("Reset");
+
+        zoomOutBtn.setStyle("-fx-background-color: #cfd8dc; -fx-text-fill: #37474f; -fx-font-weight: bold; -fx-background-radius: 4; -fx-border-color: #b0bec5; -fx-border-radius: 4;");
+        zoomInBtn.setStyle("-fx-background-color: #cfd8dc; -fx-text-fill: #37474f; -fx-font-weight: bold; -fx-background-radius: 4; -fx-border-color: #b0bec5; -fx-border-radius: 4;");
+        zoomResetBtn.setStyle("-fx-background-color: #b0bec5; -fx-text-fill: #37474f; -fx-font-weight: bold; -fx-background-radius: 4; -fx-border-color: #90a4ae; -fx-border-radius: 4;");
+
+        zoomOutBtn.setOnAction(e -> adjustZoom(1.0 / 1.15));
+        zoomInBtn.setOnAction(e -> adjustZoom(1.15));
+        zoomResetBtn.setOnAction(e -> resetZoom());
+
+        Pane spacer = new Pane();
+        toolbar.getChildren().addAll(
+            playBtn, pauseBtn, stepBtn, clearBtn, new Separator(),
+            saveBtn, loadBtn, new Separator(),
+            debugCheckbox, new Separator(),
+            zoomOutBtn, zoomLabel, zoomInBtn, zoomResetBtn,
+            spacer, tickLabel
+        );
+        HBox.setHgrow(spacer, Priority.ALWAYS);
 
         setTop(toolbar);
     }
@@ -327,7 +354,8 @@ public class SimulationView extends BorderPane {
 
     private void setupCenterGrid() {
         gridView.setAlignment(Pos.CENTER);
-        StackPane gridContainer = new StackPane(gridView);
+        zoomGroup = new Group(gridView);
+        StackPane gridContainer = new StackPane(zoomGroup);
         gridContainer.setPadding(new Insets(15));
         gridContainer.setAlignment(Pos.CENTER);
         gridContainer.setStyle("-fx-background-color: #ffffff;");
@@ -336,7 +364,37 @@ public class SimulationView extends BorderPane {
         gridScroller.setFitToWidth(true);
         gridScroller.setFitToHeight(true);
 
+        gridScroller.setOnScroll(event -> {
+            if (event.isControlDown()) {
+                double zoomFactorValue = 1.05;
+                if (event.getDeltaY() < 0) {
+                    zoomFactorValue = 1.0 / zoomFactorValue;
+                }
+                adjustZoom(zoomFactorValue);
+                event.consume();
+            }
+        });
+
         setCenter(gridScroller);
+    }
+
+    private void adjustZoom(double factor) {
+        zoomFactor *= factor;
+        zoomFactor = Math.clamp(zoomFactor, 0.3, 4.0);
+        gridView.setScaleX(zoomFactor);
+        gridView.setScaleY(zoomFactor);
+        if (zoomLabel != null) {
+            zoomLabel.setText(String.format("Zoom: %.0f%%", zoomFactor * 100));
+        }
+    }
+
+    private void resetZoom() {
+        zoomFactor = 1.0;
+        gridView.setScaleX(1.0);
+        gridView.setScaleY(1.0);
+        if (zoomLabel != null) {
+            zoomLabel.setText("Zoom: 100%");
+        }
     }
 
     private void setupRightStatsPanel() {
