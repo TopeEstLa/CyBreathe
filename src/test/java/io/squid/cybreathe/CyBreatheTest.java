@@ -82,12 +82,19 @@ public class CyBreatheTest {
         cell.setCustomRate(1.0);
         grid.setCell(0, 0, cell);
 
-        // Factory computeNextState should always set pollution to 1.0 (its custom rate)
-        cell.computeNextState(params, grid);
-        assertEquals(1.0, cell.getNextPollutionLevel());
+        // Factory computeNextState during running hours (e.g., tick 480 -> 8:00 AM)
+        cell.computeNextState(params, grid, 480);
+        assertEquals(1.0, cell.getNextPollutionLevel(), 0.0001);
 
         cell.commitState();
-        assertEquals(1.0, cell.getPollutionLevel());
+        assertEquals(1.0, cell.getPollutionLevel(), 0.0001);
+
+        // Factory computeNextState during off-hours (e.g., tick 0 -> 12:00 AM)
+        cell.computeNextState(params, grid, 0);
+        assertEquals(0.8, cell.getNextPollutionLevel(), 0.0001);
+
+        cell.commitState();
+        assertEquals(0.8, cell.getPollutionLevel(), 0.0001);
     }
 
     @Test
