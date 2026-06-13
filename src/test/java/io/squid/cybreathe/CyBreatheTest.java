@@ -16,7 +16,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * JUnit 5 Unit Tests verifying the PAC polymorphic model behaviors.
+ * JUnit 5 Unit Tests verifying model calc.
  *
  * @author TopeEstLa
  */

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Abstraction layer in the PAC architecture representing the global state of the simulation.
+ * Model layer representing the global state of the simulation.
  * Represents global stats, active grid, loaded parameters, and historical data.
  * Supports binary serialization to import/export simulation states.
  *
