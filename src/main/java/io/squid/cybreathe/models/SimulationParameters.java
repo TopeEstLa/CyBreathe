@@ -11,11 +11,32 @@ import java.io.Serializable;
 public class SimulationParameters implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private double diffusionRate = 0.3;     // Speed at which pollution spreads from Air cells (0.0 to 1.0)
-    private double absorptionRate = 0.15;   // Rate at which Vegetation absorb pollution (0.0 to 1.0)
+    /**
+     * Speed at which pollution spreads from Air cells (0.0 to 1.0).
+     */
+    private double diffusionRate = 0.3;
 
-    private WindDirection windDirection = WindDirection.NONE; // Direction of atmospheric wind
-    private double windStrength = 0.5;      // Strength of the wind advection effect (0.0 to 1.0)
+    /**
+     * Rate at which Vegetation absorbs pollution (0.0 to 1.0).
+     */
+    private double absorptionRate = 0.15;
+
+    /**
+     * Direction of atmospheric wind.
+     */
+    private WindDirection windDirection = WindDirection.NONE;
+
+    /**
+     * Strength of the wind advection effect (0.0 to 1.0).
+     */
+    private double windStrength = 0.5;
+
+    /**
+     * Constructs SimulationParameters with default settings.
+     */
+    public SimulationParameters() {
+        // Default constructor
+    }
 
     /**
      * Gets the global diffusion rate of pollution.

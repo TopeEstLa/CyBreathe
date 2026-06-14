@@ -7,14 +7,23 @@ package io.squid.cybreathe.models;
  * @author TopeEstLa
  */
 public enum WindDirection {
+    /** No wind active (0, 0). */
     NONE(0, 0),
+    /** Wind blowing North (0, -1). */
     NORTH(0, -1),
+    /** Wind blowing North-East (1, -1). */
     NORTH_EAST(1, -1),
+    /** Wind blowing East (1, 0). */
     EAST(1, 0),
+    /** Wind blowing South-East (1, 1). */
     SOUTH_EAST(1, 1),
+    /** Wind blowing South (0, 1). */
     SOUTH(0, 1),
+    /** Wind blowing South-West (-1, 1). */
     SOUTH_WEST(-1, 1),
+    /** Wind blowing West (-1, 0). */
     WEST(-1, 0),
+    /** Wind blowing North-West (-1, -1). */
     NORTH_WEST(-1, -1);
 
     private final int dx;

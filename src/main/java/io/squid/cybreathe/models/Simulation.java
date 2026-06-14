@@ -14,12 +14,34 @@ import java.util.List;
 public class Simulation implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * History list storing the average pollution levels per tick.
+     */
     private final List<Double> avgPollutionHistory;
+
+    /**
+     * History list storing the polluted air cells count per tick.
+     */
     private List<Integer> pollutedAirHistory;
 
+    /**
+     * The grid of cells.
+     */
     private Grid grid;
+
+    /**
+     * The parameters configure rules of the simulation.
+     */
     private SimulationParameters parameters;
+
+    /**
+     * The elapsed tick count of the simulation.
+     */
     private int tickCount;
+
+    /**
+     * The delay between simulation steps in milliseconds.
+     */
     private int speedDelayMs = 200;
 
     /**

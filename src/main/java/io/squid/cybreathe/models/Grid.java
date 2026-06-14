@@ -16,8 +16,19 @@ import java.util.Map;
 public class Grid implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * The width of the grid.
+     */
     private final int width;
+
+    /**
+     * The height of the grid.
+     */
     private final int height;
+
+    /**
+     * The 2D array storing cell instances of the grid.
+     */
     private final AbstractCell[][] cells;
 
     /**

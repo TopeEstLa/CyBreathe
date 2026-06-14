@@ -11,12 +11,29 @@ import java.io.Serializable;
 public abstract class AbstractCell implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * The x-coordinate of the cell.
+     */
     private final int x;
+
+    /**
+     * The y-coordinate of the cell.
+     */
     private final int y;
 
+    /**
+     * The current pollution level of the cell.
+     */
     private double pollutionLevel;
+
+    /**
+     * The pre-calculated next pollution level (double-buffered).
+     */
     private double nextPollutionLevel;
 
+    /**
+     * The custom rate multiplier for absorption or production.
+     */
     private double customRate;
 
     /**
