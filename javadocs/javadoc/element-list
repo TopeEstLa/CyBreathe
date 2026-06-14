@@ -1,0 +1,7 @@
+io.squid.cybreathe
+io.squid.cybreathe.controller.cli
+io.squid.cybreathe.controller.javafx
+io.squid.cybreathe.models
+io.squid.cybreathe.models.cells
+io.squid.cybreathe.view.cli
+io.squid.cybreathe.view.javafx

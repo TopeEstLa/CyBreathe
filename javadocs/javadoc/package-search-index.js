@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"io.squid.cybreathe"},{"l":"io.squid.cybreathe.controller.cli"},{"l":"io.squid.cybreathe.controller.javafx"},{"l":"io.squid.cybreathe.models"},{"l":"io.squid.cybreathe.models.cells"},{"l":"io.squid.cybreathe.view.cli"},{"l":"io.squid.cybreathe.view.javafx"}];updateSearchResults();
