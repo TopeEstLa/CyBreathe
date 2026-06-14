@@ -74,6 +74,9 @@ public class GridController {
         return null;
     }
 
+    /**
+     * Updates the presentation (view) of all cells in the grid based on their current states.
+     */
     public void updateCellPresentation() {
         for (int x = 0; x < abstraction.getWidth(); x++) {
             for (int y = 0; y < abstraction.getHeight(); y++) {

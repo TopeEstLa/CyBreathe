@@ -83,6 +83,13 @@ public class Grid implements Serializable {
         }
     }
 
+    /**
+     * Computes the next state for all cells in the grid, but does not commit them yet.
+     * This prepares the double-buffered state calculations in parallel without interfering
+     * with other cell transitions.
+     *
+     * @param simulation the current simulation context containing parameters and current tick
+     */
     public void computeNextStates(Simulation simulation) {
         int w = getWidth();
         int h = getHeight();
@@ -93,6 +100,10 @@ public class Grid implements Serializable {
         }
     }
 
+    /**
+     * Commits the pre-calculated next states for all cells in the grid.
+     * This updates the active pollution level of each cell to its computed next state.
+     */
     public void commitNextStates() {
         int w = getWidth();
         int h = getHeight();

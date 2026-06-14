@@ -82,6 +82,9 @@ public class SimulationView extends BorderPane {
         bindProperties();
     }
 
+    /**
+     * Sets up and configures the top toolbar containing play, pause, step, clear, save, load, debug, and zoom controls.
+     */
     private void setupTopToolbar() {
         HBox toolbar = new HBox(12);
         toolbar.setPadding(new Insets(10));
@@ -179,6 +182,9 @@ public class SimulationView extends BorderPane {
         setTop(toolbar);
     }
 
+    /**
+     * Sets up and configures the left sidebar containing brush configuration, wind settings, and simulation rates.
+     */
     private void setupLeftSidebar() {
         VBox sidebar = new VBox(15);
         sidebar.setPadding(new Insets(15));
@@ -352,6 +358,9 @@ public class SimulationView extends BorderPane {
         setLeft(scroller);
     }
 
+    /**
+     * Sets up and configures the center pane containing the grid view wrapped in a zoomable scroll pane.
+     */
     private void setupCenterGrid() {
         gridView.setAlignment(Pos.CENTER);
         zoomGroup = new Group(gridView);
@@ -378,6 +387,11 @@ public class SimulationView extends BorderPane {
         setCenter(gridScroller);
     }
 
+    /**
+     * Adjusts the grid zoom factor by the specified multiplier, clamping the zoom factor between 30% and 400%.
+     *
+     * @param factor the zoom multiplier to apply
+     */
     private void adjustZoom(double factor) {
         zoomFactor *= factor;
         zoomFactor = Math.clamp(zoomFactor, 0.3, 4.0);
@@ -388,6 +402,9 @@ public class SimulationView extends BorderPane {
         }
     }
 
+    /**
+     * Resets the zoom factor of the grid view to the default 100%.
+     */
     private void resetZoom() {
         zoomFactor = 1.0;
         gridView.setScaleX(1.0);
@@ -397,6 +414,9 @@ public class SimulationView extends BorderPane {
         }
     }
 
+    /**
+     * Sets up and configures the right sidebar analytics panel containing stats summary and charts.
+     */
     private void setupRightStatsPanel() {
         VBox rightBar = new VBox(15);
         rightBar.setPadding(new Insets(15));
@@ -445,6 +465,9 @@ public class SimulationView extends BorderPane {
         setRight(scroller);
     }
 
+    /**
+     * Binds sliders and UI control listeners to update model parameters and sync values.
+     */
     private void bindProperties() {
         syncUIWithModel();
 
@@ -496,6 +519,11 @@ public class SimulationView extends BorderPane {
         );
     }
 
+    /**
+     * Gets the custom rate configured for the brush. If random option is selected, returns a value between 0.5 and 2.0.
+     *
+     * @return the custom rate value for the brush
+     */
     private Double getBrushCustomRate() {
         if (randomRateCheckbox != null && randomRateCheckbox.isSelected()) {
             return 0.5 + Math.random() * 1.5;
@@ -503,12 +531,22 @@ public class SimulationView extends BorderPane {
         return brushCustomRateSlider != null ? brushCustomRateSlider.getValue() : 1.0;
     }
 
+    /**
+     * Gets the name of the currently selected cell type from the active radio button.
+     *
+     * @return the selected cell type name (e.g., "AIR", "VEGETATION")
+     */
     private String getSelectedCellType() {
         RadioButton selected = (RadioButton) cellTypeGroup.getSelectedToggle();
         if (selected == null) return "AIR";
         return selected.getText(); // returns "AIR", "VEGETATION", "FACTORY", or "BUILDING"
     }
 
+    /**
+     * Gets the currently selected brush mode from the active radio button.
+     *
+     * @return the selected brush mode ("BRUSH", "ZONE", or "INDIVIDUAL")
+     */
     private String getSelectedBrushMode() {
         RadioButton selected = (RadioButton) brushModeGroup.getSelectedToggle();
         if (selected == null) return "INDIVIDUAL";
@@ -520,7 +558,7 @@ public class SimulationView extends BorderPane {
     }
 
     /**
-     * Starts the periodic background simulation execution loop safely in the JavaFX thread.
+     * Starts the periodic background simulation execution loop at the user-defined speed delay.
      */
     private synchronized void startSimulationLoop() {
         stopSimulationLoop();
@@ -534,7 +572,7 @@ public class SimulationView extends BorderPane {
     }
 
     /**
-     * Stops the running simulation background thread loop.
+     * Cancels/stops the active simulation execution loop.
      */
     private synchronized void stopSimulationLoop() {
         if (timerLoop != null) {
@@ -582,6 +620,12 @@ public class SimulationView extends BorderPane {
         updateSeries(pollutedAirSeries, pollutedAirHistory);
     }
 
+    /**
+     * Updates an integer-based line chart series with the given history data.
+     *
+     * @param series  the line chart series to update
+     * @param history the history list of integers
+     */
     private void updateSeries(XYChart.Series<Number, Number> series, List<Integer> history) {
         series.getData().clear();
         for (int i = 0; i < history.size(); i++) {
@@ -589,6 +633,12 @@ public class SimulationView extends BorderPane {
         }
     }
 
+    /**
+     * Updates a double-based line chart series with the given history data.
+     *
+     * @param series  the line chart series to update
+     * @param history the history list of doubles
+     */
     private void updateSeriesDouble(XYChart.Series<Number, Number> series, List<Double> history) {
         series.getData().clear();
         for (int i = 0; i < history.size(); i++) {
@@ -659,6 +709,9 @@ public class SimulationView extends BorderPane {
         windDirButtons.put(dir, btn);
     }
 
+    /**
+     * Updates the CSS/style of wind direction buttons to highlight the active selection.
+     */
     private void updateWindUISelection() {
         WindDirection currentDir = control.getWindDirection();
         for (Map.Entry<WindDirection, Button> entry : windDirButtons.entrySet()) {
