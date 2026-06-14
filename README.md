@@ -2,9 +2,10 @@
 
 Ing-1 IT project <br>
 Subject 2D Cellular Pollution Simulation [subject.pdf](PGL_ING1_Cellules_2D_2025_2026.pdf) <br>
-Report [report.pdf](report.pdf) <br>
+Project report [report.pdf](report.pdf) <br>
 Class diagram [ClassDiagram.png](ClassDiagram.png) <br>
 Use case diagram [UseCaseDiagram.png](UseCaseDiagram.png) <br>
+Latest jar [CyBreathe.jar](https://nightly.link/TopeEstLa/CyBreathe/workflows/ci/main/CyBreathe.zip)
 
 ## Compilation
 
